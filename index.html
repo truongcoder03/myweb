@@ -1,6 +1,75 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
+    <!-- ONLINE DATABASE: Supabase. Điền 2 giá trị bên dưới sau khi tạo project Supabase. -->
+    <script>
+    window.QQ_SUPABASE_CONFIG = {
+        url: 'https://dhhrbtqirdanpgikiokd.supabase.co',
+        anonKey: 'sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU'
+    };
+    (function(){
+        const C=window.QQ_SUPABASE_CONFIG;
+        const ENABLED=C && /^https:\/\/[^\s]+\.supabase\.co$/i.test(C.url||'') && C.anonKey && C.anonKey !== 'YOUR_SUPABASE_ANON_KEY';
+        window.QQ_DB_ENABLED=!!ENABLED;
+        const MONEY='user_balances', POINTS='qq_game_points_v2';
+        let dirtyUntil=0, syncTimer=null, pulling=false;
+        function headers(){return {'apikey':C.anonKey,'Authorization':'Bearer '+C.anonKey,'Content-Type':'application/json'};}
+        async function upsertAll(){
+            if(!ENABLED)return;
+            try{
+                const b=JSON.parse(localStorage.getItem(MONEY)||'{}');
+                const p=JSON.parse(localStorage.getItem(POINTS)||'{}');
+                const names=new Set([...Object.keys(b),...Object.keys(p)].filter(Boolean));
+                if(!names.size)return;
+                const rows=[...names].map(username=>({username,balance:Number(b[username]||0),points:Number(p[username]||0)}));
+                await fetch(C.url+'/rest/v1/user_wallets?on_conflict=username',{method:'POST',headers:{...headers(),'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)});
+            }catch(e){console.warn('QQ DB sync:',e);}
+        }
+        function queueSync(){
+            if(!ENABLED)return;
+            dirtyUntil=Date.now()+1800;
+            clearTimeout(syncTimer); syncTimer=setTimeout(upsertAll,350);
+        }
+        async function pull(){
+            if(!ENABLED||pulling||Date.now()<dirtyUntil)return;
+            pulling=true;
+            try{
+                const r=await fetch(C.url+'/rest/v1/user_wallets?select=username,balance,points',{headers:headers()});
+                if(!r.ok)throw new Error('HTTP '+r.status);
+                const rows=await r.json();
+                if(!Array.isArray(rows))return;
+                if(rows.length===0){await upsertAll();return;}
+                const b=JSON.parse(localStorage.getItem(MONEY)||'{}');
+                const p=JSON.parse(localStorage.getItem(POINTS)||'{}');
+                rows.forEach(x=>{if(x&&x.username){b[x.username]=Number(x.balance||0);p[x.username]=Number(x.points||0);}});
+                localStorage.setItem(MONEY,JSON.stringify(b));
+                localStorage.setItem(POINTS,JSON.stringify(p));
+                setTimeout(()=>{
+                    try{
+                        if(typeof window.qqRefreshWallet==='function')window.qqRefreshWallet();
+                        if(typeof window.renderTopPoints==='function')window.renderTopPoints();
+                        if(typeof window.renderAdminMemberList==='function')window.renderAdminMemberList();
+                        if(typeof window.renderQQProfile==='function' && localStorage.getItem('logged_in_user'))window.renderQQProfile();
+                    }catch(e){}
+                },0);
+            }catch(e){console.warn('QQ DB pull:',e)}
+            finally{pulling=false;}
+        }
+        const nativeSet=Storage.prototype.setItem;
+        Storage.prototype.setItem=function(k,v){
+            nativeSet.call(this,k,v);
+            if(this===localStorage && (k===MONEY||k===POINTS))queueSync();
+        };
+        window.QQ_DB_PULL=pull;
+        window.QQ_DB_PUSH=upsertAll;
+        window.addEventListener('online',()=>pull());
+        window.addEventListener('load',()=>{
+            if(!ENABLED){console.warn('QQ online DB chưa cấu hình. Hãy điền url + anonKey trong QQ_SUPABASE_CONFIG.');return;}
+            pull();
+            setInterval(pull,3000);
+        });
+    })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROBUXQUYNQUYN - Hệ thống bán robux & Gamepass uy tín</title>
@@ -1024,6 +1093,7 @@
             <div class="admin-card" style="margin-bottom:20px;">
                 <h3 style="margin-top:0;color:#fbbf24;font-size:15px;">⌨️ BỘ LỆNH ADMIN — TIỀN & ĐIỂM</h3>
                 <div style="font-size:12px;color:var(--text-sub);line-height:1.65;margin-bottom:12px;">
+                    <div style="font-size:11px;color:#fbbf24;margin-bottom:8px;">🌐 Ví tiền & điểm được đồng bộ online qua Supabase khi đã cấu hình.</div>
                     Dùng lệnh: <code>/money + username 100000</code>,
                     <code>/money - username 50000</code>,
                     <code>/points + username 100</code>,
@@ -1286,7 +1356,7 @@ function qqProfileData(){
  else {const idx=Math.abs([...u].reduce((a,c)=>((a*31+c.charCodeAt(0))|0),7))%QQ_CONAN_BGS.length;bg=QQ_CONAN_BGS[idx];avatar=bg;}
  return {u,bg,avatar,role,balance:Number(balances[u]||0),point:Number(points[u]||0),isAdmin,isQtv};
 }
-function renderQQProfile(){
+window.renderQQProfile = function renderQQProfile(){
  const m=document.getElementById('qqProfileMount');if(!m)return;const d=qqProfileData();
  const vip=d.isAdmin?'ADMIN':(d.isQtv?'QTV':'VIP '+Math.min(10,Math.floor(d.point/10000)));
  m.innerHTML='<div class="qq-profile-wrap" style="--qq-profile-bg:url(\"'+d.bg+'\")"><div class="qq-profile-inner"><img class="qq-avatar" src="'+d.avatar+'" alt="Ảnh anime hồ sơ" onerror="this.style.visibility=\"hidden\""><div><div class="qq-profile-name">'+(d.isAdmin?'👑 ':d.isQtv?'🛡️ ':'')+d.u+'</div><div class="qq-profile-sub">✨ Anime profile • '+d.role+' • nền chuyển động nhẹ</div><div class="qq-profile-badges"><span class="qq-pbadge">'+(d.isAdmin?'👑 ADMIN':d.isQtv?'🛡️ QTV':'🎌 THÀNH VIÊN')+'</span><span class="qq-pbadge">🏆 '+vip+'</span></div><div class="qq-pgrid"><div class="qq-pstat">💰 Số dư<b>'+d.balance.toLocaleString('vi-VN')+' VNĐ</b></div><div class="qq-pstat">💎 Điểm<b>'+d.point.toLocaleString('vi-VN')+'</b></div><div class="qq-pstat">🎖️ Cấp VIP<b>'+vip+'</b></div></div><button class="qq-random-btn" onclick="qqRandomConan()">🎲 Đổi ảnh anime</button></div></div><div class="qq-profile-credit">Anime background • Hồ sơ '+d.role+'</div></div>';
@@ -1450,7 +1520,7 @@ function qqRandomConan(){
 
         function executeAdminBalance() {
             if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin/QTV mới dùng được chức năng này.');return;}
-            let targetUser = document.getElementById('adminTargetUser').value.trim();
+            let targetUser = qqResolveUsername(document.getElementById('adminTargetUser').value);
             let actionType = document.getElementById('adminActionType').value;
             let amount = parseInt(document.getElementById('adminAmountInput').value);
             if(!targetUser || isNaN(amount) || amount < 0) {
@@ -1555,6 +1625,29 @@ function isAdminSession(){
     const u=(localStorage.getItem('logged_in_user') || '').toLowerCase();
     return u === ADMIN_USERNAME.toLowerCase() || u === QTV_USERNAME.toLowerCase();
 }
+function qqResolveUsername(input){
+    const wanted=String(input||'').trim().toLowerCase();
+    if(!wanted) return '';
+    if(wanted===ADMIN_USERNAME.toLowerCase()) return ADMIN_USERNAME;
+    if(wanted===QTV_USERNAME.toLowerCase()) return QTV_USERNAME;
+    try{
+        const users=JSON.parse(localStorage.getItem('registered_users')||'{}');
+        for(const k of Object.keys(users)){
+            const acc=users[k];
+            const name=String(acc?.username||k||'').trim();
+            if(name.toLowerCase()===wanted) return name;
+        }
+    }catch(e){}
+    const maps=['user_balances','qq_game_points_v2'];
+    for(const key of maps){
+        try{
+            const obj=JSON.parse(localStorage.getItem(key)||'{}');
+            const hit=Object.keys(obj).find(k=>k.toLowerCase()===wanted);
+            if(hit) return hit;
+        }catch(e){}
+    }
+    return String(input||'').trim();
+}
 function adminMsg(msg, ok){
     const e=document.getElementById('adminCommandResult');
     if(e){e.textContent=msg;e.style.color=ok?'#34d399':'#f87171';}
@@ -1566,7 +1659,7 @@ function executeAdminCommand(){
     if(p.length!==4 || !/^\/(money|points)$/i.test(p[0]) || !/^[+-]$/.test(p[1]) || !p[2] || !/^\d+(\.\d+)?$/.test(p[3])){
         adminMsg('❌ Sai cú pháp. Ví dụ: /money + username 100000',false);return;
     }
-    const type=p[0].slice(1).toLowerCase(), sign=p[1], user=p[2], amount=Math.floor(Number(p[3]));
+    const type=p[0].slice(1).toLowerCase(), sign=p[1], user=qqResolveUsername(p[2]), amount=Math.floor(Number(p[3]));
     if(amount<=0){adminMsg('❌ Số lượng phải lớn hơn 0.',false);return;}
     if(type==='money'){
         let b=JSON.parse(localStorage.getItem('user_balances')||'{}');
@@ -1586,7 +1679,7 @@ function executeAdminCommand(){
 }
 function executeAdminPoints(){
     if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin/QTV mới dùng được chức năng này.');return;}
-    const u=(document.getElementById('adminTargetPointsUser').value||'').trim();
+    const u=qqResolveUsername(document.getElementById('adminTargetPointsUser').value);
     const act=document.getElementById('adminPointsActionType').value;
     const n=Math.floor(Number(document.getElementById('adminPointsInput').value||0));
     if(!u||n<=0){showCustomAlert('LỖI','Nhập tài khoản và số điểm hợp lệ.');return;}
@@ -1626,7 +1719,7 @@ function executeAdminPoints(){
         }
         document.addEventListener('input',e=>{if(e.target&&e.target.classList.contains('admin-item-rate-input'))updateAdminItemRateTotal();});
 
-        function renderTopPoints(){
+        window.renderTopPoints = function renderTopPoints(){
             const el=document.getElementById('top-points-list');
             if(!el)return;
             const pts=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
@@ -1635,7 +1728,7 @@ function executeAdminPoints(){
             const top=names.slice(0,10);
             el.innerHTML=top.length?top.map((u,i)=>`<div class="top-user-item"><div><span style="font-weight:bold;color:${i===0?'#fbbf24':i===1?'#94a3b8':i===2?'#d97706':'var(--text-sub)'};margin-right:6px;">#${i+1}</span><span style="font-weight:600;">${u}</span></div><div style="color:#a78bfa;font-weight:800;">${(Number(pts[u])||0).toLocaleString('vi-VN')} điểm</div></div>`).join(''):'<div style="padding:12px;text-align:center;color:var(--text-sub);">Chưa có dữ liệu điểm.</div>';
         }
-        function renderAdminMemberList(){
+        window.renderAdminMemberList = function renderAdminMemberList(){
             const el=document.getElementById('admin-member-list'); if(!el)return;
             const users=getRegisteredUsers();
             const balances=JSON.parse(localStorage.getItem('user_balances')||'{}');
