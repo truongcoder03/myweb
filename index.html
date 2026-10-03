@@ -25,11 +25,16 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        *, *:before, *:after {
+            box-sizing: inherit;
         }
 
         .sidebar {
             width: 260px;
-            background-color: rgba(13, 17, 23, 0.85);
+            background-color: rgba(13, 17, 23, 0.95);
             backdrop-filter: blur(12px);
             height: 100vh;
             position: fixed;
@@ -39,6 +44,7 @@
             display: flex;
             flex-direction: column;
             z-index: 10;
+            transition: 0.3s;
         }
 
         .logo-area {
@@ -62,7 +68,11 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            overflow-y: auto;
+            max-height: calc(100vh - 90px);
         }
+        .menu-section::-webkit-scrollbar { width: 4px; }
+        .menu-section::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
 
         .menu-item {
             display: flex;
@@ -85,6 +95,7 @@
         .main-content {
             margin-left: 260px;
             padding: 24px 32px;
+            transition: 0.3s;
         }
 
         .top-header {
@@ -92,6 +103,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .lop-header {
@@ -112,12 +125,13 @@
         .user-profile {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: var(--bg-card);
             backdrop-filter: blur(8px);
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 20px;
             border: 1px solid var(--border-color);
+            flex-wrap: wrap;
         }
 
         .money-bold {
@@ -125,23 +139,15 @@
             letter-spacing: 0.5px;
         }
 
-        .vip-badge {
-            background: linear-gradient(45deg, #d97706, #dc2626);
+        .vip-badge, .admin-badge {
             color: white;
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 11px;
             font-weight: bold;
         }
-
-        .admin-badge {
-            background: linear-gradient(45deg, #db2777, #7c3aed);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-        }
+        .vip-badge { background: linear-gradient(45deg, #d97706, #dc2626); }
+        .admin-badge { background: linear-gradient(45deg, #db2777, #7c3aed); }
 
         .auth-buttons {
             display: flex;
@@ -181,25 +187,21 @@
             letter-spacing: 0.3px;
         }
 
-        .rainbow-card {
+        .rainbow-card, .standard-card, .deposit-card, .admin-card {
             border-radius: 14px;
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            padding: 24px;
-            border: 2px solid transparent;
-            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff);
-            border-image-slice: 1;
-            box-shadow: 0 0 15px rgba(255, 0, 128, 0.15);
-            margin-bottom: 20px;
-        }
-
-        .standard-card {
-            border-radius: 12px;
             background: var(--bg-card);
             backdrop-filter: blur(10px);
             padding: 20px;
             border: 1px solid var(--border-color);
             margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .rainbow-card {
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff);
+            border-image-slice: 1;
+            box-shadow: 0 0 15px rgba(255, 0, 128, 0.15);
         }
 
         .grid-stats {
@@ -260,14 +262,11 @@
             justify-content: space-between;
             align-items: center;
             transition: 0.2s;
-        }
-        .transaction-card-item:hover {
-            border-color: rgba(99, 102, 241, 0.5);
-            transform: translateX(2px);
+            gap: 10px;
         }
 
-        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.3); }
-        .badge-pending { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 11px; border: 1px solid rgba(16, 185, 129, 0.3); white-space: nowrap; }
+        .badge-pending { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 11px; border: 1px solid rgba(239, 68, 68, 0.3); white-space: nowrap; }
 
         .tab-pane { display: none; }
         .tab-pane.active-pane { display: block; }
@@ -276,15 +275,6 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 20px;
-        }
-
-        .deposit-card, .admin-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
         }
 
         .bank-info-box {
@@ -296,6 +286,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         input, select {
@@ -325,6 +317,7 @@
             opacity: 0;
             pointer-events: none;
             transition: 0.3s ease;
+            padding: 15px;
         }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
@@ -333,8 +326,9 @@
             backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            width: 400px;
-            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             transform: translateY(-15px);
             transition: 0.3s ease;
@@ -380,7 +374,7 @@
         }
         .btn-cancel:hover { background: rgba(255, 255, 255, 0.04); color: white; }
 
-        #alertModal .modal-box { text-align: center; width: 360px; }
+        #alertModal .modal-box { text-align: center; max-width: 360px; }
         #alertMessage { color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
 
         .gamepass-card {
@@ -436,28 +430,82 @@
             border-radius: 8px;
             font-size: 13px;
         }
+
+        /* ===== ĐIỀU CHỈNH RESPONSIVE CHO DI ĐỘNG ===== */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            .sidebar .logo-area {
+                font-size: 11px;
+                letter-spacing: 0px;
+                padding: 20px 5px;
+            }
+            .sidebar .menu-item {
+                justify-content: center;
+                padding: 12px 5px;
+                font-size: 0px; /* Ẩn chữ menu, chỉ hiện icon/emoji */
+            }
+            .sidebar .menu-item::before {
+                font-size: 18px;
+            }
+            .menu-section div[style*="font-size:11px"] {
+                display: none; /* Ẩn các tiêu đề phụ nhóm menu */
+            }
+            .main-content {
+                margin-left: 70px;
+                padding: 15px;
+            }
+            .grid-three {
+                grid-template-columns: 1fr;
+            }
+            .deposit-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .sidebar {
+                display: none; /* Ẩn hẳn sidebar trên màn hình quá nhỏ để tiết kiệm diện tích */
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 12px;
+            }
+            .grid-stats {
+                grid-template-columns: 1fr;
+            }
+            .top-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .user-profile {
+                justify-content: space-between;
+            }
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="logo-area">ROBUXQUYNQUYN</div>
+        <div class="logo-area">QUYNQUYN</div>
         <div class="menu-section">
             <a class="menu-item active" onclick="switchTab('home', this)">🏠 Trang chủ</a>
-            <a class="menu-item" onclick="switchTab('profile', this)">👤 Hồ sơ người dùng</a>
-            <a class="menu-item" onclick="switchTab('buy-robux', this)">🛒 Mua Robux & Gamepass</a>
-            <a class="menu-item" onclick="switchTab('redeem', this)">🎁 Nhập Code (Redeem)</a>
+            <a class="menu-item" onclick="switchTab('profile', this)">👤 Hồ sơ</a>
+            <a class="menu-item" onclick="switchTab('buy-robux', this)">🛒 Mua Robux</a>
+            <a class="menu-item" onclick="switchTab('redeem', this)">🎁 Nhập Code</a>
             <a class="menu-item" onclick="switchTab('deposit', this)">💳 Nạp tiền</a>
-            <a class="menu-item" onclick="switchTab('transactions', this)">📊 Lịch sử giao dịch</a>
+            <a class="menu-item" onclick="switchTab('transactions', this)">📊 Giao dịch</a>
             
             <div id="admin-menu-container" style="display: none;">
-                <div class="menu-title" style="margin-top: 20px; font-size:11px; color:#db2777; padding:0 16px; font-weight:bold;">KHU VỰC QUẢN TRỊ</div>
-                <a class="menu-item" onclick="switchTab('admin-panel', this)" style="color: #db2777;">🛠 Bảng Quản Trị Admin</a>
+                <div class="menu-title" style="margin-top: 20px; font-size:11px; color:#db2777; padding:0 16px; font-weight:bold;">QUẢN TRỊ</div>
+                <a class="menu-item" onclick="switchTab('admin-panel', this)" style="color: #db2777;">🛠 Admin Panel</a>
             </div>
 
-            <div class="menu-title" style="margin-top: 20px; font-size:11px; color:var(--text-sub); padding:0 16px;">LIÊN HỆ HỖ TRỢ</div>
-            <a href="https://facebook.com" target="_blank" class="menu-item">💬 Facebook Admin</a>
-            <a href="https://telegram.org" target="_blank" class="menu-item">✈ Telegram Hỗ trợ</a>
+            <div class="menu-title" style="margin-top: 20px; font-size:11px; color:var(--text-sub); padding:0 16px;">HỖ TRỢ</div>
+            <a href="https://facebook.com" target="_blank" class="menu-item">💬 Facebook</a>
+            <a href="https://telegram.org" target="_blank" class="menu-item">✈ Telegram</a>
         </div>
     </div>
 
@@ -465,7 +513,7 @@
         <div class="top-header">
             <div class="lop-header">
                 <a href="#">📦 Hướng dẫn mua hàng</a>
-                <a href="#">⚡ Các dịch vụ khác</a>
+                <a href="#">⚡ Dịch vụ khác</a>
             </div>
             
             <div id="auth-container">
@@ -477,8 +525,8 @@
                     <span style="width: 8px; height: 8px; background: #34d399; border-radius: 50%;"></span>
                     <span id="username-display">Truongnyrffd</span>
                     <span id="role-badge" class="vip-badge">VIP 0</span>
-                    <span style="color: var(--text-sub); margin-left: 10px;" class="money-bold" id="user-balance">0 VNĐ</span>
-                    <button onclick="logoutAction()" style="background:none; border:none; color:#f87171; cursor:pointer; margin-left:10px;">Thoát</button>
+                    <span style="color: var(--text-sub); margin-left: 5px;" class="money-bold" id="user-balance">0 VNĐ</span>
+                    <button onclick="logoutAction()" style="background:none; border:none; color:#f87171; cursor:pointer; margin-left:5px;">Thoát</button>
                 </div>
             </div>
         </div>
@@ -488,7 +536,7 @@
             <div class="rainbow-card">
                 <div class="section-heading">💎 KHO ROBUX</div>
                 <div class="grid-stats">
-                    <div class="stat-box" style="grid-column: span 2;">
+                    <div class="stat-box" style="grid-column: span 1;">
                         <div style="color: var(--text-sub); font-size: 13px;">KHO ROBUX TỒN KHO</div>
                         <div class="stat-value" style="color: #34d399;" id="stock-robux">71,231 Robux</div>
                         <div style="font-size: 12px; color: #fbbf24; margin-top: 5px;">⚠ Giới hạn giao dịch an toàn</div>
@@ -516,7 +564,7 @@
         <div id="tab-buy-robux" class="tab-pane">
             <div class="section-heading">🛒 MUA ROBUX & GAMEPASS BLOX FRUITS</div>
             
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
                 <button class="btn-submit" id="subTabRobuxBtn" style="background: var(--primary);" onclick="switchSubTab('robux')">💎 Mua Robux 120H</button>
                 <button class="btn-submit" id="subTabGamepassBtn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="switchSubTab('gamepass')">🍎 Gamepass Blox Fruits</button>
             </div>
@@ -535,7 +583,7 @@
                         <input type="number" id="robuxAmountInput" placeholder="VD: 400, 800, 1500..." min="1" oninput="calculateCustomRobuxPrice()">
                     </div>
 
-                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                         <div>
                             <div style="font-size: 13px; color: var(--text-sub); margin-bottom: 2px;">Tổng tiền thanh toán:</div>
                             <div style="font-size: 22px; font-weight: 800; color: #34d399;" id="calculatedPriceText">0 VNĐ</div>
@@ -551,7 +599,7 @@
                     <h3 style="margin-top: 0; color: #fbbf24; font-size: 16px; margin-bottom: 5px;">Danh mục Gamepass Blox Fruits (Tặng quà trực tiếp)</h3>
                     <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 20px;">Chọn vật phẩm bạn muốn sở hữu để hệ thống gửi quà vào tài khoản game.</p>
                     
-                    <div class="grid-three" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="grid-three" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
                         
                         <!-- Dark Blade -->
                         <div class="gamepass-card">
@@ -738,7 +786,6 @@
     <script>
         let pendingPurchaseAction = null;
 
-        // Dữ liệu tạo sẵn (Mock data) 100 người mua & Lịch sử nạp tiền rải rác tự nhiên
         function initMockDataIfNeeded() {
             if (!localStorage.getItem('site_orders')) {
                 let sampleNames = [
@@ -762,8 +809,8 @@
 
                 let mockOrders = [];
                 let nowTime = new Date().getTime();
-
                 let accumulatedTimeOffset = 0;
+
                 for (let i = 0; i < 100; i++) {
                     let randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)] + Math.floor(Math.random() * 999);
                     let randomItem = sampleItems[Math.floor(Math.random() * sampleItems.length)];
@@ -815,9 +862,6 @@
             }
         }
 
-        // ==========================================
-        // TÍNH NĂNG MỚI: TỰ ĐỘNG THÊM NẠP TIỀN THỰC TẾ (30P - 2 TIẾNG, MỐC 40K - 200K)
-        // ==========================================
         const liveFakeUsers = [
             "nguy****9", "tran****2", "leto****8", "pham****3", 
             "hoan****5", "vumi****1", "duyq****7", "ngth****4",
@@ -828,37 +872,31 @@
 
         function addNewLiveDeposit() {
             let deposits = JSON.parse(localStorage.getItem('site_deposits') || "[]");
-            
             let randomUser = liveFakeUsers[Math.floor(Math.random() * liveFakeUsers.length)];
             let randomAmount = liveSmallAmounts[Math.floor(Math.random() * liveSmallAmounts.length)];
             let nowTimeStr = new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN');
 
-            // Thêm giao dịch mới lên đầu danh sách nạp tiền
             deposits.unshift({
                 user: randomUser,
                 amount: randomAmount,
                 time: nowTimeStr
             });
 
-            // Giới hạn lịch sử nạp hiển thị cho gọn
             if(deposits.length > 50) deposits.pop();
-
             localStorage.setItem('site_deposits', JSON.stringify(deposits));
-            renderHistoryTables(); // Cập nhật lại giao diện bảng lịch sử nạp
+            renderHistoryTables();
         }
 
         function scheduleNextLiveDeposit() {
-            // Thời gian ngẫu nhiên từ 30 phút (30 * 60 * 1000ms) đến 2 tiếng (120 * 60 * 1000ms)
             let minTime = 30 * 60 * 1000;
             let maxTime = 120 * 60 * 1000;
             let randomDelay = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
 
             setTimeout(() => {
                 addNewLiveDeposit();
-                scheduleNextLiveDeposit(); // Lặp lại vòng tiếp theo
+                scheduleNextLiveDeposit();
             }, randomDelay);
         }
-        // ==========================================
 
         function generateDynamicQR() {
             const amountInput = document.getElementById('depositAmountInput').value;
@@ -1038,7 +1076,6 @@
         }
 
         function renderHistoryTables() {
-            // 1. Đơn hàng gần đây
             let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
             let orderHtml = "";
             orders.slice(0, 15).forEach(item => {
@@ -1046,17 +1083,16 @@
                 orderHtml += `
                     <div class="transaction-card-item">
                         <div>
-                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Người mua: <span style="color: #818cf8;">${item.user}</span></div>
-                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 Gói mua: <b>${item.item}</b></div>
-                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 Tổng tiền: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
-                            <div style="font-size: 11px; color: var(--text-sub);">🕒 Thời gian: ${item.time}</div>
+                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #818cf8;">${item.user}</span></div>
+                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 <b>${item.item}</b></div>
+                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">${item.time}</div>
                         </div>
                         <div style="text-align: right;">${statusBadge}</div>
                     </div>`;
             });
             document.getElementById('order-history-list').innerHTML = orderHtml;
 
-            // 2. Lịch sử nạp tiền (Mới tự động thêm rải rác)
             let deposits = JSON.parse(localStorage.getItem('site_deposits') || "[]");
             let depositHtml = "";
             deposits.forEach(dep => {
@@ -1064,15 +1100,14 @@
                     <div class="transaction-card-item" style="border-left-color: #34d399;">
                         <div>
                             <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #34d399;">${dep.user}</span></div>
-                            <div style="font-size: 13px; color: #fbbf24; font-weight: 600; margin-bottom: 3px;">💳 Nạp thành công: +${dep.amount.toLocaleString('vi-VN')} VNĐ</div>
-                            <div style="font-size: 11px; color: var(--text-sub);">🕒 ${dep.time}</div>
+                            <div style="font-size: 13px; color: #fbbf24; font-weight: 600; margin-bottom: 3px;">💳 +${dep.amount.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">${dep.time}</div>
                         </div>
                         <div style="text-align: right;"><span class="badge-success">Đã nhận</span></div>
                     </div>`;
             });
             document.getElementById('deposit-history-list').innerHTML = depositHtml;
 
-            // 3. Top 10 nạp tiền
             let topUsersData = [
                 { name: "👑 trunghung_pro", amount: 5173000 },
                 { name: "🥈 hoangnam_99", amount: 4420000 },
@@ -1108,10 +1143,10 @@
                 html += `
                     <div class="transaction-card-item" style="margin-bottom: 12px;">
                         <div>
-                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Tài khoản đặt lệnh: <span style="color: #818cf8;">${item.user}</span></div>
-                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">🛍 Chi tiết giao dịch: <b>${item.item}</b></div>
-                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💵 Số tiền thanh toán: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
-                            <div style="font-size: 11px; color: var(--text-sub);">📅 Thời điểm tạo: ${item.time} | Mã đơn: #${item.id}</div>
+                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #818cf8;">${item.user}</span></div>
+                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">🛍 <b>${item.item}</b></div>
+                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💵 ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">${item.time} | #${item.id}</div>
                         </div>
                         <div style="text-align: right;">${statusBadge}</div>
                     </div>`;
@@ -1127,14 +1162,14 @@
                     html += `
                         <div class="transaction-card-item" style="border-left-color: #db2777; margin-bottom: 12px;">
                             <div>
-                                <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Khách mua: <span style="color: #f472b6;">${item.user}</span></div>
-                                <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 Yêu cầu: <b>${item.item}</b></div>
-                                <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 Trị giá: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
-                                <div style="font-size: 11px; color: var(--text-sub);">🕒 Lúc: ${item.time}</div>
+                                <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #f472b6;">${item.user}</span></div>
+                                <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 <b>${item.item}</b></div>
+                                <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                                <div style="font-size: 11px; color: var(--text-sub);">${item.time}</div>
                             </div>
                             <div style="text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-                                <span class="badge-pending">Chờ Admin duyệt</span>
-                                <button class="btn-submit" style="padding: 8px 16px; font-size: 12px; background: #34d399; color: #07090e; font-weight: bold;" onclick="approveOrder(${item.id})">✔ Duyệt Đơn Ngay</button>
+                                <span class="badge-pending">Chờ duyệt</span>
+                                <button class="btn-submit" style="padding: 6px 12px; font-size: 11px; background: #34d399; color: #07090e; font-weight: bold;" onclick="approveOrder(${item.id})">✔ Duyệt</button>
                             </div>
                         </div>`;
                 }
@@ -1160,8 +1195,6 @@
             if (savedUser) showLoggedInState(savedUser);
             renderHistoryTables();
             generateDynamicQR();
-
-            // Khởi động chu kỳ tự động thêm lịch sử nạp ngầm (30 phút đến 2 tiếng / lần)
             scheduleNextLiveDeposit();
         }
 
