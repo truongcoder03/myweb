@@ -964,12 +964,13 @@
                     <div class="bank-info-box">
                         <div>
                             <div style="font-size: 12px; color: var(--text-sub);">Ngân hàng / STK</div>
-                            <div style="font-weight: 600; font-size: 14px; color: #34d399;">MOMO - 00396318016</div>
+                            <div style="font-weight: 600; font-size: 14px; color: #34d399;">MOMO - 396318016</div>
                             <div style="font-size: 13px; color: #cbd5e1; margin-top: 4px;">VO THI NHU QUYNH</div>
                         </div>
                         <div style="text-align: right;">
                             <div style="font-size: 12px; color: var(--text-sub);">Nội dung chuyển khoản</div>
-                            <div style="font-weight: 600; font-size: 15px; color: #fbbf24;" id="transfer-syntax">NAP 123456</div>
+                            <div style="font-weight: 600; font-size: 15px; color: #fbbf24;" id="transfer-syntax">TEN THANH VIEN</div>
+                            <button type="button" onclick="copyTransferSyntax()" style="margin-top:6px;padding:5px 9px;border:0;border-radius:7px;background:#334155;color:#fff;cursor:pointer;font-size:11px;">📋 Sao chép</button>
                         </div>
                     </div>
                 </div>
@@ -978,7 +979,7 @@
                     <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 15px;">Mã QR Thanh Toán</h3>
                     <div style="font-size:12px;color:var(--text-sub);margin-bottom:10px;">Quét QR để chuyển khoản nạp tiền</div>
                     <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 15px;">
-                        <img id="qrDynamicImage" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https%3A%2F%2Fnhantien.momo.vn%2F00396318016" alt="QR Code" style="width: 150px; height: 150px; display: block;">
+                        <img id="qrDynamicImage" src="https://img.vietqr.io/image/970436-1972425422-compact2.png" alt="QR Code" style="width: 150px; height: 150px; display: block;">
                     </div>
                     <div style="font-size: 12px; color: var(--text-sub);" id="qrStatusText">Nhập số tiền để tạo mã QR</div>
                 </div>
@@ -1219,23 +1220,55 @@
             }, randomDelay);
         }
 
-        function generateDynamicQR() {
-            let amountInput = document.getElementById('depositAmountInput').value;
-            let amount = amountInput ? parseInt(amountInput) : 0;
-            if(amount < 0) amount = 0;
-            
-            const qrImage = document.getElementById('qrDynamicImage');
-            const statusText = document.getElementById('qrStatusText');
-            let syntaxText = document.getElementById('transfer-syntax').innerText.trim();
-            
-            const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent('https://nhantien.momo.vn/00396318016');
-            qrImage.src = qrUrl;
-            if(amount > 0) {
-                statusText.innerText = "Quét mã nạp " + amount.toLocaleString('vi-VN') + " VNĐ";
-                statusText.style.color = "#34d399";
+        function copyTransferSyntax() {
+            const text = document.getElementById('transfer-syntax')?.innerText?.trim() || '';
+            if (!text) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showCustomAlert("ĐÃ SAO CHÉP", "Nội dung chuyển khoản: " + text));
             } else {
-                statusText.innerText = "Nhập số tiền để tạo mã QR";
-                statusText.style.color = "var(--text-sub)";
+                const ta = document.createElement('textarea');
+                ta.value = text; document.body.appendChild(ta); ta.select();
+                document.execCommand('copy'); ta.remove();
+                showCustomAlert("ĐÃ SAO CHÉP", "Nội dung chuyển khoản: " + text);
+            }
+        }
+
+        function generateDynamicQR() {
+            const amountInput = document.getElementById('depositAmountInput')?.value || '';
+            const amount = amountInput ? Math.max(0, parseInt(amountInput, 10) || 0) : 0;
+            const statusText = document.getElementById('qrStatusText');
+            const qrImage = document.getElementById('qrDynamicImage');
+            const transferEl = document.getElementById('transfer-syntax');
+            const username = (localStorage.getItem('logged_in_user') || '').trim();
+            const displayText = username || 'TEN THANH VIEN';
+            const addInfo = displayText
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/Đ/g, 'D').replace(/đ/g, 'd')
+                .replace(/[^A-Za-z0-9 ]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim()
+                .slice(0, 50)
+                .toUpperCase() || 'TEN THANH VIEN';
+
+            if (transferEl) transferEl.innerText = displayText.toUpperCase();
+
+            // VietQR Quick Link: mã ngân hàng 970436 + STK 1972425422.
+            // Khi đăng nhập, nội dung chuyển khoản được nhúng trực tiếp vào QR.
+            const params = new URLSearchParams();
+            if (amount > 0) params.set('amount', String(amount));
+            params.set('addInfo', addInfo);
+            params.set('accountName', 'VO THI NHU QUYNH');
+            if (qrImage) {
+                qrImage.src = 'https://img.vietqr.io/image/970436-1972425422-compact2.png?' + params.toString();
+            }
+
+            if (amount > 0) {
+                statusText.innerText = 'QR đã gắn nội dung: ' + addInfo + ' • ' + amount.toLocaleString('vi-VN') + ' VNĐ';
+                statusText.style.color = '#34d399';
+            } else {
+                statusText.innerText = 'QR đã gắn nội dung: ' + addInfo;
+                statusText.style.color = 'var(--text-sub)';
             }
         }
 
@@ -1777,7 +1810,7 @@ function executeAdminPoints(){
             document.getElementById('logged-in-view').style.display = 'none';
             document.getElementById('logged-out-view').style.display = 'flex';
             document.getElementById('admin-menu-container').style.display = 'none';
-            document.getElementById('transfer-syntax').innerText = "NAP 123456";
+            document.getElementById('transfer-syntax').innerText = "TEN THANH VIEN";
             generateDynamicQR();
             if(window.qqRefreshWallet) window.qqRefreshWallet();
             showCustomAlert("ĐÃ ĐĂNG XUẤT", "Bạn đã thoát khỏi tài khoản thành công!");
@@ -1801,7 +1834,7 @@ function executeAdminPoints(){
                 roleBadge.className = "vip-badge"; roleBadge.innerText = "VIP 0";
                 adminMenu.style.display = "none";
             }
-            document.getElementById('transfer-syntax').innerText = "NAP " + username.toUpperCase();
+            document.getElementById('transfer-syntax').innerText = username.toUpperCase();
             generateDynamicQR();
             if(window.qqRefreshWallet) window.qqRefreshWallet();
             renderTopPoints();
