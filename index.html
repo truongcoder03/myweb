@@ -107,18 +107,18 @@
             gap: 15px;
         }
 
-        .lop-header {
+        .left-header {
             display: flex;
             gap: 20px;
         }
 
-        .lop-header a {
+        .left-header a {
             color: var(--text-sub);
             text-decoration: none;
             font-size: 14px;
         }
 
-        .lop-header a:hover {
+        .left-header a:hover {
             color: var(--text-main);
         }
 
@@ -445,13 +445,13 @@
             .sidebar .menu-item {
                 justify-content: center;
                 padding: 12px 5px;
-                font-size: 0px; /* Ẩn chữ menu, chỉ hiện icon/emoji */
+                font-size: 0px;
             }
             .sidebar .menu-item::before {
                 font-size: 18px;
             }
             .menu-section div[style*="font-size:11px"] {
-                display: none; /* Ẩn các tiêu đề phụ nhóm menu */
+                display: none;
             }
             .main-content {
                 margin-left: 70px;
@@ -467,7 +467,7 @@
 
         @media (max-width: 550px) {
             .sidebar {
-                display: none; /* Ẩn hẳn sidebar trên màn hình quá nhỏ để tiết kiệm diện tích */
+                display: none;
             }
             .main-content {
                 margin-left: 0;
@@ -511,7 +511,7 @@
 
     <div class="main-content">
         <div class="top-header">
-            <div class="lop-header">
+            <div class="left-header">
                 <a href="#">📦 Hướng dẫn mua hàng</a>
                 <a href="#">⚡ Dịch vụ khác</a>
             </div>
@@ -697,7 +697,7 @@
                     <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 15px; color: #818cf8;">Chuyển khoản Ngân hàng / MOMO</h3>
                     <div style="margin-bottom: 15px;">
                         <label style="font-size: 12px; color: var(--text-sub);">Nhập số tiền muốn nạp (VNĐ):</label>
-                        <input type="number" id="depositAmountInput" placeholder="VD: 50000" oninput="generateDynamicQR()">
+                        <input type="number" id="depositAmountInput" placeholder="VD: 50000" min="0" oninput="generateDynamicQR()">
                     </div>
                     <div class="bank-info-box">
                         <div>
@@ -745,7 +745,7 @@
                 <h3 style="margin-top: 0; color: #db2777; font-size: 15px;">Cộng hoặc Trừ Tiền Thành Viên</h3>
                 <div style="margin-bottom: 12px;"><label style="font-size: 12px; color: var(--text-sub);">Tên tài khoản:</label><input type="text" id="adminTargetUser" placeholder="VD: vandung"></div>
                 <div style="margin-bottom: 12px;"><label style="font-size: 12px; color: var(--text-sub);">Hành động:</label><select id="adminActionType"><option value="add">➕ Cộng tiền</option><option value="sub">➖ Trừ tiền</option></select></div>
-                <div style="margin-bottom: 15px;"><label style="font-size: 12px; color: var(--text-sub);">Số tiền (VNĐ):</label><input type="number" id="adminAmountInput" placeholder="VD: 100000"></div>
+                <div style="margin-bottom: 15px;"><label style="font-size: 12px; color: var(--text-sub);">Số tiền (VNĐ):</label><input type="number" id="adminAmountInput" placeholder="VD: 100000" min="0"></div>
                 <button class="btn-submit" style="background: linear-gradient(45deg, #db2777, #7c3aed);" onclick="executeAdminBalance()">Xác nhận thay đổi số dư</button>
             </div>
         </div>
@@ -899,10 +899,12 @@
         }
 
         function generateDynamicQR() {
-            const amountInput = document.getElementById('depositAmountInput').value;
+            let amountInput = document.getElementById('depositAmountInput').value;
+            let amount = amountInput ? parseInt(amountInput) : 0;
+            if(amount < 0) amount = 0;
+            
             const qrImage = document.getElementById('qrDynamicImage');
             const statusText = document.getElementById('qrStatusText');
-            let amount = amountInput ? parseInt(amountInput) : 0;
             let syntaxText = document.getElementById('transfer-syntax').innerText.trim();
             
             const qrUrl = `https://api.vietqr.io/image/970422-0973502843-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(syntaxText)}&accountName=NGUYEN%20VAN%20QUYNH`;
@@ -951,6 +953,7 @@
         function calculateCustomRobuxPrice() {
             let amountInput = document.getElementById('robuxAmountInput').value;
             let amount = amountInput ? parseInt(amountInput) : 0;
+            if(amount < 0) amount = 0;
             let pricePerRobux = 210;
             let totalPrice = amount * pricePerRobux;
             document.getElementById('calculatedPriceText').innerText = totalPrice.toLocaleString('vi-VN') + ' VNĐ';
@@ -1064,7 +1067,10 @@
             let targetUser = document.getElementById('adminTargetUser').value.trim();
             let actionType = document.getElementById('adminActionType').value;
             let amount = parseInt(document.getElementById('adminAmountInput').value);
-            if(!targetUser || isNaN(amount)) return;
+            if(!targetUser || isNaN(amount) || amount < 0) {
+                showCustomAlert("LỖI", "Vui lòng nhập đầy đủ thông tin và số tiền hợp lệ!");
+                return;
+            }
             let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
             let currentBal = balances[targetUser] || 0;
             balances[targetUser] = actionType === 'add' ? currentBal + amount : Math.max(0, currentBal - amount);
@@ -1210,12 +1216,25 @@
             let username = document.getElementById('modalUsernameInput').value.trim();
             let password = document.getElementById('modalPasswordInput').value.trim();
             let rememberMe = document.getElementById('rememberMeCheck').checked;
-            if(!username || !password) return;
+            if(!username || !password) {
+                showCustomAlert("LỖI", "Vui lòng nhập đầy đủ tên tài khoản và mật khẩu!");
+                return;
+            }
 
             closeModal();
             if(rememberMe) localStorage.setItem('logged_in_user', username);
             showLoggedInState(username);
             showCustomAlert("THÀNH CÔNG", "Xin chào, " + username + "!");
+        }
+
+        function logoutAction() {
+            localStorage.removeItem('logged_in_user');
+            document.getElementById('logged-in-view').style.display = 'none';
+            document.getElementById('logged-out-view').style.display = 'flex';
+            document.getElementById('admin-menu-container').style.display = 'none';
+            document.getElementById('transfer-syntax').innerText = "NAP 123456";
+            generateDynamicQR();
+            showCustomAlert("ĐÃ ĐĂNG XUẤT", "Bạn đã thoát khỏi tài khoản thành công!");
         }
 
         function showLoggedInState(username) {
