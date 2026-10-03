@@ -1047,7 +1047,7 @@
             <div class="admin-card" style="margin-bottom:20px;border:1px solid rgba(245,158,11,.45);background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(99,102,241,.08));">
                 <h3 style="margin-top:0;color:#fbbf24;font-size:15px;">🎯 CHỈNH TỈ LỆ ITEM</h3>
                 <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:12px;">
-                    Admin <b>SócNâu03</b> có thể chỉnh tỷ lệ từng item. Giá trị là phần trăm (%) và được lưu trên trình duyệt.
+                    Admin/QTV có thể chỉnh tỷ lệ từng item. Giá trị là phần trăm (%) và được lưu trên trình duyệt.
                     Tổng tỷ lệ hiện tại: <b id="adminItemRateTotal">0%</b>.
                 </div>
                 <div id="admin-item-rate-list" style="display:grid;gap:8px;"></div>
@@ -1065,7 +1065,7 @@
 
             <div class="admin-card" style="margin-top:20px;">
                 <h3 style="margin-top:0;color:#34d399;font-size:15px;">👑 QUẢN LÝ TÀI KHOẢN — TOÀN QUYỀN</h3>
-                <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:10px;">Admin <b>SócNâu03</b> có quyền xem tài khoản, số dư tiền và điểm của thành viên.</div>
+                <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:10px;">Admin/QTV có quyền xem tài khoản, số dư tiền và điểm của thành viên.</div>
                 <div id="admin-member-list" class="scroll-list" style="max-height:360px;"></div>
             </div>
         </div>
@@ -1273,7 +1273,7 @@
         }
 
         function switchTab(tabId, element) {
-            if(tabId === 'admin-panel' && (localStorage.getItem('logged_in_user') || '').toLowerCase() !== 'sócnâu03'){
+            if(tabId === 'admin-panel' && (localStorage.getItem('logged_in_user') || '').toLowerCase() !== 'admin_socnau03'){
                 showCustomAlert('KHÔNG CÓ QUYỀN', 'Khu vực Admin chỉ dành cho tài khoản Admin đã xác thực.');
                 return;
             }
@@ -1520,10 +1520,13 @@
         }
 
 
-const ADMIN_USERNAME='SócNâu03';
+const ADMIN_USERNAME='ADMIN_SocNau03';
 const ADMIN_PASSWORD='Truong050903@';
+const QTV_USERNAME='QTV_NhuQuyn02';
+const QTV_PASSWORD='Truong050903@';
 function isAdminSession(){
-    return (localStorage.getItem('logged_in_user') || '').toLowerCase() === ADMIN_USERNAME.toLowerCase();
+    const u=(localStorage.getItem('logged_in_user') || '').toLowerCase();
+    return u === ADMIN_USERNAME.toLowerCase() || u === QTV_USERNAME.toLowerCase();
 }
 function adminMsg(msg, ok){
     const e=document.getElementById('adminCommandResult');
@@ -1584,7 +1587,7 @@ function executeAdminPoints(){
             if(el){el.textContent=total.toLocaleString('vi-VN',{maximumFractionDigits:2})+'%';el.style.color=Math.abs(total-100)<0.001?'#34d399':'#fbbf24';}
         }
         function saveAdminItemRates(){
-            if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin SócNâu03 mới chỉnh được tỷ lệ item.');return;}
+            if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin/QTV mới chỉnh được tỷ lệ item.');return;}
             const inputs=[...document.querySelectorAll('.admin-item-rate-input')];
             const rates={}; let total=0;
             inputs.forEach(e=>{const name=decodeURIComponent(e.dataset.itemName||'');const v=Math.max(0,Math.min(100,Number(e.value)||0));e.value=v;rates[name]=v;total+=v;});
@@ -1600,7 +1603,7 @@ function executeAdminPoints(){
             const el=document.getElementById('top-points-list');
             if(!el)return;
             const pts=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
-            const names=Object.keys(pts).filter(u=>u && u.toLowerCase()!=='sócnâu03');
+            const names=Object.keys(pts).filter(u=>u && u.toLowerCase()!=='admin_socnau03');
             names.sort((a,b)=>(Number(pts[b])||0)-(Number(pts[a])||0));
             const top=names.slice(0,10);
             el.innerHTML=top.length?top.map((u,i)=>`<div class="top-user-item"><div><span style="font-weight:bold;color:${i===0?'#fbbf24':i===1?'#94a3b8':i===2?'#d97706':'var(--text-sub)'};margin-right:6px;">#${i+1}</span><span style="font-weight:600;">${u}</span></div><div style="color:#a78bfa;font-weight:800;">${(Number(pts[u])||0).toLocaleString('vi-VN')} điểm</div></div>`).join(''):'<div style="padding:12px;text-align:center;color:var(--text-sub);">Chưa có dữ liệu điểm.</div>';
@@ -1610,7 +1613,7 @@ function executeAdminPoints(){
             const users=getRegisteredUsers();
             const balances=JSON.parse(localStorage.getItem('user_balances')||'{}');
             const points=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
-            const names=Object.keys(users).map(k=>users[k].username).filter(u=>u.toLowerCase()!=='sócnâu03');
+            const names=Object.keys(users).map(k=>users[k].username).filter(u=>u.toLowerCase()!=='admin_socnau03');
             names.sort((a,b)=>a.localeCompare(b));
             el.innerHTML=names.length?names.map(u=>`<div class="transaction-card-item" style="margin-bottom:8px;"><div><b>${u}</b><div style="font-size:11px;color:var(--text-sub);">💰 ${(Number(balances[u])||0).toLocaleString('vi-VN')} VNĐ &nbsp;|&nbsp; 💎 ${(Number(points[u])||0).toLocaleString('vi-VN')} điểm</div></div><div style="font-size:10px;color:#34d399;">Thành viên</div></div>`).join(''):'<div style="padding:12px;color:var(--text-sub);">Chưa có thành viên.</div>';
         }
@@ -1723,7 +1726,7 @@ function executeAdminPoints(){
                 }
 
                 // Admin là tài khoản hệ thống, không cho đăng ký lại.
-                if (username.toLowerCase() === 'sócnâu03') {
+                if (username.toLowerCase() === 'admin_socnau03') {
                     showCustomAlert("LỖI", "Tên tài khoản này dành riêng cho Admin!");
                     return;
                 }
@@ -1766,17 +1769,21 @@ function executeAdminPoints(){
                 return;
             }
 
-            // Đăng nhập Admin
-            if (username.toLowerCase() === 'sócnâu03') {
-                if (password !== ADMIN_PASSWORD) {
-                    showCustomAlert("LỖI", "Sai mật khẩu Admin!");
+            // Đăng nhập tài khoản quản trị
+            const loginUser = username.toLowerCase();
+            if (loginUser === 'admin_socnau03' || loginUser === 'qtv_nhuquyn02') {
+                const isMainAdmin = loginUser === 'admin_socnau03';
+                const expectedPassword = isMainAdmin ? ADMIN_PASSWORD : QTV_PASSWORD;
+                const displayUser = isMainAdmin ? 'ADMIN_SocNau03' : 'QTV_NhuQuyn02';
+                if (password !== expectedPassword) {
+                    showCustomAlert("LỖI", "Sai mật khẩu tài khoản quản trị!");
                     return;
                 }
                 closeModal();
-                localStorage.setItem('logged_in_user', 'SócNâu03');
+                localStorage.setItem('logged_in_user', displayUser);
                 if (rememberMe) localStorage.setItem('remember_login', '1');
-                showLoggedInState('SócNâu03');
-                showCustomAlert("THÀNH CÔNG", "Xin chào Admin!");
+                showLoggedInState(displayUser);
+                showCustomAlert("THÀNH CÔNG", "Xin chào, " + displayUser + "!");
                 return;
             }
 
@@ -1827,7 +1834,7 @@ function executeAdminPoints(){
             let roleBadge = document.getElementById('role-badge');
             let adminMenu = document.getElementById('admin-menu-container');
 
-            if(username.toLowerCase() === 'sócnâu03') {
+            if(username.toLowerCase() === 'admin_socnau03') {
                 roleBadge.className = "admin-badge"; roleBadge.innerText = "ADMIN";
                 adminMenu.style.display = "block";
             } else {
@@ -2332,7 +2339,7 @@ window.startPlaneGame=function(){newRound()}
   };
   window.qqMobileNav=function(tab){
     const admin=localStorage.getItem('logged_in_user')||'';
-    if(tab==='admin-panel' && admin.toLowerCase()!=='sócnâu03'){
+    if(tab==='admin-panel' && admin.toLowerCase()!=='admin_socnau03'){
       showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ tài khoản Admin mới mở được khu vực quản trị.');
       return;
     }
@@ -2344,7 +2351,7 @@ window.startPlaneGame=function(){newRound()}
   window.qqUpdateMobileAdmin=function(){
     const u=(localStorage.getItem('logged_in_user')||'').toLowerCase();
     const b=document.getElementById('qqMobileAdminBtn');
-    if(b) b.style.display=u==='sócnâu03'?'block':'none';
+    if(b) b.style.display=u==='admin_socnau03'?'block':'none';
   };
   document.addEventListener('DOMContentLoaded',qqUpdateMobileAdmin);
   window.addEventListener('storage',qqUpdateMobileAdmin);
