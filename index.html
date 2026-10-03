@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROBUXQUYNQUYN - Hệ thống bán robux & Gamepass uy tín</title>
+    
+    <style>
+        :root {
+            --bg-main: #07090e;
+            --bg-card: rgba(13, 17, 23, 0.9);
+            --text-main: #e6edf3;
+            --text-sub: #8b949e;
+            --primary: #6366f1;
+            --border-color: #21262d;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: linear-gradient(rgba(7, 9, 14, 0.93), rgba(7, 9, 14, 0.93)), url('https://i.pinimg.com/originals/e8/56/67/e85667104278440a454df70327f2f111.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: rgba(13, 17, 23, 0.85);
+            backdrop-filter: blur(12px);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo-area {
+            padding: 28px 16px;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #818cf8, #f472b6, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-section {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-sub);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 24px 32px;
+        }
+
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .lop-header {
+            display: flex;
+            gap: 20px;
+        }
+
+        .lop-header a {
+            color: var(--text-sub);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .lop-header a:hover {
+            color: var(--text-main);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .money-bold {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .vip-badge {
+            background: linear-gradient(45deg, #d97706, #dc2626);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .admin-badge {
+            background: linear-gradient(45deg, #db2777, #7c3aed);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-login, .btn-register {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-login {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.08); }
+
+        .btn-register {
+            background: var(--primary);
+            color: white;
+        }
+        .btn-register:hover { background: #4f46e5; }
+
+        .section-heading {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .rainbow-card {
+            border-radius: 14px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff);
+            border-image-slice: 1;
+            box-shadow: 0 0 15px rgba(255, 0, 128, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .standard-card {
+            border-radius: 12px;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: rgba(7, 9, 14, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .grid-three {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .scroll-list {
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 4px;
+            max-height: 350px;
+        }
+        .scroll-list::-webkit-scrollbar { width: 4px; }
+        .scroll-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        .transaction-card-item {
+            background: linear-gradient(135deg, rgba(13, 17, 23, 0.8), rgba(22, 27, 34, 0.9));
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .transaction-card-item:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateX(2px);
+        }
+
+        .badge-success { background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge-pending { background: rgba(239, 68, 68, 0.15); color: #f87171; padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .tab-pane { display: none; }
+        .tab-pane.active-pane { display: block; }
+
+        .deposit-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .deposit-card, .admin-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .bank-info-box {
+            background: rgba(7, 9, 14, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input, select {
+            width: 100%;
+            background: #07090e;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            color: var(--text-main);
+            font-size: 14px;
+            box-sizing: border-box;
+            outline: none;
+            margin-top: 6px;
+            margin-bottom: 15px;
+        }
+        input:focus, select:focus { border-color: var(--primary); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-box {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 400px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transform: translateY(-15px);
+            transition: 0.3s ease;
+        }
+        .modal-overlay.active .modal-box { transform: translateY(0); }
+        .modal-title { font-size: 18px; font-weight: 600; margin-bottom: 22px; text-align: center; color: var(--text-main); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; color: var(--text-sub); margin-bottom: 8px; }
+
+        .remember-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-sub);
+            cursor: pointer;
+        }
+        .remember-row input { cursor: pointer; width: 16px; height: 16px; accent-color: var(--primary); margin: 0; }
+
+        .modal-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-submit:hover { background: #4f46e5; }
+        .btn-cancel {
+            flex: 1;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-cancel:hover { background: rgba(255, 255, 255, 0.04); color: white; }
+
+        #alertModal .modal-box { text-align: center; width: 360px; }
+        #alertMessage { color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 25px; }
+
+        .gamepass-card {
+            background: rgba(7, 9, 14, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: 0.2s;
+            position: relative;
+        }
+        .gamepass-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .gamepass-card.out-of-stock {
+            opacity: 0.55;
+            border: 1px dashed #ef4444;
+            background: rgba(239, 68, 68, 0.05);
+        }
+        .out-of-stock-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .gamepass-img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+        }
+
+        .top-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background: rgba(7, 9, 14, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo-area">ROBUXQUYNQUYN</div>
+        <div class="menu-section">
+            <a class="menu-item active" onclick="switchTab('home', this)">🏠 Trang chủ</a>
+            <a class="menu-item" onclick="switchTab('profile', this)">👤 Hồ sơ người dùng</a>
+            <a class="menu-item" onclick="switchTab('buy-robux', this)">🛒 Mua Robux & Gamepass</a>
+            <a class="menu-item" onclick="switchTab('redeem', this)">🎁 Nhập Code (Redeem)</a>
+            <a class="menu-item" onclick="switchTab('deposit', this)">💳 Nạp tiền</a>
+            <a class="menu-item" onclick="switchTab('transactions', this)">📊 Lịch sử giao dịch</a>
+            
+            <div id="admin-menu-container" style="display: none;">
+                <div class="menu-title" style="margin-top: 20px; font-size:11px; color:#db2777; padding:0 16px; font-weight:bold;">KHU VỰC QUẢN TRỊ</div>
+                <a class="menu-item" onclick="switchTab('admin-panel', this)" style="color: #db2777;">🛠 Bảng Quản Trị Admin</a>
+            </div>
+
+            <div class="menu-title" style="margin-top: 20px; font-size:11px; color:var(--text-sub); padding:0 16px;">LIÊN HỆ HỖ TRỢ</div>
+            <a href="https://facebook.com" target="_blank" class="menu-item">💬 Facebook Admin</a>
+            <a href="https://telegram.org" target="_blank" class="menu-item">✈ Telegram Hỗ trợ</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <div class="lop-header">
+                <a href="#">📦 Hướng dẫn mua hàng</a>
+                <a href="#">⚡ Các dịch vụ khác</a>
+            </div>
+            
+            <div id="auth-container">
+                <div class="auth-buttons" id="logged-out-view">
+                    <button class="btn-login" onclick="openModal('login')">Đăng nhập</button>
+                    <button class="btn-register" onclick="openModal('register')">Đăng ký</button>
+                </div>
+                <div class="user-profile" id="logged-in-view" style="display: none;">
+                    <span style="width: 8px; height: 8px; background: #34d399; border-radius: 50%;"></span>
+                    <span id="username-display">Truongnyrffd</span>
+                    <span id="role-badge" class="vip-badge">VIP 0</span>
+                    <span style="color: var(--text-sub); margin-left: 10px;" class="money-bold" id="user-balance">0 VNĐ</span>
+                    <button onclick="logoutAction()" style="background:none; border:none; color:#f87171; cursor:pointer; margin-left:10px;">Thoát</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 1: TRANG CHỦ -->
+        <div id="tab-home" class="tab-pane active-pane">
+            <div class="rainbow-card">
+                <div class="section-heading">💎 KHO ROBUX</div>
+                <div class="grid-stats">
+                    <div class="stat-box" style="grid-column: span 2;">
+                        <div style="color: var(--text-sub); font-size: 13px;">KHO ROBUX TỒN KHO</div>
+                        <div class="stat-value" style="color: #34d399;" id="stock-robux">71,231 Robux</div>
+                        <div style="font-size: 12px; color: #fbbf24; margin-top: 5px;">⚠ Giới hạn giao dịch an toàn</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-three">
+                <div class="card-box">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 15px;">📜 ĐƠN HÀNG GẦN ĐÂY</div>
+                    <div class="scroll-list" id="order-history-list"></div>
+                </div>
+                <div class="card-box">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 15px;">💳 LỊCH SỬ NẠP TIỀN</div>
+                    <div class="scroll-list" id="deposit-history-list"></div>
+                </div>
+                <div class="card-box">
+                    <div style="font-size: 14px; font-weight: 600; margin-bottom: 15px;">🏆 TOP 10 NẠP TIỀN</div>
+                    <div class="scroll-list" id="top-users-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: MUA ROBUX & GAMEPASS BLOX FRUITS -->
+        <div id="tab-buy-robux" class="tab-pane">
+            <div class="section-heading">🛒 MUA ROBUX & GAMEPASS BLOX FRUITS</div>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn-submit" id="subTabRobuxBtn" style="background: var(--primary);" onclick="switchSubTab('robux')">💎 Mua Robux 120H</button>
+                <button class="btn-submit" id="subTabGamepassBtn" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);" onclick="switchSubTab('gamepass')">🍎 Gamepass Blox Fruits</button>
+            </div>
+
+            <!-- PHẦN 1: MUA ROBUX -->
+            <div id="subcontent-robux" class="sub-pane">
+                <div class="rainbow-card">
+                    <h3 style="margin-top: 0; color: #60a5fa; font-size: 16px; margin-bottom: 15px;">Dịch vụ nạp Robux chính hãng (Chờ 120h)</h3>
+                    <div class="form-group">
+                        <label>Tên tài khoản Roblox:</label>
+                        <input type="text" id="robloxUsernameInput" placeholder="Nhập Username Roblox...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nhập số lượng Robux muốn mua:</label>
+                        <input type="number" id="robuxAmountInput" placeholder="VD: 400, 800, 1500..." min="1" oninput="calculateCustomRobuxPrice()">
+                    </div>
+
+                    <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 13px; color: var(--text-sub); margin-bottom: 2px;">Tổng tiền thanh toán:</div>
+                            <div style="font-size: 22px; font-weight: 800; color: #34d399;" id="calculatedPriceText">0 VNĐ</div>
+                        </div>
+                        <button class="btn-submit" style="padding: 14px 32px; font-size: 15px; background: linear-gradient(135deg, #6366f1, #a855f7);" onclick="confirmBuyRobuxPrompt()">Xác nhận mua ngay</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHẦN 2: GAMEPASS BLOX FRUITS -->
+            <div id="subcontent-gamepass" class="sub-pane" style="display: none;">
+                <div class="rainbow-card">
+                    <h3 style="margin-top: 0; color: #fbbf24; font-size: 16px; margin-bottom: 5px;">Danh mục Gamepass Blox Fruits (Tặng quà trực tiếp)</h3>
+                    <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 20px;">Chọn vật phẩm bạn muốn sở hữu để hệ thống gửi quà vào tài khoản game.</p>
+                    
+                    <div class="grid-three" style="grid-template-columns: repeat(3, 1fr);">
+                        
+                        <!-- Dark Blade -->
+                        <div class="gamepass-card">
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2Fdark-blade.png&w=128&q=75" class="gamepass-img" alt="Dark Blade">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">Dark Blade (Yoru)</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Kiếm huyền thoại mạnh nhất game.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: #34d399; margin-bottom: 8px;" class="money-bold">185.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px;" onclick="confirmBuyGamepassPrompt('Dark Blade', 185000)">Mua Ngay</button>
+                            </div>
+                        </div>
+
+                        <!-- 2x Mastery -->
+                        <div class="gamepass-card">
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2F2x-mastery.png&w=128&q=75" class="gamepass-img" alt="2x Mastery">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">2x Mastery</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Nhân đôi điểm luyện tập kỹ năng.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: #34d399; margin-bottom: 8px;" class="money-bold">75.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px;" onclick="confirmBuyGamepassPrompt('2x Mastery', 75000)">Mua Ngay</button>
+                            </div>
+                        </div>
+
+                        <!-- 2x Money -->
+                        <div class="gamepass-card">
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2F2x-money.png&w=128&q=75" class="gamepass-img" alt="2x Money">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">2x Money (Beli)</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Nhân đôi tiền thưởng nhận được.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: #34d399; margin-bottom: 8px;" class="money-bold">75.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px;" onclick="confirmBuyGamepassPrompt('2x Money', 75000)">Mua Ngay</button>
+                            </div>
+                        </div>
+
+                        <!-- Fast Boats -->
+                        <div class="gamepass-card out-of-stock">
+                            <div class="out-of-stock-badge">HẾT HÀNG</div>
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2Ffast-boats.png&w=128&q=75" class="gamepass-img" alt="Fast Boats">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">Fast Boats</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Tăng tốc độ thuyền vượt biển.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: var(--text-sub); margin-bottom: 8px;" class="money-bold">95.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px; background: #374151; color: #9ca3af; cursor: not-allowed;" disabled>Tạm Hết Hàng</button>
+                            </div>
+                        </div>
+
+                        <!-- +1 Fruit Storage -->
+                        <div class="gamepass-card">
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2F%2B1-fruit-storage.png&w=128&q=75" class="gamepass-img" alt="+1 Fruit Storage">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">+1 Fruit Storage</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Tăng sức chứa kho trái ác quỷ.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: #34d399; margin-bottom: 8px;" class="money-bold">60.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px;" onclick="confirmBuyGamepassPrompt('+1 Fruit Storage', 60000)">Mua Ngay</button>
+                            </div>
+                        </div>
+
+                        <!-- 2x Boss Drops -->
+                        <div class="gamepass-card">
+                            <img src="https://fantasyblox.com/_next/image?url=%2Fassets%2Fimages%2Fgames%2Fblox-fruits%2Fgamepass%2F2x-boss-drops.png&w=128&q=75" class="gamepass-img" alt="2x Boss Drops">
+                            <div style="font-weight: 600; color: var(--text-main); font-size: 14px; margin-bottom: 4px;">2x Boss Drops</div>
+                            <div style="font-size: 11px; color: var(--text-sub); margin-bottom: 12px;">Tăng tỷ lệ rớt đồ hiếm từ Boss.</div>
+                            <div style="margin-top: auto; width: 100%;">
+                                <div style="font-weight: 700; color: #34d399; margin-bottom: 8px;" class="money-bold">60.000 VNĐ</div>
+                                <button class="btn-submit" style="width: 100%; padding: 8px; font-size: 12px;" onclick="confirmBuyGamepassPrompt('2x Boss Drops', 60000)">Mua Ngay</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: NHẬP CODE -->
+        <div id="tab-redeem" class="tab-pane">
+            <div class="section-heading">🎁 NHẬP MÃ QUÀ TẶNG (REDEEM CODE)</div>
+            <div class="rainbow-card" style="max-width: 500px; margin: 0 auto;">
+                <h3 style="margin-top: 0; color: #34d399; font-size: 15px;">Khu vực đổi mã Code ưu đãi</h3>
+                <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 20px;">Nhập mã code khuyến mãi hoặc mã quà tặng từ Admin để nhận ngay số dư hoặc phần thưởng vào tài khoản.</p>
+                
+                <div class="form-group">
+                    <label>Mã Code của bạn:</label>
+                    <input type="text" id="redeemCodeInput" placeholder="VD: QUYNBLOX2026, FREEMONEY...">
+                </div>
+
+                <button class="btn-submit" style="width: 100%; padding: 12px;" onclick="redeemCodeAction()">Xác nhận đổi mã</button>
+            </div>
+        </div>
+
+        <!-- TAB: NẠP TIỀN -->
+        <div id="tab-deposit" class="tab-pane">
+            <div class="section-heading">💳 NẠP TIỀN TỰ ĐỘNG VÀO TÀI KHOẢN</div>
+            <div class="deposit-container">
+                <div class="deposit-card">
+                    <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 15px; color: #818cf8;">Chuyển khoản Ngân hàng / MOMO</h3>
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 12px; color: var(--text-sub);">Nhập số tiền muốn nạp (VNĐ):</label>
+                        <input type="number" id="depositAmountInput" placeholder="VD: 50000" oninput="generateDynamicQR()">
+                    </div>
+                    <div class="bank-info-box">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-sub);">Ngân hàng / STK</div>
+                            <div style="font-weight: 600; font-size: 14px; color: #34d399;">MB BANK - 0973502843</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 12px; color: var(--text-sub);">Nội dung chuyển khoản</div>
+                            <div style="font-weight: 600; font-size: 15px; color: #fbbf24;" id="transfer-syntax">NAP 123456</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deposit-card" style="text-align: center;">
+                    <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 15px;">Mã QR Thanh Toán</h3>
+                    <div style="background: white; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 15px;">
+                        <img id="qrDynamicImage" src="https://api.vietqr.io/image/970422-0973502843-compact2.png?amount=0&addInfo=NAP&accountName=NGUYEN%20VAN%20QUYNH" alt="QR Code" style="width: 150px; height: 150px; display: block;">
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-sub);" id="qrStatusText">Nhập số tiền để tạo mã QR</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-profile" class="tab-pane">
+            <div class="section-heading">👤 HỒ SƠ NGƯỜI DÙNG</div>
+            <div class="standard-card"><p style="color: var(--text-sub);">Thông tin tài khoản hiển thị ở đây.</p></div>
+        </div>
+
+        <div id="tab-transactions" class="tab-pane">
+            <div class="section-heading">📊 LỊCH SỬ GIAO DỊCH CHI TIẾT</div>
+            <div class="standard-card">
+                <div class="scroll-list" id="full-transaction-history" style="max-height: 450px;"></div>
+            </div>
+        </div>
+
+        <div id="tab-admin-panel" class="tab-pane">
+            <div class="section-heading" style="color: #db2777;">🛠 BẢNG QUẢN TRỊ ADMIN - DUYỆT ĐƠN HÀNG</div>
+            
+            <div class="admin-card" style="margin-bottom: 20px;">
+                <h3 style="margin-top: 0; color: #db2777; font-size: 15px;">📦 Danh sách đơn hàng đang chờ duyệt</h3>
+                <div class="scroll-list" id="admin-pending-orders" style="max-height: 300px;"></div>
+            </div>
+
+            <div class="admin-card">
+                <h3 style="margin-top: 0; color: #db2777; font-size: 15px;">Cộng hoặc Trừ Tiền Thành Viên</h3>
+                <div style="margin-bottom: 12px;"><label style="font-size: 12px; color: var(--text-sub);">Tên tài khoản:</label><input type="text" id="adminTargetUser" placeholder="VD: vandung"></div>
+                <div style="margin-bottom: 12px;"><label style="font-size: 12px; color: var(--text-sub);">Hành động:</label><select id="adminActionType"><option value="add">➕ Cộng tiền</option><option value="sub">➖ Trừ tiền</option></select></div>
+                <div style="margin-bottom: 15px;"><label style="font-size: 12px; color: var(--text-sub);">Số tiền (VNĐ):</label><input type="number" id="adminAmountInput" placeholder="VD: 100000"></div>
+                <button class="btn-submit" style="background: linear-gradient(45deg, #db2777, #7c3aed);" onclick="executeAdminBalance()">Xác nhận thay đổi số dư</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <div class="modal-title" id="modalTitle">ĐĂNG NHẬP HỆ THỐNG</div>
+            <div class="form-group"><label>Tên tài khoản (Nhập <strong style="color:#db2777">admin</strong> để làm Admin)</label><input type="text" id="modalUsernameInput" placeholder="Tên tài khoản..."></div>
+            <div class="form-group"><label>Mật khẩu</label><input type="password" id="modalPasswordInput" placeholder="Mật khẩu..."></div>
+            <div class="form-group"><label class="remember-row"><input type="checkbox" id="rememberMeCheck"> Nhớ đăng nhập</label></div>
+            <div class="modal-buttons"><button class="btn-cancel" onclick="closeModal()">Hủy</button><button class="btn-submit" onclick="submitAuth()">Xác nhận</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL XÁC NHẬN MUA HÀNG -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-title" style="color: #fbbf24;">XÁC NHẬN THANH TOÁN</div>
+            <div id="confirmMessage" style="color: var(--text-sub); font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center;">Bạn có chắc chắn muốn thanh toán đơn hàng này không?</div>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeConfirmModal()">Hủy bỏ</button>
+                <button class="btn-submit" id="btnExecutePurchase" style="background: #34d399; color: #07090e; font-weight: bold;">Xác nhận mua</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL THÔNG BÁO -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-box">
+            <div class="modal-title" id="alertTitle">THÔNG BÁO</div>
+            <div id="alertMessage">Nội dung thông báo...</div>
+            <div class="modal-buttons" style="margin-top: 15px;"><button class="btn-submit" onclick="closeAlert()">Đã hiểu</button></div>
+        </div>
+    </div>
+
+    <script>
+        let pendingPurchaseAction = null;
+
+        // Dữ liệu tạo sẵn (Mock data) 100 người mua & Lịch sử nạp tiền rải rác tự nhiên
+        function initMockDataIfNeeded() {
+            if (!localStorage.getItem('site_orders')) {
+                let sampleNames = [
+                    "pro_blox2k", "hungdeptrai", "tuancute", "minhquan99", "hoangnamvn", "duongpro", "namnd_9", "KhangRoblox", 
+                    "bao_tran", "chien_god", "dragon_z", "huy_beo", "linh_chi", "thanh_dat", "phuc_hau", "vinh_kf", "son_tung", 
+                    "duc_anh", "tuan_anh", "hai_yen", "ngoc_anh", "gia_huy", "quang_huy", "hoang_yen", "khanh_vy", "viet_anh", 
+                    "hoang_phuc", "ba_kien", "chi_tue", "thien_an", "thao_vy", "my_tam", "cam_tu", "huu_phuoc", "dang_khoa", 
+                    "chi_cong", "manh_quan", "tuan_kiet", "gia_bao", "phu_trong", "quang_vinh", "duc_thinh", "quoc_bao", "thanh_tung", 
+                    "ngoc_trinh", "ba_vu", "dinh_tung", "chien_thang", "van_dung", "huong_giang", "phuong_vy", "tuan_hung", "quang_linh",
+                    "tuan_vu", "minh_tuan", "hoang_dung", "thanh_thao", "nhu_quynh", "quoc_thang", "hong_van", "viet_dung", "nam_trung",
+                    "hoang_long", "thanh_huyen", "my_linh", "thu_ha", "anh_tu", "quang_hai", "cong_phuong", "van_toan", "tien_linh",
+                    "duc_chinh", "quang_hien", "hoang_duc", "hung_dung", "van_hau", "duy_manten", "thanh_chung", "bui_tien", "que_ngoc",
+                    "dang_van", "tuan_manh", "dinh_trong", "xuan_truong", "van_duc", "cong_vinh", "hong_son", "huynh_duc", "minh_phuong"
+                ];
+
+                let sampleItems = [
+                    "Mua 400 Robux (Acc: robux_vn)", "Mua 800 Robux (Acc: bloxfruit_pro)", "Mua Gamepass: Dark Blade", 
+                    "Mua 1200 Robux (Acc: gaming_VN)", "Mua Gamepass: 2x Mastery", "Mua Gamepass: +1 Fruit Storage",
+                    "Mua 400 Robux (Acc: pro_kid)", "Mua Gamepass: 2x Money", "Mua 2000 Robux (Acc: master_bf)"
+                ];
+
+                let mockOrders = [];
+                let nowTime = new Date().getTime();
+
+                let accumulatedTimeOffset = 0;
+                for (let i = 0; i < 100; i++) {
+                    let randomName = sampleNames[Math.floor(Math.random() * sampleNames.length)] + Math.floor(Math.random() * 999);
+                    let randomItem = sampleItems[Math.floor(Math.random() * sampleItems.length)];
+                    let randomPrice = randomItem.includes('Dark Blade') ? 185000 : (randomItem.includes('Robux') ? 168000 : 75000);
+                    
+                    let randomMinutesOffset = Math.floor(Math.random() * 345) + 3;
+                    accumulatedTimeOffset += randomMinutesOffset * 60 * 1000;
+                    
+                    let orderTime = new Date(nowTime - accumulatedTimeOffset);
+                    let timeStr = orderTime.toLocaleDateString('vi-VN') + ' ' + orderTime.toLocaleTimeString('vi-VN');
+
+                    mockOrders.push({
+                        id: 99000 - i,
+                        user: randomName,
+                        item: randomItem,
+                        price: randomPrice,
+                        time: timeStr,
+                        status: "Đã duyệt"
+                    });
+                }
+                localStorage.setItem('site_orders', JSON.stringify(mockOrders));
+            }
+
+            if (!localStorage.getItem('site_deposits')) {
+                let sampleDepositors = [
+                    "huy_gaming", "pro_blox", "tuancute99", "vandung_official", "hoangnam_az", "thanhdat_9", 
+                    "phuchau_pro", "vinhkf2k", "sontung_mt", "ducanh_vjp", "hainguyen_az", "giahuy_99"
+                ];
+
+                let mockDeposits = [];
+                let nowTime = new Date().getTime();
+                let accTime = 0;
+
+                for (let i = 0; i < 35; i++) {
+                    let name = sampleDepositors[Math.floor(Math.random() * sampleDepositors.length)] + Math.floor(Math.random() * 88);
+                    let amount = (Math.floor(Math.random() * 10) + 1) * 50000;
+                    
+                    let minutesOffset = Math.floor(Math.random() * 300) + 30;
+                    accTime += minutesOffset * 60 * 1000;
+                    let depTime = new Date(nowTime - accTime);
+
+                    mockDeposits.push({
+                        user: name,
+                        amount: amount,
+                        time: depTime.toLocaleDateString('vi-VN') + ' ' + depTime.toLocaleTimeString('vi-VN')
+                    });
+                }
+                localStorage.setItem('site_deposits', JSON.stringify(mockDeposits));
+            }
+        }
+
+        // ==========================================
+        // TÍNH NĂNG MỚI: TỰ ĐỘNG THÊM NẠP TIỀN THỰC TẾ (30P - 2 TIẾNG, MỐC 40K - 200K)
+        // ==========================================
+        const liveFakeUsers = [
+            "nguy****9", "tran****2", "leto****8", "pham****3", 
+            "hoan****5", "vumi****1", "duyq****7", "ngth****4",
+            "vuho****6", "thie****0", "quoc****2", "tran****9",
+            "hung****8", "tuan****3", "minh****1", "vinh****5"
+        ];
+        const liveSmallAmounts = [40000, 50000, 80000, 100000, 150000, 200000];
+
+        function addNewLiveDeposit() {
+            let deposits = JSON.parse(localStorage.getItem('site_deposits') || "[]");
+            
+            let randomUser = liveFakeUsers[Math.floor(Math.random() * liveFakeUsers.length)];
+            let randomAmount = liveSmallAmounts[Math.floor(Math.random() * liveSmallAmounts.length)];
+            let nowTimeStr = new Date().toLocaleDateString('vi-VN') + ' ' + new Date().toLocaleTimeString('vi-VN');
+
+            // Thêm giao dịch mới lên đầu danh sách nạp tiền
+            deposits.unshift({
+                user: randomUser,
+                amount: randomAmount,
+                time: nowTimeStr
+            });
+
+            // Giới hạn lịch sử nạp hiển thị cho gọn
+            if(deposits.length > 50) deposits.pop();
+
+            localStorage.setItem('site_deposits', JSON.stringify(deposits));
+            renderHistoryTables(); // Cập nhật lại giao diện bảng lịch sử nạp
+        }
+
+        function scheduleNextLiveDeposit() {
+            // Thời gian ngẫu nhiên từ 30 phút (30 * 60 * 1000ms) đến 2 tiếng (120 * 60 * 1000ms)
+            let minTime = 30 * 60 * 1000;
+            let maxTime = 120 * 60 * 1000;
+            let randomDelay = Math.floor(Math.random() * (maxTime - minTime + 1)) + minTime;
+
+            setTimeout(() => {
+                addNewLiveDeposit();
+                scheduleNextLiveDeposit(); // Lặp lại vòng tiếp theo
+            }, randomDelay);
+        }
+        // ==========================================
+
+        function generateDynamicQR() {
+            const amountInput = document.getElementById('depositAmountInput').value;
+            const qrImage = document.getElementById('qrDynamicImage');
+            const statusText = document.getElementById('qrStatusText');
+            let amount = amountInput ? parseInt(amountInput) : 0;
+            let syntaxText = document.getElementById('transfer-syntax').innerText.trim();
+            
+            const qrUrl = `https://api.vietqr.io/image/970422-0973502843-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(syntaxText)}&accountName=NGUYEN%20VAN%20QUYNH`;
+            qrImage.src = qrUrl;
+            if(amount > 0) {
+                statusText.innerText = "Quét mã nạp " + amount.toLocaleString('vi-VN') + " VNĐ";
+                statusText.style.color = "#34d399";
+            } else {
+                statusText.innerText = "Nhập số tiền để tạo mã QR";
+                statusText.style.color = "var(--text-sub)";
+            }
+        }
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active-pane'));
+            document.getElementById('tab-' + tabId).classList.add('active-pane');
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            if(element) element.classList.add('active');
+            if(tabId === 'admin-panel') renderAdminPendingList();
+            if(tabId === 'transactions') renderFullTransactions();
+        }
+
+        function switchSubTab(type) {
+            const robuxSub = document.getElementById('subcontent-robux');
+            const gpSub = document.getElementById('subcontent-gamepass');
+            const robuxBtn = document.getElementById('subTabRobuxBtn');
+            const gpBtn = document.getElementById('subTabGamepassBtn');
+
+            if(type === 'robux') {
+                robuxSub.style.display = 'block';
+                gpSub.style.display = 'none';
+                robuxBtn.style.background = 'var(--primary)';
+                robuxBtn.style.border = 'none';
+                gpBtn.style.background = 'rgba(255,255,255,0.05)';
+                gpBtn.style.border = '1px solid var(--border-color)';
+            } else {
+                robuxSub.style.display = 'none';
+                gpSub.style.display = 'block';
+                gpBtn.style.background = 'var(--primary)';
+                gpBtn.style.border = 'none';
+                robuxBtn.style.background = 'rgba(255,255,255,0.05)';
+                robuxBtn.style.border = '1px solid var(--border-color)';
+            }
+        }
+
+        function calculateCustomRobuxPrice() {
+            let amountInput = document.getElementById('robuxAmountInput').value;
+            let amount = amountInput ? parseInt(amountInput) : 0;
+            let pricePerRobux = 210;
+            let totalPrice = amount * pricePerRobux;
+            document.getElementById('calculatedPriceText').innerText = totalPrice.toLocaleString('vi-VN') + ' VNĐ';
+        }
+
+        function showCustomAlert(title, message) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            document.getElementById('alertModal').classList.add('active');
+        }
+        function closeAlert() { document.getElementById('alertModal').classList.remove('active'); }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            pendingPurchaseAction = null;
+        }
+
+        function confirmBuyRobuxPrompt() {
+            let loggedUser = localStorage.getItem('logged_in_user');
+            if(!loggedUser) { openModal('login'); return; }
+            
+            let robuxUser = document.getElementById('robloxUsernameInput').value.trim();
+            if(!robuxUser) { showCustomAlert("THIẾU THÔNG TIN", "Vui lòng nhập tên tài khoản Roblox!"); return; }
+            
+            let amountInput = document.getElementById('robuxAmountInput').value;
+            let amount = amountInput ? parseInt(amountInput) : 0;
+            if(amount <= 0 || isNaN(amount)) { showCustomAlert("LỖI", "Vui lòng nhập số lượng Robux hợp lệ lớn hơn 0!"); return; }
+            
+            let price = amount * 210;
+            let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
+            let userBal = balances[loggedUser] || 0;
+            if(userBal < price) { showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư không đủ, vui lòng nạp thêm tiền!"); return; }
+
+            document.getElementById('confirmMessage').innerHTML = `Bạn muốn mua <b>${amount.toLocaleString('vi-VN')} Robux</b> cho tài khoản <b>[${robuxUser}]</b>.<br>Số tiền thanh toán: <span style="color:#34d399; font-weight:bold;">${price.toLocaleString('vi-VN')} VNĐ</span>`;
+            pendingPurchaseAction = function() {
+                balances[loggedUser] = userBal - price;
+                localStorage.setItem('user_balances', JSON.stringify(balances));
+                document.getElementById('user-balance').innerText = balances[loggedUser].toLocaleString('vi-VN') + ' VNĐ';
+                
+                addOrderToHistory(loggedUser, `Mua ${amount} Robux (Acc: ${robuxUser})`, price);
+                showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", "Đơn mua Robux của bạn đã được tạo thành công và đang chờ Admin duyệt!");
+            };
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function confirmBuyGamepassPrompt(itemName, price) {
+            let loggedUser = localStorage.getItem('logged_in_user');
+            if(!loggedUser) { openModal('login'); return; }
+            
+            let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
+            let userBal = balances[loggedUser] || 0;
+            if(userBal < price) { showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư hiện tại không đủ để mua vật phẩm này!"); return; }
+
+            document.getElementById('confirmMessage').innerHTML = `Bạn muốn mua vật phẩm <b>[${itemName}]</b>.<br>Số tiền thanh toán: <span style="color:#34d399; font-weight:bold;">${price.toLocaleString('vi-VN')} VNĐ</span>`;
+            pendingPurchaseAction = function() {
+                balances[loggedUser] = userBal - price;
+                localStorage.setItem('user_balances', JSON.stringify(balances));
+                document.getElementById('user-balance').innerText = balances[loggedUser].toLocaleString('vi-VN') + ' VNĐ';
+                
+                addOrderToHistory(loggedUser, `Mua Gamepass: ${itemName}`, price);
+                showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", `Đơn mua [${itemName}] đã được tạo thành công. Vui lòng chờ Admin duyệt!`);
+            };
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        document.getElementById('btnExecutePurchase').onclick = function() {
+            if(pendingPurchaseAction) {
+                pendingPurchaseAction();
+            }
+            closeConfirmModal();
+        }
+
+        function addOrderToHistory(user, itemDesc, price) {
+            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
+            let now = new Date();
+            let timeString = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN');
+            let newOrder = {
+                id: Date.now(),
+                user: user,
+                item: itemDesc,
+                price: price,
+                time: timeString,
+                status: "Chờ duyệt"
+            };
+            orders.unshift(newOrder);
+            localStorage.setItem('site_orders', JSON.stringify(orders));
+            renderHistoryTables();
+        }
+
+        function redeemCodeAction() {
+            let loggedUser = localStorage.getItem('logged_in_user');
+            if(!loggedUser) { openModal('login'); return; }
+            let code = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
+
+            if(!code) { showCustomAlert("LỖI", "Vui lòng nhập mã code!"); return; }
+
+            if(code === "QUYN2026" || code === "FREEMONEY") {
+                let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
+                let userBal = balances[loggedUser] || 0;
+                balances[loggedUser] = userBal + 50000;
+                localStorage.setItem('user_balances', JSON.stringify(balances));
+                document.getElementById('user-balance').innerText = balances[loggedUser].toLocaleString('vi-VN') + ' VNĐ';
+                showCustomAlert("NHẬP CODE THÀNH CÔNG", "Bạn nhận được 50.000 VNĐ vào tài khoản từ mã code [" + code + "]!");
+            } else {
+                showCustomAlert("MÃ KHÔNG HỢP LỆ", "Mã code không tồn tại hoặc đã hết hạn sử dụng!");
+            }
+            document.getElementById('redeemCodeInput').value = '';
+        }
+
+        function executeAdminBalance() {
+            let targetUser = document.getElementById('adminTargetUser').value.trim();
+            let actionType = document.getElementById('adminActionType').value;
+            let amount = parseInt(document.getElementById('adminAmountInput').value);
+            if(!targetUser || isNaN(amount)) return;
+            let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
+            let currentBal = balances[targetUser] || 0;
+            balances[targetUser] = actionType === 'add' ? currentBal + amount : Math.max(0, currentBal - amount);
+            localStorage.setItem('user_balances', JSON.stringify(balances));
+            if(localStorage.getItem('logged_in_user') === targetUser) {
+                document.getElementById('user-balance').innerText = balances[targetUser].toLocaleString('vi-VN') + ' VNĐ';
+            }
+            showCustomAlert("THÀNH CÔNG", "Đã cập nhật số dư cho tài khoản [" + targetUser + "].");
+        }
+
+        function renderHistoryTables() {
+            // 1. Đơn hàng gần đây
+            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
+            let orderHtml = "";
+            orders.slice(0, 15).forEach(item => {
+                let statusBadge = item.status === 'Đã duyệt' ? `<span class="badge-success">Thành công</span>` : `<span class="badge-pending">Chờ duyệt</span>`;
+                orderHtml += `
+                    <div class="transaction-card-item">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Người mua: <span style="color: #818cf8;">${item.user}</span></div>
+                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 Gói mua: <b>${item.item}</b></div>
+                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 Tổng tiền: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">🕒 Thời gian: ${item.time}</div>
+                        </div>
+                        <div style="text-align: right;">${statusBadge}</div>
+                    </div>`;
+            });
+            document.getElementById('order-history-list').innerHTML = orderHtml;
+
+            // 2. Lịch sử nạp tiền (Mới tự động thêm rải rác)
+            let deposits = JSON.parse(localStorage.getItem('site_deposits') || "[]");
+            let depositHtml = "";
+            deposits.forEach(dep => {
+                depositHtml += `
+                    <div class="transaction-card-item" style="border-left-color: #34d399;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #34d399;">${dep.user}</span></div>
+                            <div style="font-size: 13px; color: #fbbf24; font-weight: 600; margin-bottom: 3px;">💳 Nạp thành công: +${dep.amount.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">🕒 ${dep.time}</div>
+                        </div>
+                        <div style="text-align: right;"><span class="badge-success">Đã nhận</span></div>
+                    </div>`;
+            });
+            document.getElementById('deposit-history-list').innerHTML = depositHtml;
+
+            // 3. Top 10 nạp tiền
+            let topUsersData = [
+                { name: "👑 trunghung_pro", amount: 5173000 },
+                { name: "🥈 hoangnam_99", amount: 4420000 },
+                { name: "🥉 tuancute_az", amount: 3890000 },
+                { name: "4. vandung_vjp", amount: 3250000 },
+                { name: "5. khangroblox", amount: 2800000 },
+                { name: "6. thanhdat_9x", amount: 2350000 },
+                { name: "7. phuchau_vn", amount: 1980000 },
+                { name: "8. vinhkf_2k", amount: 1650000 },
+                { name: "9. ducanh_dz", amount: 1320000 },
+                { name: "10. giahuy_pro", amount: 1050000 }
+            ];
+            let topHtml = "";
+            topUsersData.forEach((u, idx) => {
+                let rankColor = idx === 0 ? '#fbbf24' : (idx === 1 ? '#94a3b8' : (idx === 2 ? '#d97706' : 'var(--text-sub)'));
+                topHtml += `
+                    <div class="top-user-item">
+                        <div>
+                            <span style="font-weight: bold; color: ${rankColor}; margin-right: 6px;">#${idx + 1}</span>
+                            <span style="color: var(--text-main); font-weight: 600;">${u.name}</span>
+                        </div>
+                        <div style="color: #34d399; font-weight: 700;">${u.amount.toLocaleString('vi-VN')} VNĐ</div>
+                    </div>`;
+            });
+            document.getElementById('top-users-list').innerHTML = topHtml;
+        }
+
+        function renderFullTransactions() {
+            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
+            let html = "";
+            orders.forEach(item => {
+                let statusBadge = item.status === 'Đã duyệt' ? `<span class="badge-success">Thành công</span>` : `<span class="badge-pending">Chờ duyệt</span>`;
+                html += `
+                    <div class="transaction-card-item" style="margin-bottom: 12px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Tài khoản đặt lệnh: <span style="color: #818cf8;">${item.user}</span></div>
+                            <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">🛍 Chi tiết giao dịch: <b>${item.item}</b></div>
+                            <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💵 Số tiền thanh toán: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                            <div style="font-size: 11px; color: var(--text-sub);">📅 Thời điểm tạo: ${item.time} | Mã đơn: #${item.id}</div>
+                        </div>
+                        <div style="text-align: right;">${statusBadge}</div>
+                    </div>`;
+            });
+            document.getElementById('full-transaction-history').innerHTML = html;
+        }
+
+        function renderAdminPendingList() {
+            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
+            let html = "";
+            orders.forEach((item) => {
+                if(item.status === 'Chờ duyệt') {
+                    html += `
+                        <div class="transaction-card-item" style="border-left-color: #db2777; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 Khách mua: <span style="color: #f472b6;">${item.user}</span></div>
+                                <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 Yêu cầu: <b>${item.item}</b></div>
+                                <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 Trị giá: ${item.price.toLocaleString('vi-VN')} VNĐ</div>
+                                <div style="font-size: 11px; color: var(--text-sub);">🕒 Lúc: ${item.time}</div>
+                            </div>
+                            <div style="text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+                                <span class="badge-pending">Chờ Admin duyệt</span>
+                                <button class="btn-submit" style="padding: 8px 16px; font-size: 12px; background: #34d399; color: #07090e; font-weight: bold;" onclick="approveOrder(${item.id})">✔ Duyệt Đơn Ngay</button>
+                            </div>
+                        </div>`;
+                }
+            });
+            document.getElementById('admin-pending-orders').innerHTML = html || '<div style="color:var(--text-sub); font-size:13px; text-align:center; padding: 20px;">Tuyệt vời! Không có đơn hàng nào đang chờ xử lý.</div>';
+        }
+
+        function approveOrder(orderId) {
+            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
+            orders = orders.map(o => {
+                if(o.id === orderId) { o.status = "Đã duyệt"; }
+                return o;
+            });
+            localStorage.setItem('site_orders', JSON.stringify(orders));
+            renderAdminPendingList();
+            renderHistoryTables();
+            showCustomAlert("THÀNH CÔNG", "Đã duyệt đơn hàng thành công!");
+        }
+
+        window.onload = function() {
+            initMockDataIfNeeded();
+            let savedUser = localStorage.getItem('logged_in_user');
+            if (savedUser) showLoggedInState(savedUser);
+            renderHistoryTables();
+            generateDynamicQR();
+
+            // Khởi động chu kỳ tự động thêm lịch sử nạp ngầm (30 phút đến 2 tiếng / lần)
+            scheduleNextLiveDeposit();
+        }
+
+        let currentMode = 'login';
+        function openModal(mode) {
+            currentMode = mode;
+            document.getElementById('modalTitle').innerText = mode === 'login' ? 'ĐĂNG NHẬP HỆ THỐNG' : 'ĐĂNG KÝ TÀI KHOẢN MỚI';
+            document.getElementById('authModal').classList.add('active');
+        }
+        function closeModal() { document.getElementById('authModal').classList.remove('active'); }
+
+        function submitAuth() {
+            let username = document.getElementById('modalUsernameInput').value.trim();
+            let password = document.getElementById('modalPasswordInput').value.trim();
+            let rememberMe = document.getElementById('rememberMeCheck').checked;
+            if(!username || !password) return;
+
+            closeModal();
+            if(rememberMe) localStorage.setItem('logged_in_user', username);
+            showLoggedInState(username);
+            showCustomAlert("THÀNH CÔNG", "Xin chào, " + username + "!");
+        }
+
+        function showLoggedInState(username) {
+            document.getElementById('logged-out-view').style.display = 'none';
+            document.getElementById('logged-in-view').style.display = 'flex';
+            document.getElementById('username-display').innerText = username;
+            
+            let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
+            document.getElementById('user-balance').innerText = (balances[username] || 0).toLocaleString('vi-VN') + ' VNĐ';
+
+            let roleBadge = document.getElementById('role-badge');
+            let adminMenu = document.getElementById('admin-menu-container');
+
+            if(username.toLowerCase() === 'admin') {
+                roleBadge.className = "admin-badge"; roleBadge.innerText = "ADMIN";
+                adminMenu.style.display = "block";
+            } else {
+                roleBadge.className = "vip-badge"; roleBadge.innerText = "VIP 0";
+                adminMenu.style.display = "none";
+            }
+            document.getElementById('transfer-syntax').innerText = "NAP " + username.toUpperCase();
+            generateDynamicQR();
+        }
+    </script>
+</body>
+</html>
