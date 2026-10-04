@@ -920,7 +920,7 @@
                     </div>
                 </div>
                 <div class="qq-aviator-panel" id="qqAviatorPanel">
-                    <div class="qq-aviator-head"><div><h4>✈️ MÁY BAY SỐ NHÂN — PHÒNG NHIỀU NGƯỜI</h4><div class="qq-aviator-note">Chế độ điểm ảo: nhiều người cùng xem một ván. Điểm không đổi thành tiền hoặc Robux.</div></div><div class="qq-room">Phòng <b id="qqRoomId">QQ-2026</b></div></div>
+                    <div class="qq-aviator-head"><div><h4>✈️ MÁY BAY SỐ NHÂN — PHÒNG NHIỀU NGƯỜI</h4><div class="qq-aviator-note">Online nhiều người: 30 giây nhận cược chung → máy bay bay chung → mỗi người tự NHẢY/CHỐT lúc mình muốn. Điểm dùng trong game.</div></div><div class="qq-room">Phòng <b id="qqRoomId">QQ-2026</b></div></div>
                     <div class="qq-aviator-board" id="qqAviatorBoard">
                         <div class="qq-sky-glow"></div><div class="qq-stars"></div><div class="qq-cloud qq-cloud-a"></div><div class="qq-cloud qq-cloud-b"></div>
                         <div class="qq-chart-grid"></div><div class="qq-flight-path" id="qqFlightPath"></div><div class="qq-flight-trail" id="qqFlightTrail"></div>
@@ -1038,7 +1038,7 @@
                     Dùng lệnh: <code>/money + username 100000</code>,
                     <code>/money - username 50000</code>,
                     <code>/points + username 100</code>,
-                    <code>/points - username 20</code>
+                    <code>/points - username 20</code>, <code>/virtual + username 5000</code>, <code>/virtual - username 1000</code>
                 </div>
                 <input id="adminCommandInput" type="text" placeholder="/money + username 100000" autocomplete="off"
                        onkeydown="if(event.key==='Enter') executeAdminCommand()">
@@ -1055,6 +1055,16 @@
                 <div style="margin-bottom:15px;"><label style="font-size:12px;color:var(--text-sub);">Số điểm:</label><input type="number" id="adminPointsInput" placeholder="VD: 1000" min="0"></div>
                 <button class="btn-submit" style="background:linear-gradient(45deg,#6366f1,#8b5cf6);" onclick="executeAdminPoints()">Xác nhận thay đổi điểm</button>
             </div>
+            <div class="admin-card" style="margin-bottom:20px;border:1px solid rgba(34,211,238,.35);background:linear-gradient(135deg,rgba(34,211,238,.08),rgba(99,102,241,.08));">
+                <h3 style="margin-top:0;color:#22d3ee;font-size:15px;">🎮 Cộng hoặc Trừ Tiền Ảo</h3>
+                <div style="margin-bottom:12px;"><label style="font-size:12px;color:var(--text-sub);">Tên tài khoản:</label><input type="text" id="adminTargetVirtualUser" placeholder="VD: vandung"></div>
+                <div style="margin-bottom:12px;"><label style="font-size:12px;color:var(--text-sub);">Hành động:</label>
+                    <select id="adminVirtualActionType"><option value="add">➕ Cộng tiền ảo</option><option value="sub">➖ Trừ tiền ảo</option></select>
+                </div>
+                <div style="margin-bottom:15px;"><label style="font-size:12px;color:var(--text-sub);">Số tiền ảo:</label><input type="number" id="adminVirtualInput" placeholder="VD: 5000" min="0"></div>
+                <button class="btn-submit" style="background:linear-gradient(45deg,#06b6d4,#6366f1);" onclick="executeAdminVirtual()">Xác nhận thay đổi tiền ảo</button>
+            </div>
+
             <div class="admin-card" style="margin-bottom:20px;border:1px solid rgba(245,158,11,.45);background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(99,102,241,.08));">
                 <h3 style="margin-top:0;color:#fbbf24;font-size:15px;">🎯 CHỈNH TỈ LỆ ITEM</h3>
                 <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:12px;">
@@ -1300,7 +1310,7 @@ function qqProfileData(){
 function renderQQProfile(){
  const m=document.getElementById('qqProfileMount');if(!m)return;const d=qqProfileData();
  const vip=d.isAdmin?'ADMIN':(d.isQtv?'QTV':'VIP '+Math.min(10,Math.floor(d.point/10000)));
- m.innerHTML='<div class="qq-profile-wrap" style="--qq-profile-bg:url(\"'+d.bg+'\")"><div class="qq-profile-inner"><img class="qq-avatar" src="'+d.avatar+'" alt="Ảnh anime hồ sơ" onerror="this.style.visibility=\"hidden\""><div><div class="qq-profile-name">'+(d.isAdmin?'👑 ':d.isQtv?'🛡️ ':'')+d.u+'</div><div class="qq-profile-sub">✨ Anime profile • '+d.role+' • nền chuyển động nhẹ</div><div class="qq-profile-badges"><span class="qq-pbadge">'+(d.isAdmin?'👑 ADMIN':d.isQtv?'🛡️ QTV':'🎌 THÀNH VIÊN')+'</span><span class="qq-pbadge">🏆 '+vip+'</span></div><div class="qq-pgrid"><div class="qq-pstat">💰 Số dư<b>'+d.balance.toLocaleString('vi-VN')+' VNĐ</b></div><div class="qq-pstat">💎 Điểm<b>'+d.point.toLocaleString('vi-VN')+'</b></div><div class="qq-pstat">🎖️ Cấp VIP<b>'+vip+'</b></div></div><button class="qq-random-btn" onclick="qqRandomConan()">🎲 Đổi ảnh anime</button></div></div><div class="qq-profile-credit">Anime background • Hồ sơ '+d.role+'</div></div>';
+ m.innerHTML='<div class="qq-profile-wrap" style="--qq-profile-bg:url(\"'+d.bg+'\")"><div class="qq-profile-inner"><img class="qq-avatar" src="'+d.avatar+'" alt="Ảnh anime hồ sơ" onerror="this.style.visibility=\"hidden\""><div><div class="qq-profile-name">'+(d.isAdmin?'👑 ':d.isQtv?'🛡️ ':'')+d.u+'</div><div class="qq-profile-sub">✨ Anime profile • '+d.role+' • nền chuyển động nhẹ</div><div class="qq-profile-badges"><span class="qq-pbadge">'+(d.isAdmin?'👑 ADMIN':d.isQtv?'🛡️ QTV':'🎌 THÀNH VIÊN')+'</span><span class="qq-pbadge">🏆 '+vip+'</span></div><div class="qq-pgrid"><div class="qq-pstat">💰 Số dư<b>'+d.balance.toLocaleString('vi-VN')+' VNĐ</b></div><div class="qq-pstat">💎 Điểm<b>'+d.point.toLocaleString('vi-VN')+'</b></div><div class="qq-pstat">🎮 Tiền ảo<b>'+Number(readObj('qq_virtual_money_v1')[d.u]||0).toLocaleString('vi-VN')+'</b></div><div class="qq-pstat">🎖️ Cấp VIP<b>'+vip+'</b></div></div><button class="qq-random-btn" onclick="qqRandomConan()">🎲 Đổi ảnh anime</button></div></div><div class="qq-profile-credit">Anime background • Hồ sơ '+d.role+'</div></div>';
 }
 function qqRandomConan(){
  const m=document.getElementById('qqProfileMount');if(!m)return;const d=qqProfileData();
@@ -1602,42 +1612,46 @@ function adminMsg(msg, ok){
     const e=document.getElementById('adminCommandResult');
     if(e){e.textContent=msg;e.style.color=ok?'#34d399':'#f87171';}
 }
-function executeAdminCommand(){
+async function executeAdminCommand(){
     if(!isAdminSession()){adminMsg('❌ Không có quyền Admin.',false);return;}
     const raw=(document.getElementById('adminCommandInput')||{}).value||'';
     const p=raw.trim().split(/\s+/);
-    if(p.length!==4 || !/^\/(money|points)$/i.test(p[0]) || !/^[+-]$/.test(p[1]) || !p[2] || !/^\d+(\.\d+)?$/.test(p[3])){
-        adminMsg('❌ Sai cú pháp. Ví dụ: /money + username 100000',false);return;
+    if(p.length!==4 || !/^\/(money|points|virtual)$/i.test(p[0]) || !/^[+-]$/.test(p[1]) || !p[2] || !/^\d+(\.\d+)?$/.test(p[3])){
+        adminMsg('❌ Sai cú pháp. Ví dụ: /money + username 100000 | /points + username 100 | /virtual + username 5000',false);return;
     }
     const type=p[0].slice(1).toLowerCase(), sign=p[1], user=qqResolveUsername(p[2]), amount=Math.floor(Number(p[3]));
     if(amount<=0){adminMsg('❌ Số lượng phải lớn hơn 0.',false);return;}
-    if(type==='money'){
-        let b=JSON.parse(localStorage.getItem('user_balances')||'{}');
-        const old=Number(b[user]||0);
-        b[user]=Math.max(0,old+(sign==='+'?amount:-amount));
-        localStorage.setItem('user_balances',JSON.stringify(b));
-        adminMsg('✅ '+(sign==='+'?'Đã cộng ':'Đã trừ ')+amount.toLocaleString('vi-VN')+' VNĐ cho '+user+'. Số dư mới: '+b[user].toLocaleString('vi-VN')+' VNĐ',true);
-    }else{
-        let a=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
-        const old=Number(a[user]||0);
-        a[user]=Math.max(0,old+(sign==='+'?amount:-amount));
-        localStorage.setItem('qq_game_points_v2',JSON.stringify(a));
-        adminMsg('✅ '+(sign==='+'?'Đã cộng ':'Đã trừ ')+amount.toLocaleString('vi-VN')+' điểm cho '+user+'. Điểm mới: '+a[user].toLocaleString('vi-VN'),true);
-    }
-    if(window.qqRefreshWallet)window.qqRefreshWallet();
-    renderTopPoints(); renderAdminMemberList();
+    try{
+        if(!window.qqCloudSetWallet || !window.qqCloudGetWallet) throw new Error('Chưa tải xong kết nối Supabase.');
+        const current=await window.qqCloudGetWallet(user);
+        let b=Number(current?.balance||0), pt=Number(current?.points||0), v=Number(current?.virtual_balance||0);
+        const delta=sign==='+'?amount:-amount;
+        if(type==='money') b=Math.max(0,b+delta);
+        if(type==='points') pt=Math.max(0,pt+delta);
+        if(type==='virtual') v=Math.max(0,v+delta);
+        const row=await window.qqCloudSetWallet(user,b,pt,v);
+        const now=type==='money'?Number(row.balance):type==='points'?Number(row.points):Number(row.virtual_balance);
+        adminMsg('✅ '+(sign==='+'?'Đã cộng ':'Đã trừ ')+amount.toLocaleString('vi-VN')+' '+(type==='money'?'VNĐ':type==='points'?'điểm':'tiền ảo')+' cho '+user+'. Giá trị mới: '+now.toLocaleString('vi-VN'),true);
+        if(typeof renderAdminMemberList==='function') await renderAdminMemberList();
+        if(typeof renderTopPoints==='function') renderTopPoints();
+        if(typeof window.qqRefreshWallet==='function') await window.qqRefreshWallet();
+    }catch(e){ adminMsg('❌ Không lưu được online: '+(e.message||e),false); }
 }
-function executeAdminPoints(){
+async function executeAdminPoints(){
     if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin/QTV mới dùng được chức năng này.');return;}
     const u=qqResolveUsername(document.getElementById('adminTargetPointsUser').value);
     const act=document.getElementById('adminPointsActionType').value;
     const n=Math.floor(Number(document.getElementById('adminPointsInput').value||0));
     if(!u||n<=0){showCustomAlert('LỖI','Nhập tài khoản và số điểm hợp lệ.');return;}
-    let a=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
-    a[u]=Math.max(0,Number(a[u]||0)+(act==='add'?n:-n));
-    localStorage.setItem('qq_game_points_v2',JSON.stringify(a));
-    showCustomAlert('THÀNH CÔNG',(act==='add'?'Đã cộng ':'Đã trừ ')+n.toLocaleString('vi-VN')+' điểm cho '+u+'. Điểm mới: '+a[u].toLocaleString('vi-VN'));
-    if(window.qqRefreshWallet)window.qqRefreshWallet();
+    try{
+        const cur=await window.qqCloudGetWallet(u);
+        const next=Math.max(0,Number(cur?.points||0)+(act==='add'?n:-n));
+        const row=await window.qqCloudSetWallet(u,Number(cur?.balance||0),next,Number(cur?.virtual_balance||0));
+        showCustomAlert('THÀNH CÔNG',(act==='add'?'Đã cộng ':'Đã trừ ')+n.toLocaleString('vi-VN')+' điểm cho '+u+'. Điểm mới: '+Number(row.points).toLocaleString('vi-VN'));
+        if(typeof renderAdminMemberList==='function') await renderAdminMemberList();
+        if(typeof renderTopPoints==='function') renderTopPoints();
+        if(typeof window.qqRefreshWallet==='function') await window.qqRefreshWallet();
+    }catch(e){showCustomAlert('LỖI LƯU ONLINE',e.message||String(e));}
 }
 
         function renderAdminItemRates(){
@@ -1688,40 +1702,42 @@ function executeAdminPoints(){
             el.innerHTML=names.length?names.map(u=>`<div class="transaction-card-item" style="margin-bottom:8px;"><div><b>${u}</b><div style="font-size:11px;color:var(--text-sub);">💰 ${(Number(balances[u])||0).toLocaleString('vi-VN')} VNĐ &nbsp;|&nbsp; 💎 ${(Number(points[u])||0).toLocaleString('vi-VN')} điểm</div></div><div style="font-size:10px;color:#34d399;">Thành viên</div></div>`).join(''):'<div style="padding:12px;color:var(--text-sub);">Chưa có thành viên.</div>';
         }
 
-        function renderAdminPendingList() {
-            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
-            let html = "";
-            orders.forEach((item) => {
-                if(item.status === 'Chờ duyệt') {
-                    html += `
-                        <div class="transaction-card-item" style="border-left-color: #db2777; margin-bottom: 12px;">
-                            <div>
-                                <div style="font-weight: 600; font-size: 14px; color: #e6edf3; margin-bottom: 3px;">👤 <span style="color: #f472b6;">${item.user}</span></div>
-                                <div style="font-size: 13px; color: var(--text-main); margin-bottom: 4px;">📦 <b>${item.item}</b></div>
-                                <div style="font-size: 12px; color: #34d399; font-weight: 600; margin-bottom: 3px;">💰 ${item.price.toLocaleString('vi-VN')} VNĐ</div>
-                                <div style="font-size: 11px; color: var(--text-sub);">${item.time}</div>
-                            </div>
-                            <div style="text-align: right; display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-                                <span class="badge-pending">Chờ duyệt</span>
-                                <button class="btn-submit" style="padding: 6px 12px; font-size: 11px; background: #34d399; color: #07090e; font-weight: bold;" onclick="approveOrder(${item.id})">✔ Duyệt</button>
-                            </div>
-                        </div>`;
-                }
-            });
-            document.getElementById('admin-pending-orders').innerHTML = html || '<div style="color:var(--text-sub); font-size:13px; text-align:center; padding: 20px;">Tuyệt vời! Không có đơn hàng nào đang chờ xử lý.</div>';
+        async function renderAdminPendingList() {
+            const el=document.getElementById('admin-pending-orders');
+            if(!el)return;
+            // Admin ưu tiên dữ liệu cloud để nhìn thấy yêu cầu của thành viên trên mọi máy.
+            if(typeof isAdminSession==='function' && isAdminSession() && window.qqAdminGetPendingOrders){
+                try{
+                    const rows=await window.qqAdminGetPendingOrders();
+                    if(Array.isArray(rows)){
+                        let html=rows.map(r=>{
+                            const o=r.payload||{};
+                            return `<div class="transaction-card-item" style="border-left-color:#db2777;margin-bottom:12px;">
+                                <div><div style="font-weight:600;font-size:14px;color:#e6edf3;margin-bottom:3px;">👤 <span style="color:#f472b6;">${String(r.username||o.user||'').replace(/[<>]/g,'')}</span></div>
+                                <div style="font-size:13px;color:var(--text-main);margin-bottom:4px;">📦 <b>${String(o.item||'Đơn mua hàng').replace(/[<>]/g,'')}</b></div>
+                                <div style="font-size:12px;color:#34d399;font-weight:600;margin-bottom:3px;">💰 ${Number(o.price||0).toLocaleString('vi-VN')} VNĐ</div>
+                                <div style="font-size:11px;color:var(--text-sub);">${String(o.time||r.created_at||'').replace(/[<>]/g,'')}</div></div>
+                                <div style="text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end;"><span class="badge-pending">Chờ duyệt</span><button class="btn-submit" style="padding:6px 12px;font-size:11px;background:#34d399;color:#07090e;font-weight:bold;" onclick="approveOrder(${Number(o.id)||0})">✔ Duyệt</button></div>
+                            </div>`;
+                        }).join('');
+                        el.innerHTML=html||'<div style="color:var(--text-sub);font-size:13px;text-align:center;padding:20px;">Tuyệt vời! Không có đơn hàng nào đang chờ xử lý.</div>';
+                        return;
+                    }
+                }catch(e){ console.warn('cloud pending',e); }
+            }
+            let orders=[];try{orders=JSON.parse(localStorage.getItem('site_orders')||'[]')}catch(e){}
+            const html=orders.filter(x=>x.status==='Chờ duyệt').map(item=>`<div class="transaction-card-item" style="border-left-color:#db2777;margin-bottom:12px;"><div><div style="font-weight:600;font-size:14px;color:#e6edf3;margin-bottom:3px;">👤 <span style="color:#f472b6;">${String(item.user||'').replace(/[<>]/g,'')}</span></div><div style="font-size:13px;color:var(--text-main);margin-bottom:4px;">📦 <b>${String(item.item||'').replace(/[<>]/g,'')}</b></div><div style="font-size:12px;color:#34d399;font-weight:600;margin-bottom:3px;">💰 ${Number(item.price||0).toLocaleString('vi-VN')} VNĐ</div><div style="font-size:11px;color:var(--text-sub);">${String(item.time||'').replace(/[<>]/g,'')}</div></div><div style="text-align:right"><span class="badge-pending">Chờ duyệt</span><button class="btn-submit" style="padding:6px 12px;font-size:11px;background:#34d399;color:#07090e;font-weight:bold;margin-top:8px" onclick="approveOrder(${Number(item.id)||0})">✔ Duyệt</button></div></div>`).join('');
+            el.innerHTML=html||'<div style="color:var(--text-sub);font-size:13px;text-align:center;padding:20px;">Tuyệt vời! Không có đơn hàng nào đang chờ xử lý.</div>';
         }
 
-        function approveOrder(orderId) {
-            let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
-            orders = orders.map(o => {
-                if(o.id === orderId) { o.status = "Đã duyệt"; }
-                return o;
-            });
-            localStorage.setItem('site_orders', JSON.stringify(orders));
-            if(window.qqAdminMarkOrderApproved) window.qqAdminMarkOrderApproved(orderId);
-            renderAdminPendingList();
-            renderHistoryTables();
-            showCustomAlert("THÀNH CÔNG", "Đã duyệt đơn hàng thành công!");
+        async function approveOrder(orderId) {
+            let orders=[];try{orders=JSON.parse(localStorage.getItem('site_orders')||'[]')}catch(e){}
+            orders=orders.map(o=>{if(Number(o.id)===Number(orderId))o.status='Đã duyệt';return o;});
+            localStorage.setItem('site_orders',JSON.stringify(orders));
+            if(window.qqAdminMarkOrderApproved) await window.qqAdminMarkOrderApproved(orderId);
+            await renderAdminPendingList();
+            try{renderHistoryTables();}catch(e){}
+            showCustomAlert('THÀNH CÔNG','Đã duyệt đơn hàng online thành công!');
         }
 
 
@@ -1755,15 +1771,31 @@ function executeAdminPoints(){
     try{
       let rows=[];
       for(const table of ['aviator_bets','qq_aviator_bets']){try{const x=await api('/'+table+'?select=*&order=created_at.desc&limit=100');if(Array.isArray(x)&&x.length){rows=x;break}}catch(e){}}
-      el.innerHTML=rows.map(b=>{const user=b.username||b.user||b.player||'?';const bet=Number(b.bet??b.amount??b.stake??0);const mult=Number(b.multiplier??b.cashout_multiplier??b.cashout_at??0);const payout=Number(b.payout??b.win_amount??0);const status=b.status||((b.cashed_out??b.cashed)?'Đã chốt':'Chờ/Crash');return `<div class="transaction-card-item" style="margin-bottom:8px"><div><b>👤 ${esc(user)}</b><div style="font-size:12px">💰 Cược: ${bet.toLocaleString('vi-VN')} điểm</div><div style="font-size:12px">📈 ${mult?mult.toFixed(2)+'x':'—'} &nbsp; → &nbsp; 💵 ${payout.toLocaleString('vi-VN')} điểm</div><div style="font-size:10px;color:#94a3b8">${esc(b.created_at||b.placed_at||'')}</div></div><span style="font-size:10px;font-weight:800">${esc(status)}</span></div>`}).join('')||'<div style="padding:12px;text-align:center;color:#94a3b8">Chưa có cược online.</div>';
+      el.innerHTML=rows.map(b=>{const user=b.username||b.user||b.player||'?';const bet=Number(b.bet??b.amount??b.stake??0);const mult=Number(b.multiplier??b.cash_multiplier??b.cashout_multiplier??b.cashout_at??0);const payout=Number(b.payout??b.win_amount??0);const status=b.status==='cashed'?'Đã chốt':(b.status==='lost'?'Crash':(b.status||'Đang cược'));return `<div class="transaction-card-item" style="margin-bottom:8px"><div><b>👤 ${esc(user)}</b><div style="font-size:12px">💰 Cược: ${bet.toLocaleString('vi-VN')} điểm</div><div style="font-size:12px">📈 ${mult?mult.toFixed(2)+'x':'—'} &nbsp; → &nbsp; 💵 ${payout.toLocaleString('vi-VN')} điểm</div><div style="font-size:10px;color:#94a3b8">${esc(b.created_at||b.placed_at||'')}</div></div><span style="font-size:10px;font-weight:800">${esc(status)}</span></div>`}).join('')||'<div style="padding:12px;text-align:center;color:#94a3b8">Chưa có cược online.</div>';
     }catch(e){el.innerHTML='<div style="padding:12px;color:#fca5a5">Không tải được lịch sử cược: '+esc(e.message)+'</div>'}
   }
   window.qqAdminMarkOrderApproved=async function(orderId){try{await api('/'+T+'?record_key=eq.order-'+encodeURIComponent(orderId),{method:'PATCH',headers:{...H,Prefer:'return=minimal'},body:JSON.stringify({status:'Đã duyệt',updated_at:new Date().toISOString()})});}catch(e){console.warn('admin approve cloud',e)}};
+  window.qqAdminGetPendingOrders=async function(){const rows=await api('/'+T+'?select=record_key,username,payload,status,created_at,updated_at&type=eq.purchase&status=eq.Ch%E1%BB%9D%20duy%E1%BB%87t&order=created_at.desc&limit=100');return Array.isArray(rows)?rows:[];};
+
+  async function syncMyOrdersFromCloud(){
+    const u=localStorage.getItem('logged_in_user')||'';
+    if(!u)return;
+    try{
+      const rows=await api('/'+T+'?select=record_key,payload,status&username=eq.'+encodeURIComponent(u)+'&type=eq.purchase&limit=100');
+      if(!Array.isArray(rows))return;
+      let orders=[];try{orders=JSON.parse(localStorage.getItem('site_orders')||'[]')}catch(e){}
+      let changed=false;
+      for(const r of rows){const o=r.payload||{};const i=orders.findIndex(x=>String(x.id)===String(o.id));if(i>=0&&r.status&&orders[i].status!==r.status){orders[i].status=r.status;changed=true;}}
+      if(changed)localStorage.setItem('site_orders',JSON.stringify(orders));
+    }catch(e){}
+  }
+  window.qqSyncMyOrdersFromCloud=syncMyOrdersFromCloud;
   window.qqAdminRefreshOnlineHistory=async function(){if(!isAdmin())return;await syncOrders();await renderOrders();await renderBets();};
   const raw=localStorage.setItem.bind(localStorage);let timer=null;
   localStorage.setItem=function(k,v){raw(k,v);if(k==='site_orders'){clearTimeout(timer);timer=setTimeout(()=>{syncOrders().catch(()=>{});},500)}};
-  window.addEventListener('load',()=>setTimeout(()=>{if(isAdmin())qqAdminRefreshOnlineHistory()},1200));
-  setInterval(()=>{if(isAdmin())qqAdminRefreshOnlineHistory().catch(()=>{})},7000);
+  window.addEventListener('load',()=>setTimeout(()=>{if(isAdmin()){qqAdminRefreshOnlineHistory();try{renderAdminPendingList();}catch(e){}}},1200));
+  setInterval(()=>{if(isAdmin())qqAdminRefreshOnlineHistory().catch(()=>{}); syncMyOrdersFromCloud().catch(()=>{})},7000);
+  window.addEventListener('load',()=>setTimeout(()=>syncMyOrdersFromCloud().catch(()=>{}),1500));
 })();
 
         window.onload = function() {
@@ -2089,7 +2121,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 const QQV_MONEY='qq_virtual_money_v1', QQV_HIST='qq_virtual_history_v1';
 function qqVirtualUser(){return localStorage.getItem('logged_in_user')||'guest'}
 function qqVirtualReadMoney(){const u=qqVirtualUser(),o=JSON.parse(localStorage.getItem(QQV_MONEY)||'{}');return o[u]||0}
-function qqVirtualWriteMoney(v){const u=qqVirtualUser(),o=JSON.parse(localStorage.getItem(QQV_MONEY)||'{}');o[u]=Math.max(0,Math.floor(v));localStorage.setItem(QQV_MONEY,JSON.stringify(o))}
+function qqVirtualWriteMoney(v){const u=qqVirtualUser(),o=JSON.parse(localStorage.getItem(QQV_MONEY)||'{}');o[u]=Math.max(0,Math.floor(v));localStorage.setItem(QQV_MONEY,JSON.stringify(o));if(window.qqSyncWalletNow)window.qqSyncWalletNow().catch(()=>{})}
 function qqVirtualReadPoints(){try{const u=qqVirtualUser();const o=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');return o[u]||0}catch(e){return 0}}
 function qqVirtualWritePoints(v){const u=qqVirtualUser(),o=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');o[u]=Math.max(0,Math.floor(v));localStorage.setItem('qq_game_points_v2',JSON.stringify(o))}
 function qqVirtualRefresh(){const p=qqVirtualReadPoints(),m=qqVirtualReadMoney();const pe=document.getElementById('qqVirtualPoints'),me=document.getElementById('qqVirtualMoney');if(pe)pe.textContent=p.toLocaleString('vi-VN')+' điểm';if(me)me.textContent=m.toLocaleString('vi-VN')+' VNĐ $';const h=document.getElementById('qqVirtualHistory');if(h){const u=qqVirtualUser(),all=JSON.parse(localStorage.getItem(QQV_HIST)||'{}'),arr=all[u]||[];h.innerHTML=arr.length?arr.map(x=>'<div style="padding:10px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;gap:10px"><span>'+x.time+'<br><b>'+x.text+'</b></span><span style="color:#34d399;font-weight:800">+'+x.money.toLocaleString('vi-VN')+' VNĐ $</span></div>').join(''):'<div style="color:var(--text-sub);padding:12px;text-align:center">Chưa có lần đổi nào.</div>'}}
@@ -2139,7 +2171,7 @@ function qqVirtualRedeem(cost,reward){const u=localStorage.getItem('logged_in_us
                         <div class="plane-label">HỆ SỐ HIỆN TẠI</div>
                         <div id="planeMultiplier" class="plane-multiplier">x1.00</div>
                     </div>
-                    <div id="planeCountdown" class="plane-countdown">ĐỢI NGƯỜI CHƠI: 30s</div>
+                    <div id="planeCountdown" class="plane-countdown">ĐỢI NGƯỜI CHƠI: 20s</div>
                     <div class="plane-pot">
                         <span>TỔNG $</span>
                         <b id="planePot">$0</b>
@@ -2299,7 +2331,7 @@ window.planeJoinRound=function(){
  const bet=Math.floor(Number($('planeBetInput').value||0));
  if(bet<=0){alert('Nhập số $ ảo muốn vào.');return}
  if(getVirtual()<bet){alert('Không đủ $ ảo.');return}
- if(!round||round.phase==='done'){round={phase:'waiting',left:30,players:makePlayers(bet),bet,joined:true};}
+ if(!round||round.phase==='done'){round={phase:'waiting',left:20,players:makePlayers(bet),bet,joined:true};}
  else {round.players.unshift({name:userName(),bet,status:'Đã vào',me:true});}
  // Deduct immediately from virtual-only balance.
  setVirtual(getVirtual()-bet);
@@ -2310,7 +2342,7 @@ window.planeJoinRound=function(){
  startCountdown();
 }
 function startCountdown(){
- clearInterval(timer); round.phase="waiting"; let t=30; round.left=30;
+ clearInterval(timer); round.phase="waiting"; let t=20; round.left=20;
  $('planeCountdown').textContent='ĐỢI NGƯỜI CHƠI: '+t+'s';
  timer=setInterval(()=>{
   t--; round.left=t;
@@ -2380,7 +2412,7 @@ function newRound(){
  $('planeAircraft').style.left='5%'; $('planeAircraft').style.top='39%';
  $('planeMultiplier').textContent='x1.00';
  round=null;
- $('planeCountdown').textContent='ĐỢI NGƯỜI CHƠI: 30s';
+ $('planeCountdown').textContent='ĐỢI NGƯỜI CHƠI: 20s';
  $('planeStatus').textContent='Vòng mới. Ai vào trước sẽ mở cửa 30 giây cho mọi người tham gia.';
  $('planePlayerList').innerHTML='';
  $('planePot').textContent='$0';
@@ -2598,6 +2630,8 @@ window.startPlaneGame=function(){newRound()}
     const u=currentUser(); if(!u)return;
     const loaded=await loadAll();
     if(loaded){
+      // Sau khi khôi phục snapshot, luôn đọc lại ví từ bảng user_wallets (nguồn tiền/điểm chính).
+      try{ if(typeof window.qqRefreshWallet==='function') await window.qqRefreshWallet(); }catch(e){}
       try{ if(typeof showLoggedInState==='function') showLoggedInState(u); }catch(e){}
       try{ if(typeof renderHistoryTables==='function') renderHistoryTables(); }catch(e){}
       try{ if(typeof renderAdminMemberList==='function') renderAdminMemberList(); }catch(e){}
@@ -2669,17 +2703,18 @@ window.startPlaneGame=function(){newRound()}
 
   async function getWallet(username){
     if(!username) return null;
-    const rows=await req('/user_wallets?select=username,balance,points,updated_at&username=eq.'+encodeURIComponent(username)+'&limit=1');
+    const rows=await req('/user_wallets?select=username,balance,points,virtual_balance,updated_at&username=eq.'+encodeURIComponent(username)+'&limit=1');
     return Array.isArray(rows)&&rows[0]?rows[0]:null;
   }
 
-  async function upsertWallet(username,balance,points){
+  async function upsertWallet(username,balance,points,virtualBalance){
     if(!username) return null;
     const current=await getWallet(username);
     const body={
       username,
       balance: balance===null || balance===undefined ? num(current?.balance) : num(balance),
-      points: points===null || points===undefined ? num(current?.points) : num(points)
+      points: points===null || points===undefined ? num(current?.points) : num(points),
+      virtual_balance: virtualBalance===null || virtualBalance===undefined ? num(current?.virtual_balance) : num(virtualBalance)
     };
     const rows=await req('/user_wallets?on_conflict=username',{
       method:'POST',
@@ -2690,22 +2725,24 @@ window.startPlaneGame=function(){newRound()}
   }
 
   // API nội bộ để mọi chức năng cũ (Admin/mua hàng/đổi điểm) ghi ngay lên Supabase.
-  window.qqCloudSetWallet=async function(username,balance,points){
-    const row=await upsertWallet(username,balance,points);
+  window.qqCloudGetWallet=getWallet;
+  window.qqCloudSetWallet=async function(username,balance,points,virtualBalance){
+    const row=await upsertWallet(username,balance,points,virtualBalance);
     if(!row) throw new Error('Không nhận được dữ liệu ví từ Supabase');
-    const b=readObj(moneyKey), p=readObj(pointsKey);
+    const b=readObj(moneyKey), p=readObj(pointsKey), v=readObj('qq_virtual_money_v1');
     b[username]=num(row.balance);
     p[username]=num(row.points);
-    writeObj(moneyKey,b); writeObj(pointsKey,p);
-    if(me()===username) applyWallet(username,row.balance,row.points);
+    v[username]=num(row.virtual_balance);
+    writeObj(moneyKey,b); writeObj(pointsKey,p); writeObj('qq_virtual_money_v1',v);
+    if(me()===username) applyWallet(username,row.balance,row.points,row.virtual_balance);
     return row;
   };
   window.qqSyncWalletNow=async function(){ await syncAllLocalToCloud(); };
 
-  function applyWallet(username,balance,points){
-    const b=readObj(moneyKey), p=readObj(pointsKey);
-    b[username]=num(balance); p[username]=num(points);
-    writeObj(moneyKey,b); writeObj(pointsKey,p);
+  function applyWallet(username,balance,points,virtualBalance){
+    const b=readObj(moneyKey), p=readObj(pointsKey), v=readObj('qq_virtual_money_v1');
+    b[username]=num(balance); p[username]=num(points); v[username]=num(virtualBalance);
+    writeObj(moneyKey,b); writeObj(pointsKey,p); writeObj('qq_virtual_money_v1',v);
     try{ if(window.qqRefreshWalletOriginal) window.qqRefreshWalletOriginal(); }catch(e){}
     const money=num(balance).toLocaleString('vi-VN')+' VNĐ';
     if($('qqWalletMoney')) $('qqWalletMoney').textContent=money;
@@ -2718,12 +2755,12 @@ window.startPlaneGame=function(){newRound()}
     try{
       const w=await getWallet(u);
       if(w){
-        applyWallet(u,w.balance,w.points);
+        applyWallet(u,w.balance,w.points,w.virtual_balance);
         onlineReady=true;
         $('qqOnlineStatus') && ($('qqOnlineStatus').textContent='🟢 Online Supabase');
       } else {
         const b=readObj(moneyKey), p=readObj(pointsKey);
-        await upsertWallet(u,num(b[u]),num(p[u]));
+        const v=readObj('qq_virtual_money_v1'); await upsertWallet(u,num(b[u]),num(p[u]),num(v[u]));
         onlineReady=true;
       }
     }catch(e){
@@ -2736,13 +2773,13 @@ window.startPlaneGame=function(){newRound()}
     if(syncing) return;
     syncing=true;
     try{
-      const b=readObj(moneyKey), p=readObj(pointsKey);
-      const users=new Set([...Object.keys(b),...Object.keys(p)]);
+      const b=readObj(moneyKey), p=readObj(pointsKey), v=readObj('qq_virtual_money_v1');
+      const users=new Set([...Object.keys(b),...Object.keys(p),...Object.keys(v)]);
       for(const u of users){
         if(!u || u==='guest') continue;
-        const h=u+'|'+num(b[u])+'|'+num(p[u]);
+        const h=u+'|'+num(b[u])+'|'+num(p[u])+'|'+num(v[u]);
         if(h===lastLocalHashes[u]) continue;
-        try{ await upsertWallet(u,num(b[u]),num(p[u])); lastLocalHashes[u]=h; lastLocalHash=h; }catch(e){ console.warn('wallet sync',u,e); }
+        try{ const v=readObj('qq_virtual_money_v1'); await upsertWallet(u,num(b[u]),num(p[u]),num(v[u])); lastLocalHashes[u]=h; lastLocalHash=h; }catch(e){ console.warn('wallet sync',u,e); }
       }
     }finally{ syncing=false; }
   }
@@ -2836,9 +2873,9 @@ window.startPlaneGame=function(){newRound()}
       overlay.innerHTML=rows.map(x=>{
         const bet=num(x.bet);
         const st=String(x.status||'running').toLowerCase();
-        const isCash=st==='cashed_out'||st==='cashout'||st==='cashout_out'||st==='won';
+        const isCash=st==='cashed'||st==='cashed_out'||st==='cashout'||st==='cashout_out'||st==='won';
         const isCrash=st==='crashed'||st==='lost';
-        const liveX=isCash||isCrash?(num(x.multiplier)||m):m;
+        const liveX=isCash||isCrash?(num(x.multiplier??x.cash_multiplier)||m):m;
         const payout=isCash?(num(x.payout)||Math.floor(bet*liveX)):(isCrash?0:Math.floor(bet*liveX));
         const cls=isCash?'cashed':(isCrash?'crashed':'');
         const name=String(x.username||'Ẩn danh').replace(/[<>]/g,'');
@@ -2856,7 +2893,7 @@ window.startPlaneGame=function(){newRound()}
     }
     box.innerHTML='<b>👥 DANH SÁCH CƯỢC — '+rows.length+' người</b>'+(rows.length?rows.map(x=>{
       const bet=num(x.bet),st=String(x.status||'running').toLowerCase(),isCash=st==='cashed_out'||st==='cashout'||st==='won',isCrash=st==='crashed'||st==='lost';
-      const mult=isCash||isCrash?(num(x.multiplier)||m):m; const payout=isCash?(num(x.payout)||Math.floor(bet*mult)):(isCrash?0:Math.floor(bet*mult));
+      const mult=isCash||isCrash?(num(x.multiplier??x.cash_multiplier)||m):m; const payout=isCash?(num(x.payout)||Math.floor(bet*mult)):(isCrash?0:Math.floor(bet*mult));
       const label=isCash?'💰 Đã chốt':(isCrash?'💥 Crash':'🚀 Đang bay');
       return '<div style="display:grid;grid-template-columns:1.2fr .8fr .55fr .9fr auto;gap:7px;padding:6px 0;border-bottom:1px solid rgba(148,163,184,.10)"><span>🧑 '+String(x.username||'Ẩn danh').replace(/[<>]/g,'')+'</span><span>'+bet.toLocaleString('vi-VN')+'</span><b style="color:#fbbf24">'+mult.toFixed(2)+'x</b><span style="color:#34d399;font-weight:900">'+payout.toLocaleString('vi-VN')+'</span><span>'+label+'</span></div>';
     }).join(''):'<div style="opacity:.65;margin-top:6px">Chưa có cược.</div>');
@@ -2994,6 +3031,9 @@ window.startPlaneGame=function(){newRound()}
     setOnlineBadge();
     if(!$('qqAviatorPanel')) return;
     if(onlineLoop)clearInterval(onlineLoop);
+    // Khôi phục dữ liệu của đúng tài khoản từ Supabase trước, sau đó mới đọc ví.
+    // Điều này tránh localStorage cũ ghi đè tiền/điểm online sau khi đăng nhập lại.
+    try{ if(window.qqLoadAllCloudData) await window.qqLoadAllCloudData(); }catch(e){ console.warn('Cloud restore before wallet:',e); }
     await pullMe();
     try{
       const saved=JSON.parse(localStorage.getItem('qq_active_aviator_bet')||'null');
@@ -3007,6 +3047,24 @@ window.startPlaneGame=function(){newRound()}
 
 })();
 </script>
+<script id="qq-admin-virtual-cloud">
+(function(){
+  window.executeAdminVirtual=async function(){
+    try{
+      const u=(document.getElementById('adminTargetVirtualUser')?.value||'').trim();
+      const act=document.getElementById('adminVirtualActionType')?.value||'add';
+      const n=Math.floor(Number(document.getElementById('adminVirtualInput')?.value||0));
+      if(!u||n<=0){showCustomAlert('THIẾU DỮ LIỆU','Nhập đúng tài khoản và số tiền ảo.');return;}
+      const rows=await fetch('https://dhhrbtqridanpgikiokd.supabase.co/rest/v1/user_wallets?select=username,balance,points,virtual_balance&username=eq.'+encodeURIComponent(u)+'&limit=1',{headers:{apikey:'sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU',Authorization:'Bearer sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU'}}).then(r=>r.json());
+      const cur=Array.isArray(rows)&&rows[0]?rows[0]:{username:u,balance:0,points:0,virtual_balance:0};
+      const next=Math.max(0,Number(cur.virtual_balance||0)+(act==='add'?n:-n));
+      await window.qqCloudSetWallet(u,Number(cur.balance||0),Number(cur.points||0),next);
+      if(typeof renderAdminMemberList==='function')renderAdminMemberList();
+      showCustomAlert('THÀNH CÔNG',(act==='add'?'Đã cộng ':'Đã trừ ')+n.toLocaleString('vi-VN')+' tiền ảo cho '+u+'. Tiền ảo mới: '+next.toLocaleString('vi-VN'));
+    }catch(e){showCustomAlert('LỖI LƯU ONLINE',e.message||String(e));}
+  };
+})();
+</script>
 <script id="qq-wallet-change-bridge">
 (function(){
   // Các chức năng cũ vẫn dùng localStorage; cầu nối này đẩy thay đổi ví lên cloud ngay.
@@ -3014,11 +3072,37 @@ window.startPlaneGame=function(){newRound()}
   let timer=null;
   localStorage.setItem=function(key,value){
     rawSet(key,value);
-    if((key==='user_balances'||key==='qq_game_points_v2') && window.qqSyncWalletNow){
+    if((key==='user_balances'||key==='qq_game_points_v2'||key==='qq_virtual_money_v1') && window.qqSyncWalletNow){
       clearTimeout(timer);
       timer=setTimeout(()=>window.qqSyncWalletNow().catch(()=>{}),120);
     }
   };
+})();
+</script>
+
+<script id="qq-final-profile-and-cloud-fix">
+(function(){
+  'use strict';
+  function n(v){const x=Number(v);return Number.isFinite(x)?x:0;}
+  function u(){return String(localStorage.getItem('logged_in_user')||'').trim();}
+  function obj(k){try{return JSON.parse(localStorage.getItem(k)||'{}')||{};}catch(e){return {};}}
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  window.renderQQProfile=async function(){
+    const m=document.getElementById('qqProfileMount');if(!m)return;
+    const username=u();
+    if(!username){m.innerHTML='<div style="padding:30px;text-align:center;color:#94a3b8">🔐 Hãy đăng nhập để xem hồ sơ.</div>';return;}
+    let row=null;
+    try{if(window.qqCloudGetWallet)row=await window.qqCloudGetWallet(username);}catch(e){console.warn('profile cloud',e);}
+    if(!row){const b=obj('user_balances'),p=obj('qq_game_points_v2'),v=obj('qq_virtual_money_v1');row={username,balance:n(b[username]),points:n(p[username]),virtual_balance:n(v[username])};}
+    const admin=username.toLowerCase()==='admin_socnau03',qtv=username.toLowerCase()==='qtv_nhuquyn02';
+    let avatar='';
+    try{if(admin&&typeof QQ_ADMIN_BG!=='undefined')avatar=QQ_ADMIN_BG;else if(qtv&&typeof QQ_HINATA_BG!=='undefined')avatar=QQ_HINATA_BG;else if(typeof QQ_CONAN_BGS!=='undefined'&&QQ_CONAN_BGS.length){const i=Math.abs([...username].reduce((a,c)=>((a*31+c.charCodeAt(0))|0),7))%QQ_CONAN_BGS.length;avatar=QQ_CONAN_BGS[i];}}catch(e){}
+    const role=admin?'ADMIN':qtv?'QTV':'THÀNH VIÊN';
+    const vip=admin?'ADMIN':qtv?'QTV':'VIP '+Math.min(10,Math.floor(n(row.points)/10000));
+    m.innerHTML=`<div class="qq-profile-wrap" style="--qq-profile-bg:url('${avatar}')"><div class="qq-profile-inner">${avatar?`<img class="qq-avatar" src="${avatar}" alt="Ảnh anime hồ sơ">`:''}<div><div class="qq-profile-name">${admin?'👑 ':qtv?'🛡️ ':''}${esc(username)}</div><div class="qq-profile-sub">✨ Anime profile • ${role} • dữ liệu lưu online</div><div class="qq-profile-badges"><span class="qq-pbadge">${admin?'👑 ADMIN':qtv?'🛡️ QTV':'🎌 THÀNH VIÊN'}</span><span class="qq-pbadge">🏆 ${vip}</span></div><div class="qq-pgrid"><div class="qq-pstat">💰 Tiền ví<b>${n(row.balance).toLocaleString('vi-VN')} VNĐ</b></div><div class="qq-pstat">🎮 Tiền ảo<b>${n(row.virtual_balance).toLocaleString('vi-VN')}</b></div><div class="qq-pstat">💎 Điểm<b>${n(row.points).toLocaleString('vi-VN')}</b></div><div class="qq-pstat">🎖️ Cấp VIP<b>${vip}</b></div></div><button class="qq-random-btn" onclick="qqRandomConan()">🎲 Đổi ảnh anime</button></div></div><div class="qq-profile-credit">${role} • ☁️ Supabase Online</div></div>`;
+  };
+  window.addEventListener('load',()=>setTimeout(()=>window.renderQQProfile(),900));
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>window.renderQQProfile(),200);});
 })();
 </script>
 </body>
