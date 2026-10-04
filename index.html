@@ -658,6 +658,116 @@
 /* Nhập Code đã được ẩn khỏi giao diện */
 #tab-redeem{display:none!important;}
 </style>
+<style id="qq-modern-dark-ui">
+/* ===== QQN MODERN DARK UI v3 ===== */
+:root{
+  --qq-bg:#05070d;
+  --qq-bg2:#090d16;
+  --qq-surface:rgba(12,16,27,.82);
+  --qq-surface2:rgba(17,23,38,.9);
+  --qq-line:rgba(128,145,190,.16);
+  --qq-line2:rgba(129,140,248,.28);
+  --qq-text:#f4f7ff;
+  --qq-muted:#8e9ab5;
+  --qq-primary:#7c83ff;
+  --qq-primary2:#a855f7;
+  --qq-cyan:#38bdf8;
+  --qq-green:#34d399;
+  --qq-shadow:0 22px 70px rgba(0,0,0,.42);
+}
+html{background:var(--qq-bg);scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(circle at 15% 5%,rgba(124,131,255,.12),transparent 28%),
+    radial-gradient(circle at 88% 18%,rgba(168,85,247,.10),transparent 24%),
+    radial-gradient(circle at 50% 100%,rgba(56,189,248,.06),transparent 35%),
+    linear-gradient(180deg,#05070d 0%,#080b13 55%,#05070d 100%) !important;
+  color:var(--qq-text)!important;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  letter-spacing:.01em;
+}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+.sidebar{
+  background:rgba(6,9,16,.88)!important;
+  border-right:1px solid var(--qq-line)!important;
+  box-shadow:18px 0 60px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(24px)!important;
+}
+.logo-area{
+  min-height:78px;padding:22px 16px!important;
+  background:linear-gradient(100deg,#9da3ff,#c084fc 48%,#67e8f9)!important;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+  border-bottom:1px solid var(--qq-line)!important;
+  text-shadow:0 0 30px rgba(124,131,255,.18);
+}
+.menu-section{padding:18px 12px!important;gap:7px!important}
+.menu-item{
+  border:1px solid transparent!important;border-radius:14px!important;
+  padding:12px 14px!important;color:#8d98b2!important;
+  transition:transform .18s ease,background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease!important;
+}
+.menu-item:hover{transform:translateX(3px);background:rgba(124,131,255,.07)!important;border-color:rgba(124,131,255,.13)!important;color:#dfe3ff!important}
+.menu-item.active{background:linear-gradient(135deg,rgba(124,131,255,.19),rgba(168,85,247,.08))!important;border-color:rgba(124,131,255,.28)!important;color:#cdd1ff!important;box-shadow:inset 3px 0 0 #858cff,0 10px 30px rgba(0,0,0,.14)!important}
+.main-content{background:transparent!important}
+.card,.section,.panel,.box,[class*="card"],[class*="panel"]{
+  border-color:var(--qq-line)!important;
+}
+.card,.section,.panel,.game-card,.profile-card{
+  background:linear-gradient(145deg,rgba(16,21,35,.88),rgba(8,12,22,.82))!important;
+  border:1px solid var(--qq-line)!important;
+  border-radius:20px!important;
+  box-shadow:var(--qq-shadow)!important;
+  backdrop-filter:blur(18px)!important;
+}
+button,.btn,input,select,textarea{
+  border-radius:12px!important;
+  font-family:inherit!important;
+}
+button,.btn{
+  border:1px solid rgba(255,255,255,.08)!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.18)!important;
+  transition:transform .16s ease,filter .16s ease,box-shadow .16s ease!important;
+}
+button:hover,.btn:hover{transform:translateY(-1px);filter:brightness(1.07);box-shadow:0 12px 30px rgba(0,0,0,.28)!important}
+button:active,.btn:active{transform:translateY(0) scale(.985)}
+input,select,textarea{
+  background:rgba(3,6,13,.72)!important;color:#eef2ff!important;
+  border:1px solid rgba(132,148,194,.20)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025)!important;
+  outline:none!important;
+}
+input:focus,select:focus,textarea:focus{border-color:rgba(124,131,255,.72)!important;box-shadow:0 0 0 3px rgba(124,131,255,.10),0 0 24px rgba(124,131,255,.08)!important}
+h1,h2,h3,h4{letter-spacing:-.025em!important;color:#f7f8ff!important}
+small,.muted,.text-muted{color:var(--qq-muted)!important}
+hr{border-color:var(--qq-line)!important}
+table{border-collapse:separate!important;border-spacing:0!important;overflow:hidden;border-radius:14px;border:1px solid var(--qq-line)!important;background:rgba(5,8,15,.46)!important}
+th{background:rgba(124,131,255,.055)!important;color:#aeb8d2!important;text-transform:uppercase;font-size:11px;letter-spacing:.07em}
+td,th{border-color:var(--qq-line)!important}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#060912}
+::-webkit-scrollbar-thumb{background:linear-gradient(#303a58,#20283d);border-radius:99px;border:2px solid #060912}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(#4b5680,#303a58)}
+/* compact modern game area */
+[id*="aviator"], [class*="aviator"]{border-radius:22px!important}
+/* status pills */
+.badge,.tag,.status,.chip{border-radius:999px!important;border:1px solid rgba(255,255,255,.08)!important;background:rgba(255,255,255,.045)!important}
+/* subtle glow for important values */
+[class*="balance"],[class*="points"],[class*="multiplier"]{text-shadow:0 0 18px rgba(124,131,255,.16)}
+@media(max-width:900px){
+  .sidebar{width:78px!important}
+  .main-content{margin-left:78px!important}
+  .logo-area{font-size:0!important}.logo-area:after{content:"QQ";font-size:18px;font-weight:900}
+  .menu-item{justify-content:center!important;padding:13px 8px!important}.menu-item span:last-child{display:none!important}
+}
+@media(max-width:640px){
+  .sidebar{display:none!important}
+  .main-content{margin-left:0!important;padding:12px!important}
+  .card,.section,.panel,.game-card,.profile-card{border-radius:16px!important}
+  button,.btn{min-height:42px}
+}
+/* ===== end QQN MODERN DARK UI ===== */
+</style>
 </head>
 <body>
 
