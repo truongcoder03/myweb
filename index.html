@@ -972,6 +972,109 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
 @media(max-width:700px){.qs-stage{height:390px}.qs-rockbox{transform:translate(-50%,-50%) scale(.86)}.qs-hammer{left:63%;transform:rotate(-22deg) scale(.84)}.qs-controls{grid-template-columns:1fr 1fr}.qs-controls>div{grid-column:1/-1}.qs-mult{font-size:48px}}
 </style>
 
+
+<style id="qq-mobile-card-controls-and-smash-touch-fix">
+.qq-card-mobile-betbar{display:none}
+
+/* Crystal Smash: cho phép bấm nhanh nhiều lần mà không kích hoạt double-tap zoom.
+   Không khóa pinch zoom của cả trang; chỉ áp dụng trong game đập đá. */
+#qsGame,
+#qsGame .qs-stage,
+#qsGame .qs-rockbox,
+#qsGame .qs-rock,
+#qsGame .qs-controls,
+#qsGame .qs-btn{
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+#qsGame .qs-btn,
+#qsGame .qs-rock{
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+@media(max-width:900px){
+  /* Mobile: item -> thanh cược -> lá bài của bạn -> đối thủ */
+  .qq-battle-board>.qq-drop-zone{order:-3!important}
+  .qq-battle-board>.qq-card-mobile-betbar{order:-2!important}
+  .qq-battle-board>.qq-player-zone:first-child{order:-1!important}
+  .qq-battle-board>.qq-player-zone:last-child{order:0!important}
+
+  .qq-card-mobile-betbar{
+    display:grid;
+    grid-template-columns:auto minmax(150px,1fr);
+    gap:9px 10px;
+    align-items:center;
+    position:sticky;
+    top:92px;
+    z-index:90;
+    margin:0;
+    padding:11px;
+    border-radius:17px;
+    background:rgba(10,12,26,.96);
+    border:1px solid rgba(129,140,248,.38);
+    box-shadow:0 12px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.04);
+    backdrop-filter:blur(12px);
+  }
+  .qq-card-mobile-betinfo{
+    min-width:84px;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    line-height:1.1;
+  }
+  .qq-card-mobile-betinfo span{
+    font-size:9px;
+    font-weight:900;
+    color:#94a3b8;
+    letter-spacing:.7px;
+  }
+  .qq-card-mobile-betinfo b{
+    font-size:15px;
+    color:#fbbf24;
+  }
+  #qqMobileStartBtn{
+    min-height:48px;
+    border:0;
+    border-radius:13px;
+    background:linear-gradient(135deg,#6366f1,#a855f7);
+    color:#fff;
+    font-size:13px;
+    font-weight:1000;
+    letter-spacing:.3px;
+    box-shadow:0 9px 22px rgba(99,102,241,.25);
+    touch-action:manipulation;
+  }
+  #qqMobileStartBtn:disabled{
+    opacity:.46;
+    filter:saturate(.55);
+  }
+  #qqMobileCardStatus{
+    grid-column:1/-1;
+    min-height:16px;
+    text-align:center;
+    color:#c4b5fd;
+    font-size:10px;
+    font-weight:800;
+    line-height:1.35;
+  }
+
+  /* Bớt khoảng cách thừa để trên điện thoại lá bài nằm sát control hơn. */
+  .qq-battle-board{gap:12px!important}
+  .qq-player-zone,.qq-drop-zone{min-height:0!important}
+  .qq-player-zone{padding:12px!important}
+}
+
+@media(max-width:520px){
+  .qq-card-mobile-betbar{
+    top:84px;
+    grid-template-columns:82px 1fr;
+    padding:10px;
+  }
+  #qqMobileStartBtn{font-size:12px}
+}
+</style>
+
 </head>
 <body>
 
@@ -1280,6 +1383,14 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
 <div class="qq-battle-board">
                     <div class="qq-player-zone"><div class="qq-player-title">🧑 BẠN</div><div class="qq-cards" id="qqPlayerCards"></div></div>
                     <div class="qq-drop-zone"><div class="qq-drop-label">🎁 ITEM CỦA VÁN NÀY</div><img id="qqBattleItemImg" alt="Item Gamepass xuất hiện"><div id="qqBattleItemName">Nhấn “Chơi ván mới” để random item</div><div id="qqBattleItemRate">Kết quả item sẽ hiện ngay khi bắt đầu ván</div></div>
+                    <div class="qq-card-mobile-betbar" id="qqCardMobileBetbar">
+                        <div class="qq-card-mobile-betinfo">
+                            <span>🎴 CƯỢC VÁN</span>
+                            <b>20 ĐIỂM</b>
+                        </div>
+                        <button type="button" id="qqMobileStartBtn" onclick="qqStartGame()">CHƠI VÁN MỚI</button>
+                        <div id="qqMobileCardStatus">Nhấn để bắt đầu ván mới.</div>
+                    </div>
                     <div class="qq-player-zone"><div class="qq-player-title">🤖 ĐỐI THỦ</div><div class="qq-cards" id="qqEnemyCards"></div></div>
                 </div>
                 <div class="qq-item" id="qqItemBox"><div id="qqItemImg"></div><div><b id="qqItemTitle">ITEM XUẤT HIỆN!</b><div id="qqItemText"></div></div></div>
@@ -4050,6 +4161,66 @@ window.startPlaneGame=function(){newRound()}
     ui();
   });
   ui();
+})();
+</script>
+
+
+<script id="qq-mobile-card-and-smash-fix">
+(()=>{
+  'use strict';
+
+  function initQQMobileGameFix(){
+    const desktopBtn = document.getElementById('qqStartBtn');
+    const mobileBtn = document.getElementById('qqMobileStartBtn');
+    const desktopStatus = document.getElementById('qqStatus');
+    const mobileStatus = document.getElementById('qqMobileCardStatus');
+    const smash = document.getElementById('qsGame');
+
+    const syncCardControls = () => {
+      if(desktopBtn && mobileBtn){
+        mobileBtn.disabled = !!desktopBtn.disabled;
+        mobileBtn.textContent = desktopBtn.disabled ? 'ĐANG CHƠI...' : 'CHƠI VÁN MỚI';
+      }
+      if(desktopStatus && mobileStatus){
+        mobileStatus.textContent = desktopStatus.textContent || 'Nhấn để bắt đầu ván mới.';
+      }
+    };
+
+    syncCardControls();
+
+    if(desktopBtn && mobileBtn){
+      new MutationObserver(syncCardControls).observe(desktopBtn,{
+        attributes:true,
+        attributeFilter:['disabled']
+      });
+    }
+    if(desktopStatus && mobileStatus){
+      new MutationObserver(syncCardControls).observe(desktopStatus,{
+        childList:true,
+        subtree:true,
+        characterData:true
+      });
+    }
+
+    if(smash){
+      // touch-action: manipulation là fix chính. dblclick chỉ là lớp dự phòng
+      // cho một số browser mobile vẫn cố zoom khi bấm liên tiếp.
+      smash.addEventListener('dblclick', e => {
+        e.preventDefault();
+      }, {passive:false});
+
+      // Không cho browser chọn text khi spam nút ĐẬP.
+      smash.addEventListener('selectstart', e => {
+        if(e.target.closest('.qs-btn,.qs-rock,.qs-stage')) e.preventDefault();
+      });
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initQQMobileGameFix, {once:true});
+  }else{
+    initQQMobileGameFix();
+  }
 })();
 </script>
 
