@@ -518,8 +518,19 @@
         .qq-dealer-avatar{width:74px;height:74px;flex:0 0 74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:46px;background:radial-gradient(circle at 35% 28%,#fbcfe8,#ec4899 45%,#312e81 100%);border:2px solid rgba(251,191,36,.8);box-shadow:0 0 24px rgba(236,72,153,.35);animation:qqDealerPulse 1.8s ease-in-out infinite}
         .qq-dealer-copy b{display:block;color:#fff;font-size:14px}.qq-dealer-copy span{display:block;color:#cbd5e1;font-size:11px;margin-top:4px}.qq-dealer-copy .qq-dealer-action{color:#f9a8d4;font-weight:900;margin-top:7px}
         @keyframes qqDealerPulse{50%{transform:translateY(-2px) scale(1.03);filter:brightness(1.08)}}
-        .qq-aviator-live-overlay{position:absolute;right:14px;top:14px;width:min(390px,43%);z-index:40;background:rgba(5,10,24,.88);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,.20);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.30);overflow:hidden}.qq-aviator-live-top{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-bottom:1px solid rgba(148,163,184,.12);font-size:11px;color:#f8fafc}.qq-aviator-live-top span{color:#a5b4fc;font-weight:900}.qq-aviator-live-head{display:grid;grid-template-columns:1.35fr .85fr .55fr .95fr;gap:6px;padding:6px 10px;color:#64748b;font-size:8px;font-weight:900}.qq-aviator-live-list{max-height:220px;overflow:auto}.qq-aviator-live-row{display:grid;grid-template-columns:1.35fr .85fr .55fr .95fr;gap:6px;align-items:center;padding:7px 10px;border-top:1px solid rgba(148,163,184,.08);font-size:10px;color:#e2e8f0}.qq-aviator-live-row.me{background:linear-gradient(90deg,rgba(251,191,36,.10),transparent)}.qq-aviator-live-row .qq-live-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qq-aviator-live-row .qq-live-bet{color:#cbd5e1}.qq-aviator-live-row .qq-live-x{color:#fbbf24;font-weight:1000}.qq-aviator-live-row .qq-live-payout{color:#34d399;font-weight:1000;text-align:right}.qq-live-empty{padding:18px 10px;text-align:center;color:#64748b;font-size:10px}.qq-aviator-live-row.cashed{background:rgba(16,185,129,.08)}.qq-aviator-live-row.crashed{opacity:.72;background:rgba(244,63,94,.06)}
-@media(max-width:700px){.qq-aviator-head{flex-direction:column}.qq-aviator-board{height:330px}.qq-multiplier{font-size:43px}.qq-plane-wrap{transform:scale(.82);transform-origin:bottom left}.qq-live-head{display:none}.qq-room-player{grid-template-columns:1.2fr .8fr .65fr 1fr}.qq-room-player .qq-p-status{display:none}.qq-aviator-controls{align-items:stretch}.qq-aviator-controls>div{flex:1}.qq-aviator-controls input{width:100%}}
+        .qq-aviator-live-overlay{position:absolute;right:14px;top:82px;width:min(390px,43%);z-index:40;background:rgba(5,10,24,.90);backdrop-filter:blur(10px);border:1px solid rgba(148,163,184,.20);border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.30);overflow:hidden}.qq-aviator-live-top{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-bottom:1px solid rgba(148,163,184,.12);font-size:11px;color:#f8fafc}.qq-aviator-live-top span{color:#a5b4fc;font-weight:900}.qq-aviator-live-head{display:grid;grid-template-columns:1.35fr .85fr .55fr .95fr;gap:6px;padding:6px 10px;color:#64748b;font-size:8px;font-weight:900}.qq-aviator-live-list{max-height:190px;overflow:auto}.qq-aviator-live-row{display:grid;grid-template-columns:1.35fr .85fr .55fr .95fr;gap:6px;align-items:center;padding:7px 10px;border-top:1px solid rgba(148,163,184,.08);font-size:10px;color:#e2e8f0}.qq-aviator-live-row.me{background:linear-gradient(90deg,rgba(251,191,36,.10),transparent)}.qq-aviator-live-row .qq-live-name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qq-aviator-live-row .qq-live-bet{color:#cbd5e1}.qq-aviator-live-row .qq-live-x{color:#fbbf24;font-weight:1000}.qq-aviator-live-row .qq-live-payout{color:#34d399;font-weight:1000;text-align:right}.qq-live-empty{padding:18px 10px;text-align:center;color:#64748b;font-size:10px}.qq-aviator-live-row.cashed{background:rgba(16,185,129,.08)}.qq-aviator-live-row.crashed{opacity:.72;background:rgba(244,63,94,.06)}
+/* ===== AVIATOR LIVE BET PANEL - COMPACT / MOBILE SAFE ===== */
+.qq-aviator-live-overlay{top:108px;right:10px;width:min(320px,42%);border-radius:11px;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.qq-aviator-live-top{padding:6px 9px;font-size:10px}.qq-aviator-live-head{padding:4px 8px;font-size:7px;gap:4px}.qq-aviator-live-list{max-height:118px}.qq-aviator-live-row{padding:5px 8px;font-size:9px;gap:4px}.qq-live-empty{padding:10px 8px;font-size:9px}
+@media(max-width:700px){
+  .qq-aviator-live-overlay{top:105px;right:8px;width:58%;max-width:none;border-radius:10px}
+  .qq-aviator-live-top{padding:5px 7px;font-size:9px}
+  .qq-aviator-live-head{padding:3px 7px;font-size:6.5px;gap:3px}
+  .qq-aviator-live-row{padding:4px 7px;font-size:8.5px;gap:3px}
+  .qq-aviator-live-list{max-height:92px}
+  .qq-live-empty{padding:8px 6px;font-size:8px}
+}
+@media(max-width:700px){.qq-aviator-head{flex-direction:column}.qq-aviator-board{height:330px}.qq-multiplier{font-size:43px;top:18px;z-index:50}.qq-speed-readout{top:67px;z-index:50}.qq-plane-wrap{transform:scale(.82);transform-origin:bottom left}.qq-aviator-live-overlay{top:92px;right:10px;width:calc(100% - 20px)}.qq-aviator-live-head{grid-template-columns:1.25fr .8fr .5fr .85fr;gap:5px}.qq-aviator-live-row{grid-template-columns:1.25fr .8fr .5fr .85fr;gap:5px}.qq-aviator-live-list{max-height:145px}.qq-live-head{display:none}.qq-room-player{grid-template-columns:1.2fr .8fr .65fr 1fr}.qq-room-player .qq-p-status{display:none}.qq-aviator-controls{align-items:stretch}.qq-aviator-controls>div{flex:1}.qq-aviator-controls input{width:100%}}
     
         .qq-virtual-card{background:linear-gradient(145deg,rgba(99,102,241,.12),rgba(168,85,247,.08));border:1px solid rgba(129,140,248,.3);border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 12px 35px rgba(0,0,0,.18)}
         .qq-virtual-balance{font-size:30px;font-weight:900;color:#34d399;margin-top:5px}.qq-virtual-note{color:var(--text-sub);font-size:12px;line-height:1.6}
@@ -1066,12 +1077,12 @@
             </div>
 
             <div class="admin-card qq-game-settings-card" style="margin-bottom:20px;border:1px solid rgba(34,197,94,.35);background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(59,130,246,.08));">
-                <h3 style="margin-top:0;color:#4ade80;font-size:15px;">⚙️ LUẬT & PAYOUT CÔNG KHAI CỦA CÁC TRÒ</h3>
+                <h3 style="margin-top:0;color:#4ade80;font-size:15px;">⚙️ QUYỀN ADMIN — CHỈNH TỶ LỆ ĂN / PAYOUT</h3>
                 <div style="font-size:12px;color:var(--text-sub);line-height:1.65;margin-bottom:12px;">
-                    Admin/QTV có thể chỉnh <b>payout công khai</b>, mức cược tối thiểu/tối đa và trạng thái bật/tắt của từng trò. Các giá trị này được lưu online và hiển thị cho người chơi. Không dùng để thay đổi ngầm kết quả từng người chơi.
+                    Admin/QTV có thể chỉnh <b>tỷ lệ ăn (payout) công khai</b>, mức cược tối thiểu/tối đa và trạng thái bật/tắt của từng trò. Các giá trị được lưu online và dùng làm luật chung cho trò chơi; không chỉnh riêng kết quả từng người chơi.
                 </div>
                 <div id="qq-game-settings-list" style="display:grid;gap:10px;"></div>
-                <button class="btn-submit" style="margin-top:12px;background:linear-gradient(45deg,#22c55e,#3b82f6);" onclick="saveQQGameSettings()">💾 Lưu cấu hình trò chơi</button>
+                <button class="btn-submit" style="margin-top:12px;background:linear-gradient(45deg,#22c55e,#3b82f6);" onclick="saveQQGameSettings()">💾 Lưu tỷ lệ ăn / cấu hình trò chơi</button>
                 <div id="qqGameSettingsResult" style="margin-top:9px;font-size:12px;min-height:18px;"></div>
             </div>
 
@@ -1680,9 +1691,9 @@ async function executeAdminPoints(){
             const el=document.getElementById('qq-game-settings-list'); if(!el)return;
             const settings=qqGetGameSettings();
             el.innerHTML=Object.entries(settings).map(([key,x])=>`<div style="display:grid;grid-template-columns:minmax(0,1fr) 90px 120px 130px;gap:8px;align-items:center;padding:10px;border:1px solid #334155;border-radius:10px;background:#0b1220;">
-                <div><b style="font-size:12px;">${x.name}</b><div style="font-size:10px;color:var(--text-sub);">Payout công khai</div></div>
+                <div><b style="font-size:12px;">${x.name}</b><div style="font-size:10px;color:var(--text-sub);">💰 Tỷ lệ ăn / payout công khai</div></div>
                 <label style="font-size:11px;display:flex;align-items:center;gap:5px;"><input type="checkbox" data-gs-enabled="${key}" ${x.enabled?'checked':''}> Bật</label>
-                <label style="font-size:11px;">Payout x<input type="number" min="0" step="0.01" data-gs-payout="${key}" value="${Number(x.payout)||0}" style="width:80px;padding:6px;"></label>
+                <label style="font-size:11px;">Tỷ lệ ăn (x)<input aria-label="Tỷ lệ ăn" type="number" min="0" step="0.01" data-gs-payout="${key}" value="${Number(x.payout)||0}" style="width:80px;padding:6px;"></label>
                 <div style="display:flex;gap:5px;"><input type="number" min="0" data-gs-min="${key}" value="${Number(x.minBet)||0}" placeholder="Min" style="width:58px;padding:6px;"><input type="number" min="0" data-gs-max="${key}" value="${Number(x.maxBet)||0}" placeholder="Max" style="width:58px;padding:6px;"></div>
             </div>`).join('');
         }
