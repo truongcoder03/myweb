@@ -1065,6 +1065,16 @@
                 <button class="btn-submit" style="background:linear-gradient(45deg,#06b6d4,#6366f1);" onclick="executeAdminVirtual()">Xác nhận thay đổi tiền ảo</button>
             </div>
 
+            <div class="admin-card qq-game-settings-card" style="margin-bottom:20px;border:1px solid rgba(34,197,94,.35);background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(59,130,246,.08));">
+                <h3 style="margin-top:0;color:#4ade80;font-size:15px;">⚙️ LUẬT & PAYOUT CÔNG KHAI CỦA CÁC TRÒ</h3>
+                <div style="font-size:12px;color:var(--text-sub);line-height:1.65;margin-bottom:12px;">
+                    Admin/QTV có thể chỉnh <b>payout công khai</b>, mức cược tối thiểu/tối đa và trạng thái bật/tắt của từng trò. Các giá trị này được lưu online và hiển thị cho người chơi. Không dùng để thay đổi ngầm kết quả từng người chơi.
+                </div>
+                <div id="qq-game-settings-list" style="display:grid;gap:10px;"></div>
+                <button class="btn-submit" style="margin-top:12px;background:linear-gradient(45deg,#22c55e,#3b82f6);" onclick="saveQQGameSettings()">💾 Lưu cấu hình trò chơi</button>
+                <div id="qqGameSettingsResult" style="margin-top:9px;font-size:12px;min-height:18px;"></div>
+            </div>
+
             <div class="admin-card" style="margin-bottom:20px;border:1px solid rgba(245,158,11,.45);background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(99,102,241,.08));">
                 <h3 style="margin-top:0;color:#fbbf24;font-size:15px;">🎯 CHỈNH TỈ LỆ ITEM</h3>
                 <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:12px;">
@@ -1653,6 +1663,58 @@ async function executeAdminPoints(){
         if(typeof window.qqRefreshWallet==='function') await window.qqRefreshWallet();
     }catch(e){showCustomAlert('LỖI LƯU ONLINE',e.message||String(e));}
 }
+
+        const QQ_GAME_SETTINGS_KEY = 'qq_game_settings_v1';
+        const QQ_DEFAULT_GAME_SETTINGS = {
+            aviator: {name:'✈️ Máy bay', enabled:true, payout:1.00, minBet:1000, maxBet:1000000},
+            flip_card: {name:'🃏 Lật bài', enabled:true, payout:2.00, minBet:1000, maxBet:1000000},
+            item_game: {name:'🎁 Item / Vòng quay', enabled:true, payout:1.00, minBet:1000, maxBet:1000000}
+        };
+        function qqGetGameSettings(){
+            try{
+                const saved=JSON.parse(localStorage.getItem(QQ_GAME_SETTINGS_KEY)||'{}');
+                return Object.fromEntries(Object.entries(QQ_DEFAULT_GAME_SETTINGS).map(([k,v])=>[k,{...v,...(saved[k]||{})}]));
+            }catch(e){ return JSON.parse(JSON.stringify(QQ_DEFAULT_GAME_SETTINGS)); }
+        }
+        function qqRenderGameSettings(){
+            const el=document.getElementById('qq-game-settings-list'); if(!el)return;
+            const settings=qqGetGameSettings();
+            el.innerHTML=Object.entries(settings).map(([key,x])=>`<div style="display:grid;grid-template-columns:minmax(0,1fr) 90px 120px 130px;gap:8px;align-items:center;padding:10px;border:1px solid #334155;border-radius:10px;background:#0b1220;">
+                <div><b style="font-size:12px;">${x.name}</b><div style="font-size:10px;color:var(--text-sub);">Payout công khai</div></div>
+                <label style="font-size:11px;display:flex;align-items:center;gap:5px;"><input type="checkbox" data-gs-enabled="${key}" ${x.enabled?'checked':''}> Bật</label>
+                <label style="font-size:11px;">Payout x<input type="number" min="0" step="0.01" data-gs-payout="${key}" value="${Number(x.payout)||0}" style="width:80px;padding:6px;"></label>
+                <div style="display:flex;gap:5px;"><input type="number" min="0" data-gs-min="${key}" value="${Number(x.minBet)||0}" placeholder="Min" style="width:58px;padding:6px;"><input type="number" min="0" data-gs-max="${key}" value="${Number(x.maxBet)||0}" placeholder="Max" style="width:58px;padding:6px;"></div>
+            </div>`).join('');
+        }
+        async function saveQQGameSettings(){
+            if(!isAdminSession()){showCustomAlert('KHÔNG CÓ QUYỀN','Chỉ Admin/QTV mới chỉnh được cấu hình trò chơi.');return;}
+            const current=qqGetGameSettings();
+            for(const key of Object.keys(current)){
+                current[key].enabled=!!document.querySelector(`[data-gs-enabled="${key}"]`)?.checked;
+                current[key].payout=Math.max(0,Number(document.querySelector(`[data-gs-payout="${key}"]`)?.value)||0);
+                current[key].minBet=Math.max(0,Number(document.querySelector(`[data-gs-min="${key}"]`)?.value)||0);
+                current[key].maxBet=Math.max(current[key].minBet,Number(document.querySelector(`[data-gs-max="${key}"]`)?.value)||0);
+            }
+            localStorage.setItem(QQ_GAME_SETTINGS_KEY,JSON.stringify(current));
+            const msg=document.getElementById('qqGameSettingsResult');
+            if(msg){msg.textContent='✅ Đã lưu cấu hình công khai trên máy này.';msg.style.color='#34d399';}
+            try{
+                if(window.QQ_SAVE_GAME_SETTINGS) await window.QQ_SAVE_GAME_SETTINGS(current);
+                if(msg){msg.textContent='☁️ Đã lưu cấu hình công khai online.';}
+            }catch(e){
+                if(msg){msg.textContent='⚠️ Đã lưu trên máy; cloud chưa sẵn sàng: '+(e.message||e);msg.style.color='#fbbf24';}
+            }
+        }
+        async function qqLoadGameSettingsCloud(){
+            try{
+                if(window.QQ_LOAD_GAME_SETTINGS){
+                    const x=await window.QQ_LOAD_GAME_SETTINGS();
+                    if(x && Object.keys(x).length){ localStorage.setItem(QQ_GAME_SETTINGS_KEY,JSON.stringify({...qqGetGameSettings(),...x})); }
+                }
+            }catch(e){ console.warn('QQ game settings cloud:',e); }
+            qqRenderGameSettings();
+        }
+        document.addEventListener('DOMContentLoaded',()=>setTimeout(qqLoadGameSettingsCloud,700));
 
         function renderAdminItemRates(){
             const el=document.getElementById('admin-item-rate-list');
@@ -3103,6 +3165,27 @@ window.startPlaneGame=function(){newRound()}
   };
   window.addEventListener('load',()=>setTimeout(()=>window.renderQQProfile(),900));
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>window.renderQQProfile(),200);});
+})();
+</script>
+
+<script id="qq-game-settings-cloud">
+(function(){
+  const U='https://dhhrbtqridanpgikiokd.supabase.co';
+  const K='sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU';
+  const H={apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json'};
+  window.QQ_LOAD_GAME_SETTINGS=async function(){
+    const r=await fetch(U+'/rest/v1/qq_game_settings?select=game_key,name,enabled,payout,min_bet,max_bet',{headers:H});
+    if(!r.ok) throw new Error('Không đọc được cấu hình online');
+    const rows=await r.json(); const out={};
+    rows.forEach(x=>out[x.game_key]={name:x.name,enabled:x.enabled,payout:Number(x.payout)||0,minBet:Number(x.min_bet)||0,maxBet:Number(x.max_bet)||0});
+    return out;
+  };
+  window.QQ_SAVE_GAME_SETTINGS=async function(settings){
+    const rows=Object.entries(settings).map(([game_key,x])=>({game_key,name:x.name,enabled:!!x.enabled,payout:Number(x.payout)||0,min_bet:Number(x.minBet)||0,max_bet:Number(x.maxBet)||0,updated_at:new Date().toISOString()}));
+    const r=await fetch(U+'/rest/v1/qq_game_settings?on_conflict=game_key',{method:'POST',headers:{...H,Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(rows)});
+    if(!r.ok) throw new Error('Không lưu được cấu hình online');
+    return true;
+  };
 })();
 </script>
 </body>
