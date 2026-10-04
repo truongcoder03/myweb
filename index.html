@@ -1051,7 +1051,7 @@ td,th{border-color:var(--qq-line)!important}
                         <div class="qq-speed-readout" id="qqSpeedReadout">TỐC ĐỘ 1.00x</div>
                         <div class="qq-crash-line" id="qqCrashLine">Chờ ván mới...</div>
                     </div>
-                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button class="qq-game-btn" id="qqAviatorStart" onclick="qqAviatorStartRound()">🙋 Tham gia ván</button><button class="qq-cash-btn" id="qqAviatorCash" onclick="qqAviatorCashout()" disabled>💰 Chốt điểm</button><button class="qq-cancel-btn" id="qqAviatorCancel" onclick="qqAviatorCancelBet()" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 30 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 30 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
+                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button type="button" class="qq-game-btn" id="qqAviatorStart">🙋 Tham gia ván</button><button type="button" class="qq-cash-btn" id="qqAviatorCash" disabled>💰 Chốt điểm</button><button type="button" class="qq-cancel-btn" id="qqAviatorCancel" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 30 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 30 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
                     <div class="qq-aviator-status" id="qqAviatorStatus">Đang chờ người chơi tham gia...</div>
                     <div class="qq-live-table"><div class="qq-live-title"><span>👥 NGƯỜI CHƠI TRONG PHÒNG</span><span id="qqLiveCount">8 người</span></div><div class="qq-live-head"><span>Người chơi</span><span>Điểm vào</span><span>Hệ số</span><span>Điểm hiện tại</span><span>Trạng thái</span></div><div class="qq-room-players" id="qqRoomPlayers"></div></div>
                     <div class="qq-fairness"><b>🔐 Fairness demo</b><span id="qqFairHash">Hash sẽ xuất hiện khi mở ván</span></div>
@@ -3187,7 +3187,8 @@ window.startPlaneGame=function(){newRound()}
     if(!u){ setStatus('❌ Hãy đăng nhập trước.'); return; }
     const bet=Math.max(20,parseInt($('qqAviatorBet')?.value||20,10));
     aviatorSubmitting=true;
-    if($('qqAviatorStart')) $('qqAviatorStart').disabled=true;
+    if($('qqAviatorStart')) { $('qqAviatorStart').disabled=true; $('qqAviatorStart').textContent='⏳ Đang tham gia...'; }
+    setStatus('⏳ Đang đưa m vào danh sách chờ...');
     try{
       const out=await rpc('qq_get_or_start_aviator_round',{p_room:SB.room});
       const r=out?.round;
@@ -3213,7 +3214,10 @@ window.startPlaneGame=function(){newRound()}
       console.error(e);
     }finally{
       aviatorSubmitting=false;
-      if($('qqAviatorStart') && (!onlineRound || onlineRound.status!=='waiting')) $('qqAviatorStart').disabled=false;
+      if($('qqAviatorStart')) {
+        $('qqAviatorStart').textContent='🙋 Tham gia ván';
+        if(!onlineRound || onlineRound.status!=='waiting' || !window.qqAviatorEntry) $('qqAviatorStart').disabled=false;
+      }
     }
   };
 
@@ -3252,8 +3256,26 @@ window.startPlaneGame=function(){newRound()}
     }
   };
 
+  function bindAviatorButtons(){
+    const start=$('qqAviatorStart'), cash=$('qqAviatorCash'), cancel=$('qqAviatorCancel');
+    if(start && !start.dataset.qqBound){
+      start.dataset.qqBound='1';
+      start.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); window.qqAviatorStartRound();});
+      start.addEventListener('pointerup',e=>{ if(e.pointerType==='touch'){e.preventDefault();} });
+    }
+    if(cash && !cash.dataset.qqBound){
+      cash.dataset.qqBound='1';
+      cash.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); window.qqAviatorCashout();});
+    }
+    if(cancel && !cancel.dataset.qqBound){
+      cancel.dataset.qqBound='1';
+      cancel.addEventListener('click',e=>{e.preventDefault(); e.stopPropagation(); window.qqAviatorCancelBet();});
+    }
+  }
+
   async function startOnline(){
     setOnlineBadge();
+    bindAviatorButtons();
     if(!$('qqAviatorPanel')) return;
     if(onlineLoop)clearInterval(onlineLoop);
     // Khôi phục dữ liệu của đúng tài khoản từ Supabase trước, sau đó mới đọc ví.
