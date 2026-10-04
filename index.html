@@ -1051,7 +1051,7 @@ td,th{border-color:var(--qq-line)!important}
                         <div class="qq-speed-readout" id="qqSpeedReadout">TỐC ĐỘ 1.00x</div>
                         <div class="qq-crash-line" id="qqCrashLine">Chờ ván mới...</div>
                     </div>
-                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button class="qq-game-btn" id="qqAviatorStart" onclick="qqAviatorStartRound()">✈️ Vào ván</button><button class="qq-cash-btn" id="qqAviatorCash" onclick="qqAviatorCashout()" disabled>💰 Chốt điểm</button><button class="qq-cancel-btn" id="qqAviatorCancel" onclick="qqAviatorCancelBet()" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Người khác muốn chơi thì nhập số điểm và bấm <b>✈️ Vào ván</b>. Mỗi tài khoản chỉ 1 cược/ván.</div>
+                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button class="qq-game-btn" id="qqAviatorStart" onclick="qqAviatorStartRound()">🙋 Tham gia ván</button><button class="qq-cash-btn" id="qqAviatorCash" onclick="qqAviatorCashout()" disabled>💰 Chốt điểm</button><button class="qq-cancel-btn" id="qqAviatorCancel" onclick="qqAviatorCancelBet()" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 30 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 30 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
                     <div class="qq-aviator-status" id="qqAviatorStatus">Đang chờ người chơi tham gia...</div>
                     <div class="qq-live-table"><div class="qq-live-title"><span>👥 NGƯỜI CHƠI TRONG PHÒNG</span><span id="qqLiveCount">8 người</span></div><div class="qq-live-head"><span>Người chơi</span><span>Điểm vào</span><span>Hệ số</span><span>Điểm hiện tại</span><span>Trạng thái</span></div><div class="qq-room-players" id="qqRoomPlayers"></div></div>
                     <div class="qq-fairness"><b>🔐 Fairness demo</b><span id="qqFairHash">Hash sẽ xuất hiện khi mở ván</span></div>
@@ -2994,6 +2994,37 @@ window.startPlaneGame=function(){newRound()}
     return null;
   }
 
+  async function restoreWaitingEntry(roundId, username){
+    if(!roundId || !username) return null;
+    try{
+      const rows=await req('/aviator_entries?select=id,round_id,username,bet,status,created_at&round_id=eq.'+encodeURIComponent(roundId)+'&username=eq.'+encodeURIComponent(username)+'&status=eq.queued&order=created_at.desc&limit=1');
+      return Array.isArray(rows)&&rows[0]?rows[0]:null;
+    }catch(e){ return null; }
+  }
+
+  async function renderWaitingQueue(roundId){
+    const box=$('qqAviatorQueue');
+    if(!box || !roundId) return;
+    try{
+      const rows=await req('/aviator_entries?select=id,username,bet,status,created_at&round_id=eq.'+encodeURIComponent(roundId)+'&status=eq.queued&order=created_at.asc&limit=50');
+      if(!Array.isArray(rows) || !rows.length){
+        box.innerHTML='<b>📝 DANH SÁCH CHỜ VÁN</b><div style="opacity:.65;margin-top:6px">Chưa có ai tham gia. Ai muốn chơi thì bấm “Tham gia ván”.</div>';
+        if($('qqLiveCount')) $('qqLiveCount').textContent='0 người chờ';
+        return;
+      }
+      const meName=String(me()).toLowerCase();
+      box.innerHTML='<div style="display:flex;justify-content:space-between;gap:8px"><b>📝 DANH SÁCH CHỜ VÁN</b><b style="color:#a5b4fc">'+rows.length+' người</b></div>'+
+        '<div style="margin-top:7px;display:grid;gap:5px">'+rows.map((x,i)=>{
+          const name=String(x.username||'Ẩn danh').replace(/[<>]/g,'');
+          const mine=name.toLowerCase()===meName;
+          return '<div style="display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:6px 7px;border-radius:8px;background:'+(mine?'rgba(99,102,241,.13)':'rgba(15,23,42,.55)')+'"><span>'+(i+1)+'</span><span>'+ (mine?'⭐ ':'') +name+'</span><b style="color:#34d399">'+num(x.bet).toLocaleString('vi-VN')+' điểm</b></div>';
+        }).join('')+'</div><div style="margin-top:7px;color:#94a3b8">🔒 Điểm đã được giữ chỗ để không thể dùng trùng ở nơi khác. Hết 30 giây hệ thống tự chuyển toàn bộ danh sách sang cược.</div>';
+      if($('qqLiveCount')) $('qqLiveCount').textContent=rows.length+' người chờ';
+    }catch(e){
+      box.innerHTML='<b>📝 DANH SÁCH CHỜ VÁN</b><div style="color:#fca5a5;margin-top:6px">Không tải được danh sách chờ.</div>';
+    }
+  }
+
   async function renderLiveBets(roundId, fallbackBet){
     const overlay=$('qqAviatorLiveList');
     const count=$('qqOverlayCount');
@@ -3072,9 +3103,10 @@ window.startPlaneGame=function(){newRound()}
       renderOnline(1,'waiting');
       const remain=Math.max(0,30-(Date.now()-new Date(r.created_at).getTime())/1000);
       setStatus('⏳ Chờ cược: '+Math.ceil(remain)+' giây — tất cả người chơi dùng chung ván.');
-      if($('qqAviatorStart')) $('qqAviatorStart').disabled=!!onlineBet;
-      if($('qqAviatorCash')) { $('qqAviatorCash').disabled=true; $('qqAviatorCash').textContent='✓ Đã chốt'; }
-      if($('qqAviatorCancel')) $('qqAviatorCancel').disabled=!onlineBet || onlineCashed;
+      if($('qqAviatorStart')) $('qqAviatorStart').disabled=!!window.qqAviatorEntry;
+      if($('qqAviatorCash')) { $('qqAviatorCash').disabled=true; $('qqAviatorCash').textContent='💰 NHẢY / CHỐT'; }
+      if($('qqAviatorCancel')) $('qqAviatorCancel').disabled=!window.qqAviatorEntry;
+      renderWaitingQueue(r.id).catch(()=>{});
     }else if(r.status==='running'){
       panel?.classList.add('running'); panel?.classList.remove('crashed');
       const m=serverMultiplier(r.started_at);
@@ -3099,64 +3131,54 @@ window.startPlaneGame=function(){newRound()}
       const out=await rpc('qq_get_or_start_aviator_round',{p_room:SB.room});
       const r=out&&out.round;
       if(!r)return;
-      if(r.status==='running' && !r.started_at){
-        await new Promise(x=>setTimeout(x,300));
-        return pollRound();
-      }
-      // Khôi phục nút CHỐT nếu người chơi đã vào ván trước khi reload.
-      try{
-        const saved=JSON.parse(localStorage.getItem('qq_active_aviator_bet')||'null');
-        if(saved && saved.id && saved.round_id===r.id && saved.username===me() && !saved.cashed){
-          onlineBet=saved;
-          onlineCashed=false;
-        } else if(r.status==='crashed' || r.status==='done'){
-          localStorage.removeItem('qq_active_aviator_bet');
-          onlineBet=null; onlineCashed=false;
-        }
-      }catch(e){}
-      // Khôi phục cược đang ACTIVE trực tiếp từ Supabase, kể cả khi localStorage đã mất.
-      if(r.status==='waiting' || r.status==='running'){
-        await restoreActiveBet(r.id, me());
-      }
-      paintRound(r);
-      renderLiveBets(r.id, onlineBet).catch(()=>{});
+      if(r.status==='running' && !r.started_at){ await new Promise(x=>setTimeout(x,300)); return pollRound(); }
 
-      // Cập nhật hệ số mượt mỗi 50ms khi máy bay đang bay.
+      // Waiting: khôi phục danh sách chờ của chính tài khoản, KHÔNG tạo cược sớm.
+      if(r.status==='waiting'){
+        onlineBet=null; onlineCashed=false;
+        const entry=await restoreWaitingEntry(r.id,me());
+        window.qqAviatorEntry=entry;
+        await renderWaitingQueue(r.id);
+        paintRound(r);
+        await renderLiveBets(r.id,null);
+      }else{
+        // Khi ván đã chạy, chỉ lúc này mới đọc cược đã được server gom từ danh sách chờ.
+        window.qqAviatorEntry=null;
+        if(r.status==='running'){
+          await restoreActiveBet(r.id,me());
+        }else{
+          onlineBet=null; onlineCashed=false;
+          try{localStorage.removeItem('qq_active_aviator_bet');}catch(e){}
+        }
+        paintRound(r);
+        await renderLiveBets(r.id,onlineBet);
+      }
+
       if(r.status==='running'){
         if(!onlineRenderLoop){
           onlineRenderLoop=setInterval(()=>{
-            if(onlineRound && onlineRound.status==='running'){
+            if(onlineRound&&onlineRound.status==='running'){
               const m=serverMultiplier(onlineRound.started_at);
               renderOnline(m,'running');
-              if($('qqAviatorCash')) { $('qqAviatorCash').disabled=!onlineBet||onlineCashed; $('qqAviatorCash').textContent=onlineCashed?'✓ Đã chốt':'💰 NHẢY / CHỐT'; }
-              if($('qqAviatorCancel')) $('qqAviatorCancel').disabled=true;
+              if($('qqAviatorCash')){
+                $('qqAviatorCash').disabled=!onlineBet||onlineCashed;
+                $('qqAviatorCash').textContent=onlineCashed?'✓ Đã chốt':'💰 NHẢY / CHỐT';
+              }
             }
           },50);
         }
-        // Bảng cược chỉ đồng bộ mạng mỗi 1 giây, tránh spam REST gây lag nút Vào ván.
         if(!window.qqLiveBetsLoop){
           window.qqLiveBetsLoop=setInterval(()=>{
-            if(onlineRound) renderLiveBets(onlineRound.id, onlineBet).catch(()=>{});
-          },1000);
+            if(onlineRound) renderLiveBets(onlineRound.id,onlineBet).catch(()=>{});
+          },1200);
         }
-      } else if(onlineRenderLoop){
-        clearInterval(onlineRenderLoop); onlineRenderLoop=null;
-      }
+      }else if(onlineRenderLoop){ clearInterval(onlineRenderLoop); onlineRenderLoop=null; }
 
-      // Bất kỳ client nào cũng có thể kích hoạt crash khi chạm ngưỡng.
-      if(r.status==='running'){
-        const m=serverMultiplier(r.started_at);
-        // Chỉ server quyết định thời điểm crash. Client không biết trước ngưỡng.
-        if(!r.crash_multiplier){
-          try{
-            const cr=await rpc('qq_crash_aviator_round',{p_round_id:r.id});
-            if(cr?.ok) onlineCrash=num(cr.crash_multiplier);
-          }catch(e){}
-        }
+      // Client chỉ gọi RPC; server tự quyết định ngưỡng crash một lần.
+      if(r.status==='running' && !r.crash_multiplier){
+        try{ await rpc('qq_crash_aviator_round',{p_round_id:r.id}); }catch(e){}
       }
-    }catch(e){
-      setStatus('❌ Supabase: '+e.message);
-    }
+    }catch(e){ setStatus('❌ Supabase: '+e.message); }
   }
 
   window.qqAviatorStartRound=async function(){
@@ -3167,57 +3189,47 @@ window.startPlaneGame=function(){newRound()}
     aviatorSubmitting=true;
     if($('qqAviatorStart')) $('qqAviatorStart').disabled=true;
     try{
-      const w=await getWallet(u);
-      if(!w){await upsertWallet(u,0,0);}
       const out=await rpc('qq_get_or_start_aviator_round',{p_room:SB.room});
-      const r=out.round;
-      if(r.status!=='waiting'){ setStatus('❌ Ván đã bắt đầu, chờ ván kế tiếp.'); paintRound(r); return; }
-      const placed=await rpc('qq_place_aviator_bet',{
-        p_round_id:r.id,p_username:u,p_bet:bet
-      });
-      if(!placed?.ok){
-        const msg=String(placed?.message||'Không đặt được cược.');
-        if(/đã vào ván|đã vào/i.test(msg)){
-          const recovered=await restoreActiveBet(r.id,u);
-          if(recovered){
-            onlineBet=recovered; onlineCashed=false;
-            await pullMe();
-            setStatus('ℹ️ Tài khoản đã có cược trong ván này — đã khôi phục cược.');
-            paintRound(r);
-            await renderLiveBets(r.id,onlineBet);
-            return;
-          }
-        }
-        setStatus('❌ '+msg);return;
+      const r=out?.round;
+      if(!r){setStatus('❌ Không lấy được ván.');return;}
+      if(r.status!=='waiting'){
+        setStatus('❌ Đã hết thời gian tham gia, chờ ván kế tiếp.');
+        await pollRound();
+        return;
       }
-      onlineBet=placed.bet; onlineCashed=false;
-      localStorage.setItem('qq_active_aviator_bet',JSON.stringify({...placed.bet,username:u,cashed:false}));
+      const joined=await rpc('qq_join_aviator_waiting',{p_round_id:r.id,p_username:u,p_bet:bet});
+      if(!joined?.ok){
+        setStatus('❌ '+(joined?.message||'Không tham gia được.'));
+        await pollRound();
+        return;
+      }
+      window.qqAviatorEntry=joined.entry||null;
       await pullMe();
-      setStatus('✅ Đã vào ván online '+bet.toLocaleString('vi-VN')+' điểm. Chờ máy bay cất cánh...');
-      paintRound(r);
+      setStatus('✅ Đã vào danh sách chờ '+bet.toLocaleString('vi-VN')+' điểm. Hết 30 giây hệ thống sẽ gom vào ván.');
+      await renderWaitingQueue(r.id);
       await pollRound();
     }catch(e){
-      setStatus('❌ Không vào được ván: '+e.message);
+      setStatus('❌ Không tham gia được: '+e.message);
       console.error(e);
-      if($('qqAviatorStart')) $('qqAviatorStart').disabled=false;
     }finally{
       aviatorSubmitting=false;
+      if($('qqAviatorStart') && (!onlineRound || onlineRound.status!=='waiting')) $('qqAviatorStart').disabled=false;
     }
   };
 
   window.qqAviatorCancelBet=async function(){
     const u=me();
-    if(!u||!onlineBet||onlineCashed)return;
-    if(!onlineRound || onlineRound.status!=='waiting'){ setStatus('❌ Chỉ có thể rời ván trong thời gian chờ cược.'); return; }
+    const entry=window.qqAviatorEntry;
+    if(!u||!entry)return;
+    if(!onlineRound||onlineRound.status!=='waiting'){setStatus('❌ Chỉ có thể rời danh sách trong 30 giây chờ.');return;}
     try{
-      const out=await rpc('qq_cancel_aviator_bet',{p_bet_id:onlineBet.id,p_username:u});
-      if(!out?.ok){setStatus('❌ '+(out?.message||'Không thể rời ván.'));return;}
-      onlineBet=null; onlineCashed=false;
-      try{localStorage.removeItem('qq_active_aviator_bet');}catch(e){}
+      const out=await rpc('qq_cancel_aviator_entry',{p_entry_id:entry.id,p_username:u});
+      if(!out?.ok){setStatus('❌ '+(out?.message||'Không thể rời danh sách.'));return;}
+      window.qqAviatorEntry=null;
       await pullMe();
       if($('qqAviatorStart')) $('qqAviatorStart').disabled=false;
       if($('qqAviatorCancel')) $('qqAviatorCancel').disabled=true;
-      setStatus('↩️ Đã rời ván và hoàn lại điểm cược. Muốn chơi thì tự bấm “Vào ván”.');
+      setStatus('↩️ Đã rời danh sách chờ và hoàn lại điểm.');
       await pollRound();
     }catch(e){setStatus('❌ '+e.message);}
   };
