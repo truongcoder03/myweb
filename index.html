@@ -1515,6 +1515,18 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
 }
 </style>
 
+
+<style id="qq-point-ledger-style">
+.qq-point-ledger{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;margin:10px 0;padding:10px;border-radius:14px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.20)}
+.qq-point-ledger .qpl{padding:8px 9px;border-radius:11px;background:rgba(255,255,255,.04);text-align:center}
+.qq-point-ledger .qpl span{display:block;font-size:9px;color:#94a3b8;font-weight:900;letter-spacing:.3px}
+.qq-point-ledger .qpl b{display:block;margin-top:3px;font-size:15px;color:#eaf2ff}
+.qq-point-ledger .qpl.minus b{color:#ff8fa8}.qq-point-ledger .qpl.plus b{color:#63f2a5}
+.qq-point-ledger.flash-minus .minus,.qq-point-ledger.flash-plus .plus{animation:qplFlash .6s ease}
+@keyframes qplFlash{0%{transform:scale(.95);filter:brightness(1)}45%{transform:scale(1.04);filter:brightness(1.45)}100%{transform:scale(1);filter:brightness(1)}}
+@media(max-width:700px){.qq-point-ledger{grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px}.qq-point-ledger .qpl{padding:7px 4px}.qq-point-ledger .qpl span{font-size:8px}.qq-point-ledger .qpl b{font-size:13px}}
+</style>
+
 </head>
 <body>
 
@@ -1846,8 +1858,8 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
                 <div class="qq-taixiu-embed" id="qqTaiXiuEmbed">
                     <div class="qq-taixiu-embed-head">
                         <div>
-                            <h4>🎲 TÀI XỈU — NẶN / MỞ BÁT</h4>
-                            <div class="qq-taixiu-embed-note">Dùng chung <b>Điểm Mini Game</b> của tài khoản trên web. 20 giây vào cược → 10 giây nặn / mở bát.</div>
+                            <h4>🎲 CHẴN LẺ — 1 XÚC XẮC</h4>
+                            <div class="qq-taixiu-embed-note">Dùng chung <b>Điểm Mini Game</b> của tài khoản trên web. Chọn CHẴN hoặc LẺ bằng 1 xúc xắc • 20 giây vào cược → 10 giây nặn / mở bát.</div>
                         </div>
                     </div>
                     <div class="qq-taixiu-frame-wrap">
@@ -1856,7 +1868,7 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
 &lt;head&gt;
   &lt;meta charset=&quot;UTF-8&quot; /&gt;
   &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover&quot; /&gt;
-  &lt;title&gt;Tài Xỉu tích hợp ROBUXQUYNQUYN —  ROBUXQUYNQUYN • Cyber Luxury V19&lt;/title&gt;
+  &lt;title&gt;Chẵn Lẻ 1 Xúc Xắc tích hợp ROBUXQUYNQUYN —  ROBUXQUYNQUYN • Cyber Luxury V19&lt;/title&gt;
   &lt;style&gt;
     :root{
       --bg1:#050915;
@@ -2184,6 +2196,22 @@ body{overflow-x:hidden}
   .bhTime{grid-column:1/-1;text-align:left}
 }
 
+
+/* === V21 SINGLE DIE CHAN/LE + POINT LEDGER === */
+.txPointLedger{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 10px}
+.txPointLedger&gt;div{padding:9px 10px;border-radius:15px;text-align:center;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.16));border:1px solid rgba(142,213,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.txPointLedger span{display:block;font-size:9px;font-weight:900;color:#9fcfff;letter-spacing:.35px}
+.txPointLedger b{display:block;margin-top:3px;font-size:17px;color:#f8fbff}
+.txPointLedger .minus b{color:#ff9baf}.txPointLedger .plus b{color:#7ff5b4}
+.diceGroup{width:138px!important;height:100px!important;top:60%!important}
+.diceGroup .d1{left:42px!important;top:24px!important;transform:rotate(-6deg)!important}
+.diceGroup .d2,.diceGroup .d3{display:none!important}
+@media(max-width:620px){
+  .txPointLedger{grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .txPointLedger&gt;div{padding:8px 5px}.txPointLedger span{font-size:8px}.txPointLedger b{font-size:14px}
+  .diceGroup{width:122px!important;height:92px!important}.diceGroup .d1{left:38px!important;top:23px!important}
+}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -2192,8 +2220,8 @@ body{overflow-x:hidden}
       &lt;div class=&quot;logo&quot;&gt;
         &lt;div class=&quot;logo-badge&quot;&gt;🎲&lt;/div&gt;
         &lt;div class=&quot;title&quot;&gt;
-          &lt;h1&gt;TÀI XỈU&lt;/h1&gt;
-          &lt;p&gt;Cyber Luxury V20 • Mobile Fix + Dice Fix&lt;/p&gt;
+          &lt;h1&gt;CHẴN LẺ&lt;/h1&gt;
+          &lt;p&gt;Cyber Luxury V21 • Chẵn/Lẻ • 1 xúc xắc&lt;/p&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class=&quot;balance&quot;&gt;
@@ -2204,13 +2232,13 @@ body{overflow-x:hidden}
 
     &lt;div class=&quot;hero&quot;&gt;
       &lt;div class=&quot;roundBar&quot; id=&quot;phaseWrap&quot;&gt;
-        &lt;div class=&quot;miniBox&quot;&gt;&lt;div class=&quot;small&quot;&gt;Tổng cửa tài&lt;/div&gt;&lt;div class=&quot;big&quot; id=&quot;sumTai&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;miniBox&quot;&gt;&lt;div class=&quot;small&quot;&gt;Tổng cửa chẵn&lt;/div&gt;&lt;div class=&quot;big&quot; id=&quot;sumTai&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
         &lt;div class=&quot;phaseBox phase-betting&quot; id=&quot;phaseBox&quot;&gt;
           &lt;div class=&quot;phaseTag&quot; id=&quot;phaseTag&quot;&gt;⏳ ĐANG CƯỢC&lt;/div&gt;
           &lt;div class=&quot;small&quot; id=&quot;phaseText&quot;&gt;Còn lại&lt;/div&gt;
           &lt;div class=&quot;big&quot; id=&quot;phaseCountdown&quot;&gt;20s&lt;/div&gt;
         &lt;/div&gt;
-        &lt;div class=&quot;miniBox&quot;&gt;&lt;div class=&quot;small&quot;&gt;Tổng cửa xỉu&lt;/div&gt;&lt;div class=&quot;big&quot; id=&quot;sumXiu&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
+        &lt;div class=&quot;miniBox&quot;&gt;&lt;div class=&quot;small&quot;&gt;Tổng cửa lẻ&lt;/div&gt;&lt;div class=&quot;big&quot; id=&quot;sumXiu&quot;&gt;0&lt;/div&gt;&lt;/div&gt;
       &lt;/div&gt;
 
       &lt;div class=&quot;myBetInfo&quot;&gt;
@@ -2218,6 +2246,12 @@ body{overflow-x:hidden}
         &lt;div style=&quot;text-align:right&quot;&gt;&lt;span class=&quot;label&quot;&gt;💰 SỐ TIỀN ĐÃ ĐẶT&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;betAmountBig&quot;&gt;&lt;span id=&quot;myBetAmount&quot;&gt;0&lt;/span&gt; ĐIỂM&lt;/span&gt;&lt;/div&gt;
       &lt;/div&gt;
 
+
+      &lt;div class=&quot;txPointLedger&quot; id=&quot;txPointLedger&quot;&gt;
+        &lt;div&gt;&lt;span&gt;💎 ĐIỂM HIỆN TẠI&lt;/span&gt;&lt;b id=&quot;txLedgerNow&quot;&gt;0&lt;/b&gt;&lt;/div&gt;
+        &lt;div class=&quot;minus&quot;&gt;&lt;span&gt;➖ VỪA TRỪ&lt;/span&gt;&lt;b id=&quot;txLedgerMinus&quot;&gt;0&lt;/b&gt;&lt;/div&gt;
+        &lt;div class=&quot;plus&quot;&gt;&lt;span&gt;➕ VỪA CỘNG&lt;/span&gt;&lt;b id=&quot;txLedgerPlus&quot;&gt;0&lt;/b&gt;&lt;/div&gt;
+      &lt;/div&gt;
       &lt;div class=&quot;roomStrip&quot;&gt;
         &lt;div class=&quot;roomMini&quot;&gt;&lt;div class=&quot;rLabel&quot;&gt;👥 NGƯỜI CHƠI CHUNG&lt;/div&gt;&lt;div class=&quot;rVal&quot;&gt;&lt;b id=&quot;roomPlayers&quot;&gt;0&lt;/b&gt; người&lt;/div&gt;&lt;/div&gt;
         &lt;div class=&quot;roomMini&quot;&gt;&lt;div class=&quot;rLabel&quot;&gt;📝 LỊCH SỬ CƯỢC&lt;/div&gt;&lt;div class=&quot;rVal&quot;&gt;&lt;b id=&quot;betHistoryCount&quot;&gt;0&lt;/b&gt; lượt gần nhất&lt;/div&gt;&lt;/div&gt;
@@ -2231,9 +2265,9 @@ body{overflow-x:hidden}
         &lt;div class=&quot;taixiuRow&quot;&gt;
           &lt;div class=&quot;betPanel tai&quot;&gt;
             &lt;div&gt;
-              &lt;div class=&quot;betLabel&quot;&gt;TÀI&lt;/div&gt;
-              &lt;div class=&quot;betRange&quot;&gt;11–17&lt;/div&gt;
-              &lt;div class=&quot;betMeta&quot;&gt;Tiền đặt cửa tài: &lt;span id=&quot;taiStake&quot;&gt;0&lt;/span&gt;&lt;/div&gt;
+              &lt;div class=&quot;betLabel&quot;&gt;CHẴN&lt;/div&gt;
+              &lt;div class=&quot;betRange&quot;&gt;2 • 4 • 6&lt;/div&gt;
+              &lt;div class=&quot;betMeta&quot;&gt;Điểm cửa chẵn: &lt;span id=&quot;taiStake&quot;&gt;0&lt;/span&gt;&lt;/div&gt;
             &lt;/div&gt;
             &lt;button class=&quot;betBtn&quot; data-side=&quot;tai&quot;&gt;ĐẶT CƯỢC&lt;/button&gt;
           &lt;/div&gt;
@@ -2256,9 +2290,9 @@ body{overflow-x:hidden}
 
           &lt;div class=&quot;betPanel xiu&quot;&gt;
             &lt;div&gt;
-              &lt;div class=&quot;betLabel&quot;&gt;XỈU&lt;/div&gt;
-              &lt;div class=&quot;betRange&quot;&gt;4–10&lt;/div&gt;
-              &lt;div class=&quot;betMeta&quot;&gt;Tiền đặt cửa xỉu: &lt;span id=&quot;xiuStake&quot;&gt;0&lt;/span&gt;&lt;/div&gt;
+              &lt;div class=&quot;betLabel&quot;&gt;LẺ&lt;/div&gt;
+              &lt;div class=&quot;betRange&quot;&gt;1 • 3 • 5&lt;/div&gt;
+              &lt;div class=&quot;betMeta&quot;&gt;Điểm cửa lẻ: &lt;span id=&quot;xiuStake&quot;&gt;0&lt;/span&gt;&lt;/div&gt;
             &lt;/div&gt;
             &lt;button class=&quot;betBtn&quot; data-side=&quot;xiu&quot;&gt;ĐẶT CƯỢC&lt;/button&gt;
           &lt;/div&gt;
@@ -2361,11 +2395,24 @@ body{overflow-x:hidden}
         const all = JSON.parse(parent.localStorage.getItem(&#x27;qq_game_points_v2&#x27;) || &#x27;{}&#x27;);
         all[u] = next;
         parent.localStorage.setItem(&#x27;qq_game_points_v2&#x27;, JSON.stringify(all));
-        if(typeof parent.qqRefreshWallet === &#x27;function&#x27;) parent.qqRefreshWallet();
         const p = parent.document &amp;&amp; parent.document.getElementById(&#x27;qqPoints&#x27;);
         if(p) p.textContent = next.toLocaleString(&#x27;vi-VN&#x27;);
+        const now = document.getElementById(&#x27;txLedgerNow&#x27;);
+        if(now) now.textContent = next.toLocaleString(&#x27;vi-VN&#x27;);
+        // localStorage bridge của web chính sẽ đẩy thay đổi lên Supabase sau đó.
+        // Không gọi qqRefreshWallet ngay ở đây để tránh cloud cũ ghi đè điểm vừa cược.
       }catch(e){}
       return next;
+    }
+    function qqTxPointDelta(delta,label=&#x27;&#x27;){
+      const d = Math.trunc(Number(delta)||0);
+      const minus=document.getElementById(&#x27;txLedgerMinus&#x27;);
+      const plus=document.getElementById(&#x27;txLedgerPlus&#x27;);
+      const now=document.getElementById(&#x27;txLedgerNow&#x27;);
+      if(minus) minus.textContent = d&lt;0 ? Math.abs(d).toLocaleString(&#x27;vi-VN&#x27;) : &#x27;0&#x27;;
+      if(plus) plus.textContent = d&gt;0 ? d.toLocaleString(&#x27;vi-VN&#x27;) : &#x27;0&#x27;;
+      if(now) now.textContent = Math.max(0,balance).toLocaleString(&#x27;vi-VN&#x27;);
+      try{ if(typeof parent.qqPointDelta===&#x27;function&#x27;) parent.qqPointDelta(&#x27;chanle&#x27;,d,label||&#x27;Chẵn/Lẻ&#x27;); }catch(e){}
     }
 
     let balance = qqTxReadMainPoints();
@@ -2377,7 +2424,7 @@ body{overflow-x:hidden}
     let history = [];
     let betHistory = [];
     let roomPlayers = 0;
-    let currentDice = [4,2,5];
+    let currentDice = [4];
 
     let phase = &#x27;betting&#x27;;
     let phaseSeconds = 20;
@@ -2400,7 +2447,7 @@ body{overflow-x:hidden}
     let betFeed = [];
     const botNames = [&#x27;Huy&#x27;, &#x27;Minh&#x27;, &#x27;Linh&#x27;, &#x27;Tuấn&#x27;, &#x27;Khoa&#x27;, &#x27;Vy&#x27;, &#x27;Bảo&#x27;, &#x27;Nhi&#x27;, &#x27;Long&#x27;, &#x27;Hà&#x27;, &#x27;Nam&#x27;, &#x27;An&#x27;];
 
-    function updateWallet(){ balanceEl.textContent = moneyFmt(balance); }
+    function updateWallet(){ balanceEl.textContent = moneyFmt(balance); const n=document.getElementById(&#x27;txLedgerNow&#x27;); if(n)n.textContent=moneyFmt(balance); }
     function updateChipNote(){
       if(customBetNote) customBetNote.textContent = `Chip đang chọn: ${moneyFmt(currentChip)} điểm`;
     }
@@ -2439,7 +2486,7 @@ body{overflow-x:hidden}
       betHistoryEl.innerHTML = betHistory.map(item =&gt; `
         &lt;div class=&quot;betHistoryRow ${item.mine ? &#x27;mine&#x27; : &#x27;&#x27;}&quot;&gt;
           &lt;div class=&quot;bhName&quot;&gt;${item.mine ? &#x27;🧑 Bạn&#x27; : item.name}&lt;/div&gt;
-          &lt;div class=&quot;bhSide ${item.side}&quot;&gt;${item.side === &#x27;tai&#x27; ? &#x27;TÀI&#x27; : &#x27;XỈU&#x27;}&lt;/div&gt;
+          &lt;div class=&quot;bhSide ${item.side}&quot;&gt;${item.side === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;}&lt;/div&gt;
           &lt;div class=&quot;bhAmt&quot;&gt;${moneyFmt(item.amount)}&lt;/div&gt;
           &lt;div class=&quot;bhTime&quot;&gt;${item.time}&lt;/div&gt;
         &lt;/div&gt;`).join(&#x27;&#x27;);
@@ -2460,7 +2507,7 @@ body{overflow-x:hidden}
       betFeedEl.innerHTML = betFeed.map(item =&gt; `
         &lt;div class=&quot;betFeedRow ${item.mine ? &#x27;mine&#x27; : &#x27;&#x27;}&quot;&gt;
           &lt;div class=&quot;betFeedName&quot;&gt;${item.mine ? &#x27;🧑 Bạn&#x27; : item.name}&lt;/div&gt;
-          &lt;div class=&quot;betFeedSide ${item.side}&quot;&gt;${item.side === &#x27;tai&#x27; ? &#x27;TÀI&#x27; : &#x27;XỈU&#x27;}&lt;/div&gt;
+          &lt;div class=&quot;betFeedSide ${item.side}&quot;&gt;${item.side === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;}&lt;/div&gt;
           &lt;div class=&quot;betFeedAmt&quot;&gt;${moneyFmt(item.amount)}&lt;/div&gt;
         &lt;/div&gt;`).join(&#x27;&#x27;);
       renderRoomStats();
@@ -2485,7 +2532,7 @@ body{overflow-x:hidden}
     function updateBetInfo(){
       taiStakeEl.textContent = moneyFmt(publicTaiStake);
       xiuStakeEl.textContent = moneyFmt(publicXiuStake);
-      const sideText = playerBetSide ? (playerBetSide === &#x27;tai&#x27; ? &#x27;TÀI&#x27; : &#x27;XỈU&#x27;) : &#x27;Chưa đặt&#x27;;
+      const sideText = playerBetSide ? (playerBetSide === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;) : &#x27;Chưa đặt&#x27;;
       myBetSideEl.textContent = sideText;
       myBetAmountEl.textContent = moneyFmt(playerBetAmount);
       if(myBetFloatText){
@@ -2496,7 +2543,7 @@ body{overflow-x:hidden}
       betButtons.forEach(btn =&gt; {
         const side = btn.dataset.side;
         if(playerBetSide === side){
-          btn.textContent = `${side === &#x27;tai&#x27; ? &#x27;TÀI&#x27; : &#x27;XỈU&#x27;} • ${moneyFmt(playerBetAmount)}`;
+          btn.textContent = `${side === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;} • ${moneyFmt(playerBetAmount)}`;
         }else{
           btn.textContent = &#x27;ĐẶT CƯỢC&#x27;;
         }
@@ -2534,26 +2581,22 @@ body{overflow-x:hidden}
       }
     }
     function randomResult(){
-      return [1 + Math.floor(Math.random()*6), 1 + Math.floor(Math.random()*6), 1 + Math.floor(Math.random()*6)];
+      return [1 + Math.floor(Math.random()*6)];
     }
     function prepareRoundDice(){
       currentDice = randomResult();
       setDieFace($(&#x27;die1&#x27;), currentDice[0]);
-      setDieFace($(&#x27;die2&#x27;), currentDice[1]);
-      setDieFace($(&#x27;die3&#x27;), currentDice[2]);
     }
     function calcOutcome(dice){
-      const total = dice.reduce((a,b)=&gt;a+b,0);
-      const same = dice[0] === dice[1] &amp;&amp; dice[1] === dice[2];
-      return { total, side: same ? &#x27;bo3&#x27; : (total &gt;= 11 ? &#x27;tai&#x27; : &#x27;xiu&#x27;) };
+      const total = Number(dice[0] || 1);
+      return { total, side: total % 2 === 0 ? &#x27;tai&#x27; : &#x27;xiu&#x27; };
     }
     function renderHistory(){
       historyEl.innerHTML = &#x27;&#x27;;
       history.forEach(h =&gt; {
         const d = document.createElement(&#x27;div&#x27;);
-        d.className = &#x27;dot &#x27; + (h === &#x27;T&#x27; ? &#x27;tai&#x27; : &#x27;xiu&#x27;);
+        d.className = &#x27;dot &#x27; + (h === &#x27;C&#x27; ? &#x27;tai&#x27; : &#x27;xiu&#x27;);
         d.textContent = h;
-        if(h === &#x27;B&#x27;){ d.className = &#x27;dot tai&#x27;; d.textContent = &#x27;3&#x27;; }
         historyEl.appendChild(d);
       });
       if(!history.length) historyEl.innerHTML = &#x27;&lt;div style=&quot;color:#bcdcff;font-size:12px&quot;&gt;Chưa có lịch sử.&lt;/div&gt;&#x27;;
@@ -2690,14 +2733,15 @@ body{overflow-x:hidden}
       phaseSeconds = 6;
 
       const { total, side } = calcOutcome(currentDice);
-      const label = side === &#x27;bo3&#x27; ? &#x27;BỘ BA&#x27; : side.toUpperCase();
+      const label = side === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;;
       let win = false;
       let msg = `Kết quả: ${currentDice.join(&#x27; - &#x27;)} = ${total} điểm (${label}).`;
       if(playerBetSide){
-        if(side !== &#x27;bo3&#x27; &amp;&amp; playerBetSide === side){
+        if(playerBetSide === side){
           const prize = playerBetAmount * 2;
           balance += prize;
           qqTxWriteMainPoints(balance);
+          qqTxPointDelta(prize,&#x27;Thắng Chẵn/Lẻ&#x27;);
           win = true;
           msg += ` Bạn THẮNG ${moneyFmt(prize)} điểm!`;
         } else {
@@ -2711,7 +2755,7 @@ body{overflow-x:hidden}
         ? `CHÚC MỪNG • ${label} (${total}) • +${moneyFmt(playerBetAmount*2)} điểm`
         : `KẾT QUẢ • ${label} (${total}) • ${playerBetSide ? &#x27;Không ăn cược&#x27; : &#x27;Chưa đặt cược&#x27;}`;
 
-      history.unshift(side === &#x27;tai&#x27; ? &#x27;T&#x27; : side === &#x27;xiu&#x27; ? &#x27;X&#x27; : &#x27;B&#x27;);
+      history.unshift(side === &#x27;tai&#x27; ? &#x27;C&#x27; : &#x27;L&#x27;);
       history = history.slice(0, 12);
       renderHistory();
       startPhaseTimer();
@@ -2759,6 +2803,7 @@ body{overflow-x:hidden}
         return;
       }
 
+      const balanceBeforeBet = balance;
       // hoàn lại cược cũ rồi đặt cược mới
       if(playerBetSide === &#x27;tai&#x27;) publicTaiStake -= playerBetAmount;
       if(playerBetSide === &#x27;xiu&#x27;) publicXiuStake -= playerBetAmount;
@@ -2768,11 +2813,11 @@ body{overflow-x:hidden}
       playerBetAmount = currentChip;
       balance -= currentChip;
       qqTxWriteMainPoints(balance);
+      qqTxPointDelta(balance - balanceBeforeBet,&#x27;Đặt cược Chẵn/Lẻ&#x27;);
       if(playerBetSide === &#x27;tai&#x27;) publicTaiStake += playerBetAmount;
       if(playerBetSide === &#x27;xiu&#x27;) publicXiuStake += playerBetAmount;
       pushBetFeed(&#x27;Bạn&#x27;, playerBetSide, playerBetAmount, true);
 
-      qqTxWriteMainPoints(balance);
       updateWallet();
       updateBetInfo();
       renderPublicSums();
@@ -2782,7 +2827,7 @@ body{overflow-x:hidden}
         myBetFloat.classList.add(&#x27;flash&#x27;);
         setTimeout(()=&gt;myBetFloat.classList.remove(&#x27;flash&#x27;),650);
       }
-      statusEl.textContent = `Đã vào ${moneyFmt(playerBetAmount)} điểm cửa ${side === &#x27;tai&#x27; ? &#x27;TÀI&#x27; : &#x27;XỈU&#x27;}. Còn ${phaseSeconds}s để đổi / vào lại.`;
+      statusEl.textContent = `Đã vào ${moneyFmt(playerBetAmount)} điểm cửa ${side === &#x27;tai&#x27; ? &#x27;CHẴN&#x27; : &#x27;LẺ&#x27;}. Còn ${phaseSeconds}s để đổi / vào lại.`;
     }
 
     document.querySelectorAll(&#x27;.chip&#x27;).forEach(el =&gt; {
@@ -2857,7 +2902,7 @@ body{overflow-x:hidden}
       if(isFullyOpened()){
         finishResult(false);
       } else {
-        statusEl.textContent = &#x27;Bạn chưa mở hết bát. Cứ kéo tiếp từ vị trí đang dở tới khi thấy rõ cả 3 xúc xắc.&#x27;;
+        statusEl.textContent = &#x27;Bạn chưa mở hết bát. Cứ kéo tiếp từ vị trí đang dở tới khi thấy rõ xúc xắc.&#x27;;
       }
     }
     window.addEventListener(&#x27;pointerup&#x27;, endDrag);
@@ -2996,6 +3041,7 @@ body{overflow-x:hidden}
                         <div class="qq-crash-line" id="qqCrashLine">Chờ ván mới...</div>
                     </div>
                     <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button type="button" class="qq-game-btn" id="qqAviatorStart" onclick="if(typeof window.qqAviatorStartRound==='function'){window.qqAviatorStartRound();}else{var x=document.getElementById('qqAviatorStatus');if(x)x.textContent='❌ Module máy bay chưa tải xong. Ctrl+F5 rồi thử lại.';}">🙋 Tham gia ván</button><button type="button" class="qq-cash-btn" id="qqAviatorCash" disabled>💰 Chốt điểm</button><button type="button" class="qq-cancel-btn" id="qqAviatorCancel" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div id="qqAviatorCurveNote">📈 0.10x → 1.00x ~1.8s • 2.00x ~5.5s • qua 2x mới tăng tốc mượt.</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 15 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 15 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
+                    <div class="qq-point-ledger" id="qqLedger-aviator" data-game="aviator"><div class="qpl"><span>💎 MÁY BAY • ĐIỂM</span><b data-role="now">0</b></div><div class="qpl minus"><span>➖ VỪA TRỪ</span><b data-role="minus">0</b></div><div class="qpl plus"><span>➕ VỪA CỘNG</span><b data-role="plus">0</b></div></div>
                     <div class="qq-aviator-status" id="qqAviatorStatus">Đang chờ người chơi tham gia...</div><button type="button" id="qqAviatorTestBtn" style="margin-top:7px;font-size:11px;padding:7px 10px;border-radius:9px;border:1px solid rgba(129,140,248,.28);background:rgba(99,102,241,.10);color:#c7d2fe;cursor:pointer">🔧 Kiểm tra kết nối</button>
                     <div class="qq-live-table"><div class="qq-live-title"><span>👥 NGƯỜI CHƠI TRONG PHÒNG</span><span id="qqLiveCount">8 người</span></div><div class="qq-live-head"><span>Người chơi</span><span>Điểm vào</span><span>Hệ số</span><span>Điểm hiện tại</span><span>Trạng thái</span></div><div class="qq-room-players" id="qqRoomPlayers"></div></div>
                     <div class="qq-fairness"><b>🔐 Fairness demo</b><span id="qqFairHash">Hash sẽ xuất hiện khi mở ván</span></div>
@@ -3010,6 +3056,7 @@ body{overflow-x:hidden}
                     <input id="qqCardBet" type="number" min="1" step="1" value="20" inputmode="numeric" aria-label="Điểm cược trò chọn lá bài">
                     <button class="qq-game-btn" id="qqStartBtn" onclick="qqStartGame()">🎴 Chơi ván mới</button>
                 </div>
+                <div class="qq-point-ledger" id="qqLedger-card" data-game="card"><div class="qpl"><span>💎 LẬT BÀI • ĐIỂM</span><b data-role="now">0</b></div><div class="qpl minus"><span>➖ VỪA TRỪ</span><b data-role="minus">0</b></div><div class="qpl plus"><span>➕ VỪA CỘNG</span><b data-role="plus">0</b></div></div>
                 <div class="qq-status" id="qqStatus">Nhập điểm cược rồi chơi. Không còn chờ 5 giây trước khi lật bài.</div>
                 <div class="qq-dealer"><div class="qq-dealer-avatar">💃</div><div class="qq-dealer-copy"><b>👩 Cô chia bài</b><span>Nhân vật nữ trưởng thành, phong cách quyến rũ • mở bài cùng bạn</span><span class="qq-dealer-action">🃏 Chạm lá bài để lật</span></div></div>
 <div class="qq-battle-board">
@@ -3051,6 +3098,7 @@ body{overflow-x:hidden}
                         </div>
                         <div class="qs-result" id="qsResult"><div><strong>💥 BỂ!</strong><span id="qsResultText">Mất điểm cược của vòng.</span></div></div>
                     </div>
+                    <div class="qq-point-ledger" id="qqLedger-crystal" data-game="crystal"><div class="qpl"><span>💎 ĐẬP ĐÁ • ĐIỂM</span><b data-role="now">0</b></div><div class="qpl minus"><span>➖ VỪA TRỪ</span><b data-role="minus">0</b></div><div class="qpl plus"><span>➕ VỪA CỘNG</span><b data-role="plus">0</b></div></div>
                     <div class="qs-controls">
                         <div><label>Điểm cược</label><input id="qsStake" type="number" min="20" step="10" value="20"></div>
                         <button class="qs-btn qs-start" id="qsStart">▶ BẮT ĐẦU</button>
@@ -4318,6 +4366,7 @@ window.qqStartGame=function(){
   }
 
   write(read()-bet);
+  if(window.qqPointDelta) window.qqPointDelta('card',-bet,'Cược Lật Bài');
 
   // Roll item exactly once at the START of the round and reveal it immediately.
   const roundItem=weighted();
@@ -4364,7 +4413,7 @@ function qqFinish(){
   else if(ps===es){result='HÒA';reward=bet}
   else{result='THUA';reward=0}
 
-  if(reward)write(read()+reward);
+  if(reward){write(read()+reward);if(window.qqPointDelta)window.qqPointDelta('card',reward,result==='THẮNG'?'Thắng Lật Bài':'Hoàn cược Lật Bài');}
 
   // IMPORTANT: do not reroll here. The item was already determined at round start.
   const item=state.item||null;
@@ -5456,6 +5505,7 @@ window.startPlaneGame=function(){newRound()}
 
   window.qqAviatorStartRound=async function(){
     if(aviatorSubmitting) return;
+    const qqPtsBeforeJoin=window.qqPointNow?window.qqPointNow():0;
     const u=String(me()||'').trim();
     if(!u){ setStatus('❌ Hãy đăng nhập trước.'); return; }
     const input=$('qqAviatorBet');
@@ -5501,6 +5551,7 @@ window.startPlaneGame=function(){newRound()}
       window.qqAviatorEntry=rpcOne(joined.entry)||rpcOne(joined.data)||await restoreWaitingEntry(r.id,u);
       try{localStorage.setItem('qq_aviator_joined_round',String(r.id));}catch(e){}
       await pullMe();
+      if(window.qqPointDelta) window.qqPointDelta('aviator',(window.qqPointNow?window.qqPointNow():0)-qqPtsBeforeJoin,'Tham gia Máy Bay');
       setStatus('✅ Đã vào danh sách chờ '+bet.toLocaleString('vi-VN')+' điểm. Hết 15 giây hệ thống sẽ gom vào ván.');
       await renderWaitingQueue(r.id);
       await pollRound();
@@ -5518,6 +5569,7 @@ window.startPlaneGame=function(){newRound()}
   };
 
   window.qqAviatorCancelBet=async function(){
+    const qqPtsBeforeCancel=window.qqPointNow?window.qqPointNow():0;
     const u=me();
     const entry=window.qqAviatorEntry;
     if(!u||!entry)return;
@@ -5528,6 +5580,7 @@ window.startPlaneGame=function(){newRound()}
       window.qqAviatorEntry=null;
       qqClearJoinedRound();
       await pullMe();
+      if(window.qqPointDelta) window.qqPointDelta('aviator',(window.qqPointNow?window.qqPointNow():0)-qqPtsBeforeCancel,'Hoàn điểm Máy Bay');
       if($('qqAviatorStart')) $('qqAviatorStart').disabled=false;
       if($('qqAviatorCancel')) $('qqAviatorCancel').disabled=true;
       setStatus('↩️ Đã rời danh sách chờ và hoàn lại điểm.');
@@ -5536,6 +5589,7 @@ window.startPlaneGame=function(){newRound()}
   };
 
   window.qqAviatorCashout=async function(){
+    const qqPtsBeforeCash=window.qqPointNow?window.qqPointNow():0;
     const u=String(me()||'').trim();
     if(!u){ setStatus('❌ Hãy đăng nhập trước.'); return; }
     if(onlineCashed) return;
@@ -5578,6 +5632,7 @@ window.startPlaneGame=function(){newRound()}
       qqClearJoinedRound();
       try{localStorage.removeItem('qq_active_aviator_bet');}catch(e){}
       await pullMe();
+      if(window.qqPointDelta) window.qqPointDelta('aviator',(window.qqPointNow?window.qqPointNow():0)-qqPtsBeforeCash,'Chốt Máy Bay');
 
       const payout=num(out.payout);
       const mult=num(out.multiplier);
@@ -5811,6 +5866,7 @@ window.startPlaneGame=function(){newRound()}
     const pts=readPoints();
     if(pts<stake){if($('qsStatus')) $('qsStatus').textContent='❌ Không đủ điểm. Hiện có '+pts.toLocaleString('vi-VN')+' điểm.';return}
     writePoints(pts-stake);
+    if(window.qqPointDelta) window.qqPointDelta('crystal',-stake,'Cược Đập Đá');
     mult=.50;active=true;busted=false;busy=false;resetVisual();
     $('qsStart').disabled=true;$('qsHit').disabled=false;$('qsCash').disabled=false;
     if($('qsStatus')) $('qsStatus').textContent='🔨 Đập đá hoặc chốt bất kỳ lúc nào.';
@@ -5833,6 +5889,7 @@ window.startPlaneGame=function(){newRound()}
     active=false;
     const win=payout();
     writePoints(readPoints()+win);
+    if(window.qqPointDelta) window.qqPointDelta('crystal',win,'Chốt Đập Đá');
     if($('qsStatus')) $('qsStatus').textContent='✅ Đã chốt '+win.toLocaleString('vi-VN')+' điểm tại '+mult.toFixed(2)+'x.';
     $('qsHit').disabled=true;$('qsCash').disabled=true;$('qsStart').disabled=false;
     ui();
@@ -6025,6 +6082,47 @@ window.startPlaneGame=function(){newRound()}
   window.addEventListener('load',()=>{ setTimeout(()=>window.qqRefreshMyWithdrawals&&window.qqRefreshMyWithdrawals().catch(()=>{}),1700); setTimeout(()=>renderAdmin().catch(()=>{}),2200); });
   setInterval(()=>{ const tab=$('tab-virtual-withdraw'); if(tab?.classList.contains('active-pane') && window.qqRefreshMyWithdrawals) window.qqRefreshMyWithdrawals().catch(()=>{}); },8000);
   setInterval(()=>{ if(typeof isAdminSession==='function'&&isAdminSession()) renderAdmin().catch(()=>{}); },6000);
+})();
+</script>
+
+
+<script id="qq-point-ledger-js">
+(function(){
+  function user(){return String(localStorage.getItem('logged_in_user')||'').trim()||'guest'}
+  window.qqPointNow=function(){
+    try{const o=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');return Math.max(0,Math.floor(Number(o[user()]||0)))}catch(e){return 0}
+  };
+  window.qqPointDelta=function(game,delta,label){
+    const box=document.getElementById('qqLedger-'+game); if(!box)return;
+    const d=Math.trunc(Number(delta)||0), now=window.qqPointNow();
+    const a=box.querySelector('[data-role="now"]'), m=box.querySelector('[data-role="minus"]'), p=box.querySelector('[data-role="plus"]');
+    if(a)a.textContent=now.toLocaleString('vi-VN');
+    if(m)m.textContent=d<0?Math.abs(d).toLocaleString('vi-VN'):'0';
+    if(p)p.textContent=d>0?d.toLocaleString('vi-VN'):'0';
+    box.classList.remove('flash-minus','flash-plus'); void box.offsetWidth;
+    if(d<0)box.classList.add('flash-minus'); if(d>0)box.classList.add('flash-plus');
+    if(label)box.title=label;
+    setTimeout(()=>box.classList.remove('flash-minus','flash-plus'),700);
+  };
+  window.qqRefreshPointLedgers=function(){
+    ['aviator','card','crystal'].forEach(g=>window.qqPointDelta(g,0,''));
+  };
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(window.qqRefreshPointLedgers,500));
+  setTimeout(window.qqRefreshPointLedgers,1200);
+})();
+</script>
+
+
+<script id="qq-ledger-wallet-refresh-bridge">
+(function(){
+  const old=window.qqRefreshWallet;
+  if(typeof old==='function'){
+    window.qqRefreshWallet=async function(){
+      const r=await old.apply(this,arguments);
+      try{window.qqRefreshPointLedgers&&window.qqRefreshPointLedgers()}catch(e){}
+      return r;
+    };
+  }
 })();
 </script>
 
