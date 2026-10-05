@@ -2122,7 +2122,69 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
     @media (prefers-reduced-motion: reduce){
       .app:before,.app:after,.myBetInfo::after,.potWrap.shaking .potBase,.potWrap.shaking .lid,.potWrap.shaking .diceGroup{animation-duration:.01ms!important;animation-iteration-count:1!important}
     }
-  &lt;/style&gt;
+  
+/* === V20 MOBILE + DICE FIX PATCH === */
+body{overflow-x:hidden}
+.hero{overflow:hidden}
+.stage{overflow:hidden}
+.potWrap{overflow:hidden}
+.diceLayer{overflow:visible}
+.pip{width:10px;height:10px}
+.face1 .p1{left:50%;top:50%;transform:translate(-50%,-50%)}
+.face2 .p1{left:12px;top:12px}.face2 .p2{right:12px;bottom:12px}
+.face3 .p1{left:12px;top:12px}.face3 .p2{left:50%;top:50%;transform:translate(-50%,-50%)}.face3 .p3{right:12px;bottom:12px}
+.face4 .p1{left:12px;top:12px}.face4 .p2{right:12px;top:12px}.face4 .p3{left:12px;bottom:12px}.face4 .p4{right:12px;bottom:12px}
+.face5 .p1{left:12px;top:12px}.face5 .p2{right:12px;top:12px}.face5 .p3{left:50%;top:50%;transform:translate(-50%,-50%)}.face5 .p4{left:12px;bottom:12px}.face5 .p5{right:12px;bottom:12px}
+.face6 .p1{left:12px;top:8px}.face6 .p2{right:12px;top:8px}.face6 .p3{left:12px;top:50%;transform:translateY(-50%)}.face6 .p4{right:12px;top:50%;transform:translateY(-50%)}.face6 .p5{left:12px;bottom:8px}.face6 .p6{right:12px;bottom:8px}
+.die{overflow:hidden}
+@media (max-width: 620px){
+  .hero{padding:12px;border-radius:24px}
+  .roundBar{grid-template-columns:1fr;gap:8px}
+  .phaseBox{order:-1;min-width:0}
+  .myBetInfo{display:grid;grid-template-columns:1fr;gap:6px;padding:10px}
+  .roomStrip{grid-template-columns:1fr;gap:8px}
+  .stage{height:388px;padding:10px;border-radius:26px}
+  .taixiuRow{grid-template-columns:88px 1fr 88px;gap:6px}
+  .betPanel{max-height:215px;padding:10px 8px;border-radius:18px}
+  .betLabel{font-size:30px}
+  .betRange{font-size:15px}
+  .betMeta{font-size:10px;line-height:1.25}
+  .betBtn{font-size:14px;padding:10px 6px;border-radius:14px}
+  .potWrap{height:308px}
+  .potShadow{width:250px;height:68px;top:75%}
+  .potBase{width:214px;height:152px;top:58%;border-width:8px}
+  .diceGroup{width:148px;height:96px;top:62%}
+  .die{width:46px;height:46px;border-radius:14px}
+  .d1{left:4px;top:40px}
+  .d2{left:50px;top:8px}
+  .d3{left:98px;top:40px}
+  .pip{width:8px;height:8px}
+  .face2 .p1,.face3 .p1,.face4 .p1,.face5 .p1,.face6 .p1{left:10px}
+  .face2 .p2,.face4 .p2,.face5 .p2,.face6 .p2{right:10px}
+  .face4 .p3,.face5 .p4,.face6 .p5{left:10px}
+  .face4 .p4,.face5 .p5,.face6 .p6{right:10px}
+  .face2 .p1,.face3 .p1,.face4 .p1,.face5 .p1{top:10px}
+  .face4 .p2,.face5 .p2{top:10px}
+  .face2 .p2,.face3 .p3,.face4 .p3,.face5 .p4{bottom:10px}
+  .face4 .p4,.face5 .p5{bottom:10px}
+  .face6 .p1,.face6 .p2{top:7px}
+  .face6 .p3,.face6 .p4{top:50%;transform:translateY(-50%)}
+  .face6 .p5,.face6 .p6{bottom:7px}
+  .face1 .p1,.face3 .p2,.face5 .p3{left:50%;top:50%;transform:translate(-50%,-50%)}
+  .controls{grid-template-columns:repeat(5,1fr);gap:6px}
+  .chip{padding:11px 6px;font-size:13px;border-radius:15px}
+  .customBetRow{grid-template-columns:1fr;gap:8px}
+  .customBetInput{padding:12px 12px;font-size:15px}
+  .customBetBtn{padding:12px 12px;min-height:46px}
+  .actionRow{grid-template-columns:1fr}
+  .mainBtn{padding:13px 10px;font-size:17px}
+  .footCards{grid-template-columns:1fr}
+  .betHistory{max-height:160px}
+  .betHistoryRow{grid-template-columns:1fr auto auto;gap:6px;padding:9px}
+  .bhTime{grid-column:1/-1;text-align:left}
+}
+
+&lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
   &lt;div class=&quot;app&quot;&gt;
@@ -2131,7 +2193,7 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
         &lt;div class=&quot;logo-badge&quot;&gt;🎲&lt;/div&gt;
         &lt;div class=&quot;title&quot;&gt;
           &lt;h1&gt;TÀI XỈU&lt;/h1&gt;
-          &lt;p&gt;Cyber Luxury V19 • Full Effects Optimized&lt;/p&gt;
+          &lt;p&gt;Cyber Luxury V20 • Mobile Fix + Dice Fix&lt;/p&gt;
         &lt;/div&gt;
       &lt;/div&gt;
       &lt;div class=&quot;balance&quot;&gt;
@@ -2214,7 +2276,7 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
       &lt;/div&gt;
 
       &lt;div class=&quot;customBetRow&quot;&gt;
-        &lt;input class=&quot;customBetInput&quot; id=&quot;customChipInput&quot; type=&quot;number&quot; inputmode=&quot;numeric&quot; min=&quot;1&quot; step=&quot;1&quot; placeholder=&quot;Nhập số điểm cược bất kỳ, ví dụ 2750&quot;&gt;
+        &lt;input class=&quot;customBetInput&quot; id=&quot;customChipInput&quot; type=&quot;number&quot; inputmode=&quot;numeric&quot; min=&quot;1&quot; step=&quot;1&quot; placeholder=&quot;Nhập số điểm cược bất kỳ&quot;&gt;
         &lt;button class=&quot;customBetBtn&quot; id=&quot;applyCustomChipBtn&quot;&gt;DÙNG SỐ NÀY&lt;/button&gt;
       &lt;/div&gt;
       &lt;div class=&quot;customBetNote&quot; id=&quot;customBetNote&quot;&gt;Chip đang chọn: 1.000 điểm&lt;/div&gt;
@@ -2933,7 +2995,7 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
                         <div class="qq-speed-readout" id="qqSpeedReadout">TỐC ĐỘ 0.10x</div>
                         <div class="qq-crash-line" id="qqCrashLine">Chờ ván mới...</div>
                     </div>
-                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button type="button" class="qq-game-btn" id="qqAviatorStart" onclick="if(typeof window.qqAviatorStartRound==='function'){window.qqAviatorStartRound();}else{var x=document.getElementById('qqAviatorStatus');if(x)x.textContent='❌ Module máy bay chưa tải xong. Ctrl+F5 rồi thử lại.';}">🙋 Tham gia ván</button><button type="button" class="qq-cash-btn" id="qqAviatorCash" disabled>💰 Chốt điểm</button><button type="button" class="qq-cancel-btn" id="qqAviatorCancel" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div id="qqAviatorCurveNote">📈 0.10x → 1.00x ~2.8s • 2.00x ~8s • qua 2x mới tăng tốc rõ hơn.</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 15 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 15 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
+                    <div class="qq-aviator-controls"><div><label>Điểm tham gia</label><input id="qqAviatorBet" type="number" min="20" step="10" value="20"></div><button type="button" class="qq-game-btn" id="qqAviatorStart" onclick="if(typeof window.qqAviatorStartRound==='function'){window.qqAviatorStartRound();}else{var x=document.getElementById('qqAviatorStatus');if(x)x.textContent='❌ Module máy bay chưa tải xong. Ctrl+F5 rồi thử lại.';}">🙋 Tham gia ván</button><button type="button" class="qq-cash-btn" id="qqAviatorCash" disabled>💰 Chốt điểm</button><button type="button" class="qq-cancel-btn" id="qqAviatorCancel" disabled>↩️ Rời ván</button></div><div id="qqAviatorPointsHint" style="margin-top:7px;font-size:12px;font-weight:800;color:#a5b4fc">💎 Điểm khả dụng: đang tải...</div><div id="qqAviatorCurveNote">📈 0.10x → 1.00x ~1.8s • 2.00x ~5.5s • qua 2x mới tăng tốc mượt.</div><div style="margin-top:7px;font-size:12px;color:#94a3b8">👥 Nhập số điểm rồi bấm <b>🙋 Tham gia ván</b>. Trong 15 giây đầu, mọi người chỉ vào <b>danh sách chờ</b>; hết 15 giây hệ thống mới gom danh sách thành cược của ván.</div><div id="qqAviatorQueue" style="margin-top:10px;padding:10px;border-radius:12px;background:rgba(2,6,23,.58);border:1px solid rgba(129,140,248,.18);font-size:12px;color:#e2e8f0"></div>
                     <div class="qq-aviator-status" id="qqAviatorStatus">Đang chờ người chơi tham gia...</div><button type="button" id="qqAviatorTestBtn" style="margin-top:7px;font-size:11px;padding:7px 10px;border-radius:9px;border:1px solid rgba(129,140,248,.28);background:rgba(99,102,241,.10);color:#c7d2fe;cursor:pointer">🔧 Kiểm tra kết nối</button>
                     <div class="qq-live-table"><div class="qq-live-title"><span>👥 NGƯỜI CHƠI TRONG PHÒNG</span><span id="qqLiveCount">8 người</span></div><div class="qq-live-head"><span>Người chơi</span><span>Điểm vào</span><span>Hệ số</span><span>Điểm hiện tại</span><span>Trạng thái</span></div><div class="qq-room-players" id="qqRoomPlayers"></div></div>
                     <div class="qq-fairness"><b>🔐 Fairness demo</b><span id="qqFairHash">Hash sẽ xuất hiện khi mở ván</span></div>
@@ -5085,21 +5147,23 @@ window.startPlaneGame=function(){newRound()}
     const sec=Math.max(0,(Date.now()-new Date(started).getTime())/1000);
     const smooth=p=>p*p*(3-2*p);
 
-    // Bay chậm ở đoạn đầu: 0.10x -> 1.00x khoảng 2.8 giây.
-    if(sec < 2.8){
-      const p=smooth(sec/2.8);
+    // 0.10x -> 1.00x trong khoảng 1.8 giây, tăng mượt chứ không nhảy cục.
+    if(sec < 1.8){
+      const p=smooth(sec/1.8);
       return 0.10 + 0.90*p;
     }
 
-    // Từ 1.00x -> 2.00x tiếp tục đi chậm, tổng khoảng 8 giây mới chạm 2x.
-    if(sec < 8.0){
-      const p=smooth((sec-2.8)/5.2);
+    // 1.00x -> 2.00x trong khoảng 3.7 giây tiếp theo.
+    // Tổng cộng khoảng 5.5 giây để chạm 2x.
+    if(sec < 5.5){
+      const p=smooth((sec-1.8)/3.7);
       return 1.00 + 1.00*p;
     }
 
-    // Chỉ sau 2x mới tăng tốc rõ rệt.
-    // ~13s: 3.30x | ~18s: 5.44x | ~23s: 8.96x | ~28s: 14.78x
-    return 2.00 * Math.exp((sec-8.0)*0.10);
+    // Qua 2x mới bắt đầu tăng nhanh dần.
+    // ~10s: 2.77x | ~15s: 3.97x | ~20s: 5.70x
+    // ~30s: 11.70x | ~40s: 24.0x
+    return 2.00 * Math.exp((sec-5.5)*0.072);
   }
   function renderOnline(mult, status){
     const panel=$('qqAviatorPanel');
