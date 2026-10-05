@@ -1322,7 +1322,7 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
 
         <!-- TAB: NẠP TIỀN -->
         <div id="tab-deposit" class="tab-pane">
-            <div class="section-heading">💳 NẠP TIỀN TỰ ĐỘNG VÀO TÀI KHOẢN</div>
+            <div class="section-heading">💳 NẠP TIỀN — CHỜ HỆ THỐNG XÁC NHẬN</div>
             <div class="deposit-container">
                 <div class="deposit-card">
                     <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 15px; color: #818cf8;">Chuyển khoản Ngân hàng / MOMO</h3>
@@ -1342,8 +1342,11 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
                             <button type="button" onclick="copyTransferSyntax()" style="margin-top:6px;padding:5px 9px;border:0;border-radius:7px;background:#334155;color:#fff;cursor:pointer;font-size:11px;">📋 Sao chép</button>
                         </div>
                     </div>
-                    <button type="button" class="btn-submit" onclick="qqCreateDepositRequest()" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#10b981,#059669);">✅ TÔI ĐÃ CHUYỂN KHOẢN — BÁO ADMIN</button>
-                    <div style="margin-top:8px;font-size:11px;color:var(--text-sub);line-height:1.45;">Sau khi chuyển khoản, bấm nút này để tạo yêu cầu nạp. Admin sẽ nhận thông báo Telegram và kiểm tra giao dịch trước khi cộng tiền.</div>
+                    <div id="qqDepositAutoVerifyBox" style="width:100%;margin-top:10px;padding:14px 15px;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,.13),rgba(16,185,129,.10));border:1px solid rgba(52,211,153,.28);line-height:1.55;">
+                        <div style="font-weight:900;color:#6ee7b7;margin-bottom:5px;">🔒 KHÔNG CÓ NÚT “ĐÃ CHUYỂN KHOẢN”</div>
+                        <div style="font-size:12px;color:#cbd5e1;">Sau khi chuyển khoản thật, hệ thống máy chủ mới được phép xác nhận giao dịch. Người dùng không thể tự bấm để báo đã thanh toán hoặc tự cộng tiền.</div>
+                        <div style="font-size:11px;color:#93c5fd;margin-top:7px;">⏳ Trạng thái: Chờ hệ thống xác nhận tiền vào tài khoản.</div>
+                    </div>
                 </div>
 
                 <div class="deposit-card" style="text-align: center;">
@@ -2216,25 +2219,16 @@ async function executeAdminPoints(){
     }
   }
   window.qqPushOrderNow=pushOrder;
-  window.qqCreateDepositRequest=async function(){
-    const user=(localStorage.getItem('logged_in_user')||'').trim();
-    if(!user){ if(typeof openModal==='function') openModal('login'); return; }
-    const amount=Math.floor(Number(document.getElementById('depositAmountInput')?.value||0));
-    if(!Number.isFinite(amount)||amount<10000){
-      if(typeof showCustomAlert==='function') showCustomAlert('SỐ TIỀN KHÔNG HỢP LỆ','Vui lòng nhập số tiền nạp từ 10.000 VNĐ trở lên.');
-      return;
+  // SECURITY: người dùng không được tạo yêu cầu nạp tiền từ trình duyệt.
+  // Giao dịch nạp thật chỉ được tạo bởi backend/webhook đã xác minh.
+  window.qqCreateDepositRequest=function(){
+    if(typeof showCustomAlert==='function'){
+      showCustomAlert(
+        'TỰ ĐỘNG XÁC NHẬN',
+        'Không cần bấm báo đã chuyển khoản. Giao dịch chỉ được ghi nhận khi máy chủ xác minh tiền thật đã vào tài khoản.'
+      );
     }
-    const transfer=(document.getElementById('transfer-syntax')?.innerText||user).trim();
-    const now=new Date();
-    const id=Date.now();
-    const payload={id,user,amount,transfer_content:transfer,time:now.toLocaleDateString('vi-VN')+' '+now.toLocaleTimeString('vi-VN'),timeISO:now.toISOString(),status:'Chờ duyệt',telegram_notify:true};
-    try{
-      await pushRecord({record_key:'deposit-'+id,type:'deposit',username:user,payload,status:'Chờ duyệt',created_at:now.toISOString(),updated_at:now.toISOString()});
-      if(typeof showCustomAlert==='function') showCustomAlert('ĐÃ BÁO ADMIN','Yêu cầu nạp '+amount.toLocaleString('vi-VN')+' VNĐ đã được gửi. Admin sẽ kiểm tra giao dịch và duyệt.');
-    }catch(e){
-      console.warn('deposit request cloud',e);
-      if(typeof showCustomAlert==='function') showCustomAlert('CHƯA GỬI ĐƯỢC','Không gửi được yêu cầu nạp lên máy chủ. Vui lòng thử lại.');
-    }
+    return false;
   };
   async function syncOrders(){
     let a=[];try{a=JSON.parse(localStorage.getItem('site_orders')||'[]')}catch(e){}
