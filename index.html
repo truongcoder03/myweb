@@ -4385,5 +4385,80 @@ window.startPlaneGame=function(){newRound()}
 })();
 </script>
 
+
+<script id="qq-telegram-web-sync-v6">
+(function(){
+  'use strict';
+  const URL='https://dhhrbtqridanpgikiokd.supabase.co';
+  const KEY='sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU';
+  const TABLE='qq_admin_records';
+  const H={apikey:KEY,'Content-Type':'application/json'};
+  let busy=false;
+
+  function isAdminNow(){
+    try{
+      if(typeof isAdminSession==='function') return !!isAdminSession();
+      if(typeof isAdmin==='function') return !!isAdmin();
+    }catch(e){}
+    const u=(localStorage.getItem('logged_in_user')||'').toLowerCase();
+    return u==='admin' || u.includes('admin_');
+  }
+
+  async function api(path){
+    const r=await fetch(URL+'/rest/v1'+path,{headers:H,cache:'no-store'});
+    const t=await r.text(); let d=null;
+    try{ d=t?JSON.parse(t):null; }catch(e){ d=t; }
+    if(!r.ok) throw new Error((d&&d.message)||('HTTP '+r.status));
+    return d;
+  }
+
+  function syncPurchaseLocal(rows){
+    let orders=[];
+    try{ orders=JSON.parse(localStorage.getItem('site_orders')||'[]'); }catch(e){ return; }
+    if(!Array.isArray(orders)||!orders.length) return;
+    let changed=false;
+    for(const r of rows||[]){
+      if(r.type!=='purchase') continue;
+      const p=r.payload||{};
+      const id=String(p.id ?? String(r.record_key||'').replace(/^order-/,''));
+      const i=orders.findIndex(o=>String(o.id)===id);
+      if(i>=0 && r.status && orders[i].status!==r.status){
+        orders[i].status=r.status;
+        changed=true;
+      }
+    }
+    if(changed){
+      try{ localStorage.setItem('site_orders',JSON.stringify(orders)); }catch(e){}
+      try{ if(typeof renderPurchaseHistory==='function') renderPurchaseHistory(); }catch(e){}
+      try{ if(typeof renderHistoryTables==='function') renderHistoryTables(); }catch(e){}
+    }
+  }
+
+  async function refreshFromCloud(){
+    if(busy) return;
+    busy=true;
+    try{
+      const rows=await api('/'+TABLE+'?select=record_key,type,username,payload,status,created_at,updated_at&order=updated_at.desc&limit=250&_='+Date.now());
+      syncPurchaseLocal(Array.isArray(rows)?rows:[]);
+      if(isAdminNow()){
+        try{ if(typeof window.qqV4RenderAdminRequests==='function') await window.qqV4RenderAdminRequests(); }catch(e){}
+        try{ if(typeof window.qqAdminRefreshOnlineHistory==='function') await window.qqAdminRefreshOnlineHistory(); }catch(e){}
+      }
+    }catch(e){ console.warn('QQ V6 status sync:',e); }
+    finally{ busy=false; }
+  }
+
+  window.qqRefreshTelegramDecisions=refreshFromCloud;
+  window.addEventListener('load',()=>setTimeout(refreshFromCloud,900));
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshFromCloud(); });
+  window.addEventListener('focus',refreshFromCloud);
+  document.addEventListener('click',(e)=>{
+    const el=e.target&&e.target.closest?e.target.closest('[onclick*="Admin"], [onclick*="admin"], #adminPanel, .admin-panel'):null;
+    if(el) setTimeout(refreshFromCloud,300);
+  },true);
+  setInterval(refreshFromCloud,2500);
+})();
+</script>
+
 </body>
 </html>
