@@ -1826,6 +1826,14 @@ function qqRandomConan(){
             };
             orders.unshift(newOrder);
             localStorage.setItem('site_orders', JSON.stringify(orders));
+            // Đẩy đơn lên Supabase ngay để trigger Telegram, không phụ thuộc sync nền.
+            if (typeof window.qqPushOrderNow === 'function') {
+                Promise.resolve(window.qqPushOrderNow(newOrder)).then(function(ok){
+                    if (ok === false) console.warn('Không đồng bộ được đơn mới lên Supabase');
+                }).catch(function(e){
+                    console.warn('Không đồng bộ được đơn mới lên Supabase', e);
+                });
+            }
             renderHistoryTables();
         }
 
@@ -2185,7 +2193,7 @@ async function executeAdminPoints(){
   const URL='https://dhhrbtqridanpgikiokd.supabase.co';
   const KEY='sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU';
   const T='qq_admin_records';
-  const H={apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'};
+  const H={apikey:KEY,'Content-Type':'application/json'};
   const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   async function api(path,opt={}){const r=await fetch(URL+'/rest/v1'+path,Object.assign({headers:H},opt));const t=await r.text();let d=null;try{d=t?JSON.parse(t):null}catch(e){d=t}if(!r.ok)throw new Error((d&&d.message)||'HTTP '+r.status);return d}
   const isAdmin=()=>typeof isAdminSession==='function'&&isAdminSession();
@@ -2193,14 +2201,21 @@ async function executeAdminPoints(){
     return api('/'+T,{method:'POST',headers:{...H,Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(row)});
   }
   async function pushOrder(o){
-    if(!o||!o.user)return;
+    if(!o||!o.user)return false;
     const oid=Number(o.id||0);
     // Bỏ dữ liệu mẫu cũ (ID nhỏ). Chỉ đơn thật mới được đồng bộ / báo Telegram.
-    if(!Number.isFinite(oid)||oid<1000000000000)return;
+    if(!Number.isFinite(oid)||oid<1000000000000)return false;
     const isFresh=(Date.now()-oid)>=0 && (Date.now()-oid)<10*60*1000;
     const cloudPayload=Object.assign({},o,{telegram_notify:isFresh});
-    try{await pushRecord({record_key:'order-'+String(o.id),type:'purchase',username:o.user,payload:cloudPayload,status:o.status||'Chờ duyệt',created_at:new Date(o.timeISO||oid||Date.now()).toISOString(),updated_at:new Date().toISOString()})}catch(e){console.warn('admin order cloud',e)}
+    try{
+      await pushRecord({record_key:'order-'+String(o.id),type:'purchase',username:o.user,payload:cloudPayload,status:o.status||'Chờ duyệt',created_at:new Date(o.timeISO||oid||Date.now()).toISOString(),updated_at:new Date().toISOString()});
+      return true;
+    }catch(e){
+      console.warn('admin order cloud',e);
+      return false;
+    }
   }
+  window.qqPushOrderNow=pushOrder;
   window.qqCreateDepositRequest=async function(){
     const user=(localStorage.getItem('logged_in_user')||'').trim();
     if(!user){ if(typeof openModal==='function') openModal('login'); return; }
@@ -3094,7 +3109,7 @@ window.startPlaneGame=function(){newRound()}
   const SKIP_KEYS=new Set(['qq_cloud_sync_lock','qq_cloud_last_snapshot']);
   let busy=false, applying=false;
   function currentUser(){ return (localStorage.getItem('logged_in_user')||'').trim(); }
-  function headers(extra){ return Object.assign({'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},extra||{}); }
+  function headers(extra){ return Object.assign({'apikey':SB_KEY,'Content-Type':'application/json'},extra||{}); }
   async function api(path,opt){
     const r=await fetch(SB_URL+path,Object.assign({headers:headers()},opt||{}));
     const txt=await r.text(); let data=null; try{data=txt?JSON.parse(txt):null}catch(e){data=txt;}
@@ -3895,7 +3910,7 @@ window.startPlaneGame=function(){newRound()}
       const act=document.getElementById('adminVirtualActionType')?.value||'add';
       const n=Math.floor(Number(document.getElementById('adminVirtualInput')?.value||0));
       if(!u||n<=0){showCustomAlert('THIẾU DỮ LIỆU','Nhập đúng tài khoản và số tiền ảo.');return;}
-      const rows=await fetch('https://dhhrbtqridanpgikiokd.supabase.co/rest/v1/user_wallets?select=username,balance,points,virtual_balance&username=eq.'+encodeURIComponent(u)+'&limit=1',{headers:{apikey:'sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU',Authorization:'Bearer sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU'}}).then(r=>r.json());
+      const rows=await fetch('https://dhhrbtqridanpgikiokd.supabase.co/rest/v1/user_wallets?select=username,balance,points,virtual_balance&username=eq.'+encodeURIComponent(u)+'&limit=1',{headers:{apikey:'sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU'}}).then(r=>r.json());
       const cur=Array.isArray(rows)&&rows[0]?rows[0]:{username:u,balance:0,points:0,virtual_balance:0};
       const next=Math.max(0,Number(cur.virtual_balance||0)+(act==='add'?n:-n));
       await window.qqCloudSetWallet(u,Number(cur.balance||0),Number(cur.points||0),next);
@@ -3950,7 +3965,7 @@ window.startPlaneGame=function(){newRound()}
 (function(){
   const U='https://dhhrbtqridanpgikiokd.supabase.co';
   const K='sb_publishable_GS7cHvjhvT4t02rwKWaq8w_qku2hblU';
-  const H={apikey:K,Authorization:'Bearer '+K,'Content-Type':'application/json'};
+  const H={apikey:K,'Content-Type':'application/json'};
   window.QQ_LOAD_GAME_SETTINGS=async function(){
     const r=await fetch(U+'/rest/v1/qq_game_settings?select=game_key,name,enabled,payout,min_bet,max_bet',{headers:H});
     if(!r.ok) throw new Error('Không đọc được cấu hình online');
