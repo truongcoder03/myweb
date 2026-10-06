@@ -1137,6 +1137,17 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
                     <div class="form-group">
                         <label>Nhập số lượng Robux muốn mua:</label>
                         <input type="number" id="robuxAmountInput" placeholder="VD: 400, 800, 1500..." min="1" oninput="calculateCustomRobuxPrice()">
+                        <div id="robuxTaxPreview" style="margin-top:9px;padding:10px 12px;border-radius:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.28);color:#fbbf24;font-size:12px;line-height:1.6;font-weight:700;">
+                            ⚠️ Roblox trừ 30% thuế Game Pass. VD: 100 ROBUX - 30% = <b style="color:#34d399;">70 ROBUX</b> thực nhận.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ID Game Pass của bạn:</label>
+                        <input type="text" id="robuxGamepassIdInput" placeholder="VD: 1234567890" inputmode="numeric" autocomplete="off">
+                        <div style="margin-top:7px;font-size:12px;color:var(--text-sub);line-height:1.5;">
+                            ❓ Không biết tạo? <a href="https://www.facebook.com/qynnbae16122025/?locale=vi_VN" target="_blank" rel="noopener" style="color:#f472b6;font-weight:800;text-decoration:none;">NHẮN ADMIN HỖ TRỢ</a>
+                        </div>
                     </div>
 
                     <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
@@ -1510,10 +1521,15 @@ radial-gradient(circle at 30% 30%,rgba(255,255,255,.12),transparent 22%)}
                 <button class="btn-submit" style="background: linear-gradient(45deg, #db2777, #7c3aed);" onclick="executeAdminBalance()">Xác nhận thay đổi số dư</button>
             </div>
 
-            <div class="admin-card" style="margin-top:20px;">
-                <h3 style="margin-top:0;color:#34d399;font-size:15px;">👑 QUẢN LÝ TÀI KHOẢN — TOÀN QUYỀN</h3>
-                <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:10px;">Admin/QTV có quyền xem tài khoản, số dư tiền và điểm của thành viên.</div>
-                <div id="admin-member-list" class="scroll-list" style="max-height:360px;"></div>
+            <div class="admin-card" style="margin-top:20px;border:1px solid rgba(52,211,153,.35);background:linear-gradient(135deg,rgba(52,211,153,.07),rgba(59,130,246,.07));">
+                <h3 style="margin-top:0;color:#34d399;font-size:15px;">👑 KIỂM TRA SỐ DƯ TẤT CẢ THÀNH VIÊN — ONLINE</h3>
+                <div style="font-size:12px;color:var(--text-sub);line-height:1.6;margin-bottom:12px;">Chỉ Admin/QTV mới xem được danh sách ví online từ Supabase: tiền VNĐ, điểm game, tiền ảo và thời gian cập nhật gần nhất.</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                    <input id="adminWalletSearch" type="text" placeholder="🔎 Tìm theo tên tài khoản..." autocomplete="off" oninput="renderAdminMemberList()" style="flex:1;min-width:210px;">
+                    <button class="btn-submit" style="width:auto;padding:10px 16px;background:linear-gradient(45deg,#10b981,#3b82f6);" onclick="renderAdminMemberList()">🔄 Tải số dư online</button>
+                </div>
+                <div id="adminMemberCount" style="font-size:11px;color:#94a3b8;margin-bottom:8px;">Đang chờ tải dữ liệu...</div>
+                <div id="admin-member-list" class="scroll-list" style="max-height:420px;"></div>
             </div>
         </div>
     </div>
@@ -1794,7 +1810,14 @@ function qqRandomConan(){
             if(amount < 0) amount = 0;
             let pricePerRobux = 210;
             let totalPrice = amount * pricePerRobux;
+            let afterTax = Math.floor(amount * 0.70);
             document.getElementById('calculatedPriceText').innerText = totalPrice.toLocaleString('vi-VN') + ' VNĐ';
+            const taxEl = document.getElementById('robuxTaxPreview');
+            if(taxEl) {
+                taxEl.innerHTML = amount > 0
+                    ? `⚠️ Roblox trừ <b>30% thuế Game Pass</b>. ${amount.toLocaleString('vi-VN')} ROBUX - 30% = <b style="color:#34d399;">${afterTax.toLocaleString('vi-VN')} ROBUX</b> thực nhận.`
+                    : `⚠️ Roblox trừ 30% thuế Game Pass. VD: 100 ROBUX - 30% = <b style="color:#34d399;">70 ROBUX</b> thực nhận.`;
+            }
         }
 
         function showCustomAlert(title, message) {
@@ -1819,20 +1842,55 @@ function qqRandomConan(){
             let amountInput = document.getElementById('robuxAmountInput').value;
             let amount = amountInput ? parseInt(amountInput) : 0;
             if(amount <= 0 || isNaN(amount)) { showCustomAlert("LỖI", "Vui lòng nhập số lượng Robux hợp lệ lớn hơn 0!"); return; }
+
+            let gamepassId = (document.getElementById('robuxGamepassIdInput')?.value || '').trim();
+            if(!gamepassId) { showCustomAlert("THIẾU ID GAME PASS", "Vui lòng nhập ID Game Pass của bạn. Nếu chưa biết tạo, hãy nhắn ADMIN HỖ TRỢ!"); return; }
+            if(!/^\d+$/.test(gamepassId)) { showCustomAlert("ID GAME PASS KHÔNG HỢP LỆ", "ID Game Pass chỉ được nhập số. Vui lòng kiểm tra lại!"); return; }
             
             let price = amount * 210;
             let balances = JSON.parse(localStorage.getItem('user_balances') || "{}");
             let userBal = balances[loggedUser] || 0;
             if(userBal < price) { showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư không đủ, vui lòng nạp thêm tiền!"); return; }
 
-            document.getElementById('confirmMessage').innerHTML = `Bạn muốn mua <b>${amount.toLocaleString('vi-VN')} Robux</b> cho tài khoản <b>[${robuxUser}]</b>.<br>Số tiền thanh toán: <span style="color:#34d399; font-weight:bold;">${price.toLocaleString('vi-VN')} VNĐ</span>`;
-            pendingPurchaseAction = function() {
-                balances[loggedUser] = userBal - price;
-                localStorage.setItem('user_balances', JSON.stringify(balances));
-                document.getElementById('user-balance').innerText = balances[loggedUser].toLocaleString('vi-VN') + ' VNĐ';
-                
-                addOrderToHistory(loggedUser, `Mua ${amount} Robux (Acc: ${robuxUser})`, price);
-                showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", "Đơn mua Robux của bạn đã được tạo thành công và đang chờ Admin duyệt!");
+            const afterTaxRobux = Math.floor(amount * 0.70);
+            document.getElementById('confirmMessage').innerHTML = `Bạn muốn mua <b>${amount.toLocaleString('vi-VN')} Robux</b> cho tài khoản <b>[${robuxUser}]</b>.<br>ID Game Pass: <b style="color:#fbbf24;">${gamepassId}</b><br><span style="color:#fbbf24;font-weight:800;">⚠️ Thuế Roblox 30%: dự kiến thực nhận ${afterTaxRobux.toLocaleString('vi-VN')} Robux.</span><br>Số tiền thanh toán: <span style="color:#34d399; font-weight:bold;">${price.toLocaleString('vi-VN')} VNĐ</span>`;
+            pendingPurchaseAction = async function() {
+                let finalBalance = userBal - price;
+                try {
+                    if (window.qqCloudGetWallet && window.qqCloudSetWallet) {
+                        const cloud = await window.qqCloudGetWallet(loggedUser);
+                        const cloudBal = Number(cloud?.balance ?? userBal);
+                        if (cloudBal < price) {
+                            showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư online không đủ để tạo đơn. Vui lòng nạp thêm tiền!");
+                            if (cloud) {
+                                balances[loggedUser] = cloudBal;
+                                localStorage.setItem('user_balances', JSON.stringify(balances));
+                                document.getElementById('user-balance').innerText = cloudBal.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                            return false;
+                        }
+                        finalBalance = cloudBal - price;
+                        await window.qqCloudSetWallet(loggedUser, finalBalance, Number(cloud?.points || 0), Number(cloud?.virtual_balance || 0));
+                    }
+                    balances[loggedUser] = finalBalance;
+                    localStorage.setItem('user_balances', JSON.stringify(balances));
+                    document.getElementById('user-balance').innerText = finalBalance.toLocaleString('vi-VN') + ' VNĐ';
+
+                    addOrderToHistory(loggedUser, `Mua ${amount} Robux (Acc: ${robuxUser} | Game Pass ID: ${gamepassId})`, price, {
+                        order_kind: 'robux',
+                        robux_username: robuxUser,
+                        robux_amount: amount,
+                        after_tax_robux: afterTaxRobux,
+                        tax_percent: 30,
+                        gamepass_id: gamepassId
+                    });
+                    showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", "Đơn mua Robux đã được tạo và đang chờ Admin duyệt. Roblox trừ 30% thuế Game Pass.");
+                    return true;
+                } catch (e) {
+                    console.warn('purchase cloud debit', e);
+                    showCustomAlert("CHƯA TẠO ĐƯỢC ĐƠN", "Không đồng bộ được số dư online. Vui lòng thử lại để tránh trừ tiền sai.");
+                    return false;
+                }
             };
             document.getElementById('confirmModal').classList.add('active');
         }
@@ -1846,29 +1904,52 @@ function qqRandomConan(){
             if(userBal < price) { showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư hiện tại không đủ để mua vật phẩm này!"); return; }
 
             document.getElementById('confirmMessage').innerHTML = `Bạn muốn mua vật phẩm <b>[${itemName}]</b>.<br>Số tiền thanh toán: <span style="color:#34d399; font-weight:bold;">${price.toLocaleString('vi-VN')} VNĐ</span>`;
-            pendingPurchaseAction = function() {
-                balances[loggedUser] = userBal - price;
-                localStorage.setItem('user_balances', JSON.stringify(balances));
-                document.getElementById('user-balance').innerText = balances[loggedUser].toLocaleString('vi-VN') + ' VNĐ';
-                
-                addOrderToHistory(loggedUser, `Mua Gamepass: ${itemName}`, price);
-                showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", `Đơn mua [${itemName}] đã được tạo thành công. Vui lòng chờ Admin duyệt!`);
+            pendingPurchaseAction = async function() {
+                let finalBalance = userBal - price;
+                try {
+                    if (window.qqCloudGetWallet && window.qqCloudSetWallet) {
+                        const cloud = await window.qqCloudGetWallet(loggedUser);
+                        const cloudBal = Number(cloud?.balance ?? userBal);
+                        if (cloudBal < price) {
+                            showCustomAlert("KHÔNG ĐỦ SỐ DƯ", "Số dư online không đủ để mua vật phẩm này!");
+                            if (cloud) {
+                                balances[loggedUser] = cloudBal;
+                                localStorage.setItem('user_balances', JSON.stringify(balances));
+                                document.getElementById('user-balance').innerText = cloudBal.toLocaleString('vi-VN') + ' VNĐ';
+                            }
+                            return false;
+                        }
+                        finalBalance = cloudBal - price;
+                        await window.qqCloudSetWallet(loggedUser, finalBalance, Number(cloud?.points || 0), Number(cloud?.virtual_balance || 0));
+                    }
+                    balances[loggedUser] = finalBalance;
+                    localStorage.setItem('user_balances', JSON.stringify(balances));
+                    document.getElementById('user-balance').innerText = finalBalance.toLocaleString('vi-VN') + ' VNĐ';
+                    addOrderToHistory(loggedUser, `Mua Gamepass: ${itemName}`, price, {order_kind:'blox_gamepass'});
+                    showCustomAlert("ĐÃ TẠO ĐƠN HÀNG", `Đơn mua [${itemName}] đã được tạo thành công. Vui lòng chờ Admin duyệt!`);
+                    return true;
+                } catch (e) {
+                    console.warn('gamepass cloud debit', e);
+                    showCustomAlert("CHƯA TẠO ĐƯỢC ĐƠN", "Không đồng bộ được số dư online. Vui lòng thử lại.");
+                    return false;
+                }
             };
             document.getElementById('confirmModal').classList.add('active');
         }
 
-        document.getElementById('btnExecutePurchase').onclick = function() {
+        document.getElementById('btnExecutePurchase').onclick = async function() {
             if(pendingPurchaseAction) {
-                pendingPurchaseAction();
+                const ok = await pendingPurchaseAction();
+                if(ok === false) return;
             }
             closeConfirmModal();
         }
 
-        function addOrderToHistory(user, itemDesc, price) {
+        function addOrderToHistory(user, itemDesc, price, extra = {}) {
             let orders = JSON.parse(localStorage.getItem('site_orders') || "[]");
             let now = new Date();
             let timeString = now.toLocaleDateString('vi-VN') + ' ' + now.toLocaleTimeString('vi-VN');
-            let newOrder = {
+            let newOrder = Object.assign({
                 id: Date.now(),
                 user: user,
                 item: itemDesc,
@@ -1876,7 +1957,7 @@ function qqRandomConan(){
                 time: timeString,
                 timeISO: now.toISOString(),
                 status: "Chờ duyệt"
-            };
+            }, extra || {});
             orders.unshift(newOrder);
             localStorage.setItem('site_orders', JSON.stringify(orders));
             // Đẩy đơn lên Supabase ngay để trigger Telegram, không phụ thuộc sync nền.
@@ -2191,14 +2272,60 @@ async function executeAdminPoints(){
             const top=names.slice(0,10);
             el.innerHTML=top.length?top.map((u,i)=>`<div class="top-user-item"><div><span style="font-weight:bold;color:${i===0?'#fbbf24':i===1?'#94a3b8':i===2?'#d97706':'var(--text-sub)'};margin-right:6px;">#${i+1}</span><span style="font-weight:600;">${u}</span></div><div style="color:#a78bfa;font-weight:800;">${(Number(pts[u])||0).toLocaleString('vi-VN')} điểm</div></div>`).join(''):'<div style="padding:12px;text-align:center;color:var(--text-sub);">Chưa có dữ liệu điểm.</div>';
         }
-        function renderAdminMemberList(){
-            const el=document.getElementById('admin-member-list'); if(!el)return;
-            const users=getRegisteredUsers();
-            const balances=JSON.parse(localStorage.getItem('user_balances')||'{}');
-            const points=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
-            const names=Object.keys(users).map(k=>users[k].username).filter(u=>u.toLowerCase()!=='admin_socnau03');
-            names.sort((a,b)=>a.localeCompare(b));
-            el.innerHTML=names.length?names.map(u=>`<div class="transaction-card-item" style="margin-bottom:8px;"><div><b>${u}</b><div style="font-size:11px;color:var(--text-sub);">💰 ${(Number(balances[u])||0).toLocaleString('vi-VN')} VNĐ &nbsp;|&nbsp; 💎 ${(Number(points[u])||0).toLocaleString('vi-VN')} điểm</div></div><div style="font-size:10px;color:#34d399;">Thành viên</div></div>`).join(''):'<div style="padding:12px;color:var(--text-sub);">Chưa có thành viên.</div>';
+        async function renderAdminMemberList(){
+            const el=document.getElementById('admin-member-list');
+            const countEl=document.getElementById('adminMemberCount');
+            if(!el)return;
+            if(typeof isAdminSession==='function' && !isAdminSession()){
+                el.innerHTML='<div style="padding:12px;color:#fca5a5;">❌ Chỉ Admin/QTV mới có quyền xem số dư thành viên.</div>';
+                if(countEl) countEl.textContent='Không có quyền truy cập.';
+                return;
+            }
+
+            const keyword=(document.getElementById('adminWalletSearch')?.value||'').trim().toLowerCase();
+            el.innerHTML='<div style="padding:12px;color:#94a3b8;">⏳ Đang tải số dư online từ Supabase...</div>';
+            if(countEl) countEl.textContent='Đang tải...';
+
+            try{
+                let rows=[];
+                if(window.qqAdminGetAllWallets){
+                    rows=await window.qqAdminGetAllWallets();
+                }else{
+                    // Fallback cho lúc script Supabase chưa tải xong.
+                    const users=getRegisteredUsers();
+                    const balances=JSON.parse(localStorage.getItem('user_balances')||'{}');
+                    const points=JSON.parse(localStorage.getItem('qq_game_points_v2')||'{}');
+                    const virtuals=JSON.parse(localStorage.getItem('qq_virtual_money_v1')||'{}');
+                    const names=new Set([...Object.keys(users).map(k=>users[k]?.username||k),...Object.keys(balances),...Object.keys(points),...Object.keys(virtuals)]);
+                    rows=[...names].filter(Boolean).map(username=>({username,balance:Number(balances[username]||0),points:Number(points[username]||0),virtual_balance:Number(virtuals[username]||0),updated_at:null}));
+                }
+
+                if(!Array.isArray(rows)) rows=[];
+                rows=rows.filter(r=>r&&r.username);
+                rows.sort((a,b)=>String(a.username).localeCompare(String(b.username),'vi',{sensitivity:'base'}));
+                const allCount=rows.length;
+                if(keyword) rows=rows.filter(r=>String(r.username).toLowerCase().includes(keyword));
+                if(countEl) countEl.textContent='Tổng ví online: '+allCount.toLocaleString('vi-VN')+(keyword?' • Kết quả tìm: '+rows.length.toLocaleString('vi-VN'):'');
+
+                const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+                const fmt=v=>Number(v||0).toLocaleString('vi-VN');
+                el.innerHTML=rows.length?rows.map(r=>{
+                    const username=String(r.username||'');
+                    const role=username.toLowerCase()===ADMIN_USERNAME.toLowerCase()?'ADMIN':username.toLowerCase()===QTV_USERNAME.toLowerCase()?'QTV':'Thành viên';
+                    const updated=r.updated_at?new Date(r.updated_at).toLocaleString('vi-VN'):'—';
+                    return `<div class="transaction-card-item" style="margin-bottom:8px;border-left:3px solid ${role==='ADMIN'?'#f472b6':role==='QTV'?'#a78bfa':'#34d399'};">
+                        <div style="min-width:0;">
+                            <div style="font-weight:800;color:#e6edf3;overflow-wrap:anywhere;">👤 ${esc(username)} <span style="font-size:10px;color:#94a3b8;">${role}</span></div>
+                            <div style="font-size:12px;color:#34d399;margin-top:4px;">💰 ${fmt(r.balance)} VNĐ</div>
+                            <div style="font-size:11px;color:#a78bfa;margin-top:2px;">💎 ${fmt(r.points)} điểm &nbsp;•&nbsp; 🎮 ${fmt(r.virtual_balance)} tiền ảo</div>
+                            <div style="font-size:10px;color:#64748b;margin-top:3px;">Cập nhật: ${esc(updated)}</div>
+                        </div>
+                    </div>`;
+                }).join(''):'<div style="padding:12px;text-align:center;color:var(--text-sub);">Không tìm thấy tài khoản phù hợp.</div>';
+            }catch(e){
+                if(countEl) countEl.textContent='Không tải được dữ liệu online.';
+                el.innerHTML='<div style="padding:12px;color:#fca5a5;">❌ Không tải được số dư online: '+String(e?.message||e)+'</div>';
+            }
         }
 
         async function renderAdminPendingList() {
@@ -3348,6 +3475,13 @@ window.startPlaneGame=function(){newRound()}
     throw new Error('Supabase không tạo được ví cho tài khoản '+safeUser+'.');
   }
 
+  // Admin/QTV: tải toàn bộ ví online để kiểm tra số dư thành viên trên web.
+  window.qqAdminGetAllWallets=async function(){
+    if(typeof isAdminSession==='function' && !isAdminSession()) throw new Error('Không có quyền Admin/QTV.');
+    const rows=await req('/user_wallets?select=username,balance,points,virtual_balance,updated_at&order=username.asc&limit=1000');
+    return Array.isArray(rows)?rows:[];
+  };
+
   // API nội bộ để mọi chức năng cũ (Admin/mua hàng/đổi điểm) ghi ngay lên Supabase.
   window.qqCloudGetWallet=getWallet;
   window.qqCloudSetWallet=async function(username,balance,points,virtualBalance){
@@ -3380,6 +3514,10 @@ window.startPlaneGame=function(){newRound()}
       const w=await getWallet(u);
       if(w){
         applyWallet(u,w.balance,w.points,w.virtual_balance);
+        const remoteHash=u+'|'+num(w.balance)+'|'+num(w.points)+'|'+num(w.virtual_balance);
+        lastLocalHashes[u]=remoteHash;
+        lastLocalHash=remoteHash;
+        lastRemoteHash=remoteHash;
         if($('qqAviatorPointsHint')) $('qqAviatorPointsHint').textContent='💎 Điểm khả dụng: '+num(w.points).toLocaleString('vi-VN');
         onlineReady=true;
         $('qqOnlineStatus') && ($('qqOnlineStatus').textContent='🟢 Online Supabase');
@@ -3398,14 +3536,18 @@ window.startPlaneGame=function(){newRound()}
     if(syncing) return;
     syncing=true;
     try{
+      const u=me();
+      if(!u || u==='guest') return;
       const b=readObj(moneyKey), p=readObj(pointsKey), v=readObj('qq_virtual_money_v1');
-      const users=new Set([...Object.keys(b),...Object.keys(p),...Object.keys(v)]);
-      for(const u of users){
-        if(!u || u==='guest') continue;
-        const h=u+'|'+num(b[u])+'|'+num(p[u])+'|'+num(v[u]);
-        if(h===lastLocalHashes[u]) continue;
-        try{ const v=readObj('qq_virtual_money_v1'); await upsertWallet(u,num(b[u]),num(p[u]),num(v[u])); lastLocalHashes[u]=h; lastLocalHash=h; }catch(e){ console.warn('wallet sync',u,e); }
-      }
+      const h=u+'|'+num(b[u])+'|'+num(p[u])+'|'+num(v[u]);
+      if(h===lastLocalHashes[u]) return;
+      const row=await upsertWallet(u,num(b[u]),num(p[u]),num(v[u]));
+      const saved=u+'|'+num(row?.balance)+'|'+num(row?.points)+'|'+num(row?.virtual_balance);
+      lastLocalHashes[u]=saved;
+      lastLocalHash=saved;
+      lastRemoteHash=saved;
+    }catch(e){
+      console.warn('wallet sync',e);
     }finally{ syncing=false; }
   }
 
@@ -3429,12 +3571,17 @@ window.startPlaneGame=function(){newRound()}
     };
   }
 
-  // Đồng bộ dữ liệu local hiện có lên cloud; từ đó các chức năng cũ vẫn chạy.
+  // Supabase là nguồn số dư chính:
+  // local vừa thay đổi -> đẩy tài khoản đang đăng nhập lên cloud;
+  // local không đổi -> kéo cloud về để nhận thay đổi từ Admin/Telegram.
   setInterval(async()=>{
     const u=me();
     if(!u) return;
-    await syncAllLocalToCloud();
-    if(!onlineReady) await pullMe();
+    if(!onlineReady){ await pullMe(); return; }
+    const b=readObj(moneyKey), p=readObj(pointsKey), v=readObj('qq_virtual_money_v1');
+    const h=u+'|'+num(b[u])+'|'+num(p[u])+'|'+num(v[u]);
+    if(h!==lastLocalHashes[u]) await syncAllLocalToCloud();
+    else await pullMe();
   },1800);
 
   // =========================
@@ -4304,7 +4451,17 @@ window.startPlaneGame=function(){newRound()}
 
   function requestDetails(r){
     const p=r.payload||{};
-    if(r.type==='purchase')return `📦 ${esc(p.item||'Đơn mua hàng')}<br>💰 ${money(p.price)} VNĐ`;
+    if(r.type==='purchase'){
+      let s=`📦 ${esc(p.item||'Đơn mua hàng')}<br>💰 ${money(p.price)} VNĐ`;
+      if(p.robux_username)s+=`<br>🎮 Roblox: <b>${esc(p.robux_username)}</b>`;
+      if(p.gamepass_id)s+=`<br>🆔 Game Pass ID: <b>${esc(p.gamepass_id)}</b>`;
+      if(Number(p.robux_amount||0)>0){
+        const gross=Math.floor(Number(p.robux_amount||0));
+        const net=Math.floor(Number(p.after_tax_robux||gross*0.70));
+        s+=`<br>🧾 Robux: ${money(gross)} → sau thuế 30%: <b style="color:#34d399">${money(net)} Robux</b>`;
+      }
+      return s;
+    }
     if(r.type==='deposit')return `💰 ${money(p.amount)} VNĐ<br>📝 ${esc(p.transfer_content||'—')}`;
     if(r.type==='card_topup')return `📱 ${esc(p.carrier||'—')} • Mệnh giá ${money(p.face_value)} VNĐ<br>💰 Tiền cộng: <b style="color:#34d399">${money(p.net_amount??p.amount??p.credit_amount)} VNĐ</b><br>🔢 Serial: ${esc(p.serial_masked||'—')}<br>🔐 Mã thẻ: ${esc(p.card_code_masked||'—')}`;
     if(r.type==='virtual_withdraw')return `🪙 Rút ${money(p.amount)} tiền ảo<br>📝 ${esc(p.note||'—')}`;
@@ -4471,6 +4628,7 @@ window.startPlaneGame=function(){newRound()}
       try{ localStorage.setItem('site_orders',JSON.stringify(orders)); }catch(e){}
       try{ if(typeof renderPurchaseHistory==='function') renderPurchaseHistory(); }catch(e){}
       try{ if(typeof renderHistoryTables==='function') renderHistoryTables(); }catch(e){}
+      try{ if(typeof window.qqRefreshWallet==='function') Promise.resolve(window.qqRefreshWallet()).catch(()=>{}); }catch(e){}
     }
   }
 
